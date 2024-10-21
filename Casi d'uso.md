@@ -13,6 +13,25 @@
 | Variations                  | 1. Utente può inserire username o e-mail come identificativo                                                                                                                                                                                                                        |
 | Alternative flows           | 3A. Se identificativo non nel database, compare scritta "Identificativo non presente"<br>3B. Se identificativo esiste ma password sbagliata, compare scritta "Password errata"<br>3C. Se non c'è connessione al database, compare scritta "Impossibile connettersi con il database" |
 
+### Use Case: Dettagli elemento
+| Use Case                    | Dettagli elemento                                                                                                                                                                                                                                                                               |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| History                     | by Tommaso Puzzo on 2024/10/21 "First creation" v1.0                                                                                                                                               
+| Source                      |                                                                                                                                                                                                                       |
+| Level*                      | Function                                                                                                                                                                                                                                                                            |
+| Description*                | Utente visualizza un elemento in dettaglio                                                                                                                                            
+| Scope                      |                                                                                                                                                                                                                                          |
+| Actors                      | User, Cliente, Manager                                                                                                                                                                                                                                                                    |
+| Pre-conditions*             | Essere connessi al database                                                                                                                                                                                                                               |
+| Post-conditions*            | Utente visualizza la pagina dell'elemento o viene segnalato errore al login                                                                                                                                                                                                             |
+| Normal flow*                | 1. Utente clicca su un elemento<br>2. L'elemento viene visualizzato correttamente                                                                                                                                                                     |
+| Variations                  | 1. Un cliente può accedere ai dettagli di un elemento dalla pagina prestiti                                                                                                                                                                                                                         |
+| Alternative flows           | 1A. Se non c'è connessione al database, compare scritta "Impossibile connettersi con il database" |
+| Reference                      |                                                                                                                          
+| Non-functional requirements                      |                                                                                                                         
+| Issues                      |                                                                                                                                 
+| Priority                      |                                                                                                                                  
+| Delivery date                      |                                                                                                                                                                                       
 
 ### Use Case: Logout
 
