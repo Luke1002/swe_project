@@ -1,0 +1,11 @@
+Book(CODICE,titolo,autore,edizione,casa editrice,pagine,anno, ...)
+
+Periodic(CODICE,titolo,giorno,mese,anno,casa produttrice, ...)
+
+Digital(CODICE,titolo,durata,director,casa produttrice,anno, ...)
+
+Borrows(LibraryUserID,CODICE)
+
+ModifiedElements(AdminID,CODICE)
+
+Users(ID,name,nickname,mail, ...)
