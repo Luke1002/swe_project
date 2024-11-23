@@ -7,6 +7,8 @@ module com.swe.libraryprogram {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires eu.hansolo.tilesfx;
+    requires java.sql;
+    requires org.postgresql.jdbc;
 
     opens com.swe.libraryprogram to javafx.fxml;
     exports com.swe.libraryprogram;
