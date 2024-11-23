@@ -26,7 +26,7 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         String jdbcUrl = "jdbc:postgresql://localhost:5432/postgres";
         String username = "postgres";
-        String password = "Oiomaasile200!";
+        String password = "pincopallo";
 
         Connection c;
         try {
