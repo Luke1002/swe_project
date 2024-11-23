@@ -1,5 +1,7 @@
 package com.swe.libraryprogram.domainmodel;
 
+import java.util.LinkedList;
+
 public class PeriodicPublication extends Element{
     private String publisher;
     private Integer frequency;
@@ -7,8 +9,8 @@ public class PeriodicPublication extends Element{
     private Integer releaseDay;
     private Integer issn;
 
-    public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, String genre, String publisher, Integer frequency, Integer releaseMonth, Integer releaseDay, Integer issn) {
-        super(id, title, releaseYear, description, quantity, quantityAvailable, length, genre);
+    public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String publisher, Integer frequency, Integer releaseMonth, Integer releaseDay, Integer issn) {
+        super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
         this.publisher = publisher;
         this.frequency = frequency;
         this.releaseMonth = releaseMonth;

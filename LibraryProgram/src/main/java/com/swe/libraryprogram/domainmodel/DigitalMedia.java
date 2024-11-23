@@ -1,5 +1,7 @@
 package com.swe.libraryprogram.domainmodel;
 
+import java.util.LinkedList;
+
 public class DigitalMedia extends Element{
 
     private String producer;
@@ -7,8 +9,8 @@ public class DigitalMedia extends Element{
     private Integer ageRating;
     private String director;
 
-    public DigitalMedia(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, String genre, String producer, Integer length1, Integer ageRating, String director) {
-        super(id, title, releaseYear, description, quantity, quantityAvailable, length, genre);
+    public DigitalMedia(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String producer, Integer length1, Integer ageRating, String director) {
+        super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
         this.producer = producer;
         this.length = length1;
         this.ageRating = ageRating;
