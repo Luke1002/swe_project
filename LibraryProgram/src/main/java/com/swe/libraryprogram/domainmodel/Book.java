@@ -58,4 +58,15 @@ public class Book extends Element {
     public void setEdition(Integer edition) {
         this.edition = edition;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "isbn=" + isbn +
+                ", author='" + author + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", nPages=" + nPages +
+                ", edition=" + edition +
+                '}';
+    }
 }

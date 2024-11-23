@@ -50,4 +50,14 @@ public class DigitalMedia extends Element{
     public void setDirector(String director) {
         this.director = director;
     }
+
+    @Override
+    public String toString() {
+        return "DigitalMedia{" +
+                "producer='" + producer + '\'' +
+                ", length=" + length +
+                ", ageRating=" + ageRating +
+                ", director='" + director + '\'' +
+                '}';
+    }
 }

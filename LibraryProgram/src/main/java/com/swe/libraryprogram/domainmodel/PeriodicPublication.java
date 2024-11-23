@@ -57,4 +57,15 @@ public class PeriodicPublication extends Element{
     public void setIssn(Integer issn) {
         this.issn = issn;
     }
+
+    @Override
+    public String toString() {
+        return "PeriodicPublication{" +
+                "publisher='" + publisher + '\'' +
+                ", frequency=" + frequency +
+                ", releaseMonth=" + releaseMonth +
+                ", releaseDay=" + releaseDay +
+                ", issn=" + issn +
+                '}';
+    }
 }

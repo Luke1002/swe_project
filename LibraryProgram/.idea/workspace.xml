@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4416065-121d-4ef5-8e4a-cf9b73c8b216" name="Changes" comment="Added IDE config to project">
+    <list default="true" id="b4416065-121d-4ef5-8e4a-cf9b73c8b216" name="Changes" comment="Commit">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/swe/libraryprogram/domainmodel/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swe/libraryprogram/domainmodel/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swe/libraryprogram/domainmodel/Book.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swe/libraryprogram/domainmodel/DigitalMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swe/libraryprogram/domainmodel/DigitalMedia.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swe/libraryprogram/domainmodel/PeriodicPublication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swe/libraryprogram/domainmodel/PeriodicPublication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,18 +19,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Luke1002"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Luke1002&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Luke1002/swe_project.git",
-    "accountId": "5d090d20-bc32-45f7-9b0b-c0694f0c8bff"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Luke1002/swe_project&quot;,
+    &quot;accountId&quot;: &quot;3d0ba560-c328-45c5-9984-4d77fe7fed89&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -37,10 +41,10 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2pFTP7LPEYzr7lOpdKbfnlSzptk" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -49,11 +53,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.HelloApplication.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Application.Test.executor": "Run",
     "Downloaded.Files.Path.Enabled": "false",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
@@ -73,14 +81,6 @@
     ]
   }
 }]]></component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -89,7 +89,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1732360798836</updated>
-      <workItem from="1732360799678" duration="6725000" />
+      <workItem from="1732360799678" duration="5172000" />
+      <workItem from="1732378452311" duration="132000" />
+      <workItem from="1732378588106" duration="527000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <option name="closed" value="true" />
@@ -99,43 +101,14 @@
       <option name="project" value="LOCAL" />
       <updated>1732360884197</updated>
     </task>
-    <task id="LOCAL-00002" summary="Added JDBC to project">
-      <option name="closed" value="true" />
-      <created>1732376202788</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1732376202788</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Added IDE config to project">
-      <option name="closed" value="true" />
-      <created>1732376240955</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1732376240955</updated>
-    </task>
-    <option name="localTasksCounter" value="4" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commit" />
-    <MESSAGE value="Added JDBC to project" />
-    <MESSAGE value="Added IDE config to project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added IDE config to project" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit" />
   </component>
 </project>
