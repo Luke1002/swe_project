@@ -2,7 +2,7 @@ package com.swe.libraryprogram.domainmodel;
 
 import java.util.LinkedList;
 
-public class PeriodicPublication extends Element{
+public class PeriodicPublication extends Element {
     private String publisher;
     private Integer frequency;
     private Integer releaseMonth;

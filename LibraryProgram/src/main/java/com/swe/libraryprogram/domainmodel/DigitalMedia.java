@@ -2,7 +2,7 @@ package com.swe.libraryprogram.domainmodel;
 
 import java.util.LinkedList;
 
-public class DigitalMedia extends Element{
+public class DigitalMedia extends Element {
 
     private String producer;
     private Integer length;

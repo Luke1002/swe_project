@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,19 +25,19 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        String jdbcUrl = "jdbc:postgresql://localhost:5432/postgres";
+        String jdbcUrl = "jdbc:postgresql://berrettilove.minecraftnoob.com:5432/postgres";
         String username = "postgres";
-        String password = "pincopallo";
+        String password = "postgres";
 
         Connection c;
         try {
             Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection(jdbcUrl,username, password);
+            c = DriverManager.getConnection(jdbcUrl, username, password);
             Statement statement = c.createStatement();
-            statement.execute("INSERT INTO cars(brand, model, year) VALUES ('Fiat', 'Panda', 2008);");
+            statement.execute("");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
 
