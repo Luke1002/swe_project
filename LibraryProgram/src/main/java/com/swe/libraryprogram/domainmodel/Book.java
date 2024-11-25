@@ -2,22 +2,31 @@ package com.swe.libraryprogram.domainmodel;
 
 import java.util.LinkedList;
 
+
+
+
 public class Book extends Element {
+
 
     private Integer isbn;
     private String author;
     private String publisher;
-    private Integer nPages;
     private Integer edition;
 
-    public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, Integer isbn, String author, String publisher, Integer nPages, Integer edition) {
+
+
+    public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, Integer isbn, String author, String publisher, Integer edition) {
+
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
+
         this.isbn = isbn;
         this.author = author;
         this.publisher = publisher;
-        this.nPages = nPages;
         this.edition = edition;
+
     }
+
+
 
     public Integer getIsbn() {
         return isbn;
@@ -43,14 +52,6 @@ public class Book extends Element {
         this.publisher = publisher;
     }
 
-    public Integer getnPages() {
-        return nPages;
-    }
-
-    public void setnPages(Integer nPages) {
-        this.nPages = nPages;
-    }
-
     public Integer getEdition() {
         return edition;
     }
@@ -59,14 +60,15 @@ public class Book extends Element {
         this.edition = edition;
     }
 
+
     @Override
     public String toString() {
         return "Book{" +
                 "isbn=" + isbn +
                 ", author='" + author + '\'' +
                 ", publisher='" + publisher + '\'' +
-                ", nPages=" + nPages +
                 ", edition=" + edition +
                 '}';
     }
+
 }

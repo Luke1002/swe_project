@@ -2,21 +2,31 @@ package com.swe.libraryprogram.domainmodel;
 
 import java.util.LinkedList;
 
-public class PeriodicPublication extends Element {
+
+
+public class PeriodicPublication extends Element{
+
+
     private String publisher;
     private Integer frequency;
     private Integer releaseMonth;
     private Integer releaseDay;
     private Integer issn;
 
+
+
     public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String publisher, Integer frequency, Integer releaseMonth, Integer releaseDay, Integer issn) {
+
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
+
         this.publisher = publisher;
         this.frequency = frequency;
         this.releaseMonth = releaseMonth;
         this.releaseDay = releaseDay;
         this.issn = issn;
+
     }
+
 
     public String getPublisher() {
         return publisher;
@@ -58,6 +68,7 @@ public class PeriodicPublication extends Element {
         this.issn = issn;
     }
 
+
     @Override
     public String toString() {
         return "PeriodicPublication{" +
@@ -68,4 +79,5 @@ public class PeriodicPublication extends Element {
                 ", issn=" + issn +
                 '}';
     }
+
 }

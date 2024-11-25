@@ -1,5 +1,7 @@
 package com.swe.libraryprogram.domainmodel;
 
+
+
 public class Genre {
 
     // Libri (codice 01)
@@ -60,10 +62,13 @@ public class Genre {
 
 
     Genre(String name, Integer code, String description) {
+
         this.name = name;
         this.code = code;
         this.description = description;
+
     }
+
 
     public String getName() {
         return name;
