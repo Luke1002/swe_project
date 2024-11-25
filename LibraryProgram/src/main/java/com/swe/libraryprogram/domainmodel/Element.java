@@ -94,4 +94,7 @@ public class Element {
     public void setGenres(LinkedList<Genre> genres) {
         this.genres = genres;
     }
+
+
+
 }
