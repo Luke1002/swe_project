@@ -1,26 +1,37 @@
 package com.swe.libraryprogram.domainmodel;
 
+
+
 public class User {
+
+
     private String email;
     private String password;
     private String name;
     private String surname;
     private String phone;
 
+
+
     public User(String email, String password, String name, String surname, String phone) {
+
         this.email = email;
         this.password = password;
         this.name = name;
         this.surname = surname;
         this.phone = phone;
+
     }
 
     public User(String email, String password, String name, String surname) {
+
         this.email = email;
         this.password = password;
         this.name = name;
         this.surname = surname;
+
     }
+
 
     public String getEmail() {
         return email;
@@ -61,4 +72,5 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
 }

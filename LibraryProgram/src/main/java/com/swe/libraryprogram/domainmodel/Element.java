@@ -2,18 +2,28 @@ package com.swe.libraryprogram.domainmodel;
 
 import java.util.LinkedList;
 
+
+
 public class Element {
+
+
     private static Integer nextId = 1;
+
     private final Integer id;
+
     private String title;
     private Integer releaseYear;
     private String description;
     private Integer quantity = 1;
     private Integer quantityAvailable = 1;
     private Integer length;
+
     private LinkedList<Genre> genres;
 
+
+
     public Element(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres) {
+
         this.id = id;
         this.title = title;
         this.releaseYear = releaseYear;
@@ -22,9 +32,11 @@ public class Element {
         this.quantityAvailable = quantityAvailable;
         this.length = length;
         this.genres = genres;
+
     }
 
     public Element(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres) {
+
         this.id = nextId++;
         this.title = title;
         this.releaseYear = releaseYear;
@@ -33,7 +45,9 @@ public class Element {
         this.quantityAvailable = quantityAvailable;
         this.length = length;
         this.genres = genres;
+
     }
+
 
     public Integer getId() {
         return id;
@@ -94,7 +108,6 @@ public class Element {
     public void setGenres(LinkedList<Genre> genres) {
         this.genres = genres;
     }
-
 
 
 }
