@@ -3883,7 +3883,7 @@
 											"top": 79,
 											"width": 206,
 											"height": 13,
-											"text": "AdminController"
+											"text": "LibraryAdminController"
 										},
 										{
 											"_type": "LabelView",
@@ -8016,7 +8016,7 @@
 					"_parent": {
 						"$ref": "AAAAAAGSyRUAx4Efd4Q="
 					},
-					"name": "AdminController",
+					"name": "LibraryAdminController",
 					"ownedElements": [
 						{
 							"_type": "UMLGeneralization",
