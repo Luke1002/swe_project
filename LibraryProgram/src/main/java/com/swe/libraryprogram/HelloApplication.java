@@ -1,6 +1,7 @@
 package com.swe.libraryprogram;
 
 import com.swe.libraryprogram.dao.ConnectionManager;
+import com.swe.libraryprogram.dao.UserManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,8 +23,10 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         ConnectionManager conman  = ConnectionManager.getInstance();
-        if (conman.startingConnectionCheck()){
-            HelloController.labelText ="Connection established";
+        if (conman.startingConnectionCheck()) {
+            UserManager userman = new UserManager(conman);
+            String res = userman.getUser();
+            HelloController.labelText =res;
         }else{
             HelloController.labelText ="Connection failed";
         }
