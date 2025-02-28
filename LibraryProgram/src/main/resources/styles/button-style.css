@@ -1,0 +1,23 @@
+.button {
+    -fx-background-color: #f0f0f0; /* Light gray background */
+    -fx-text-fill: black; /* Text color */
+    -fx-font-family: "Segoe UI", sans-serif; /* Windows default font */
+    -fx-font-size: 12px; /* Font size */
+    -fx-padding: 5 10 5 10; /* Padding (top, right, bottom, left) */
+    -fx-border-radius: 1px; /* Rounded corners */
+    -fx-background-radius: 1px; /* Rounded corners */
+    -fx-border-color: #c0c0c0; /* Light gray border */
+    -fx-border-width: 1px; /* Border thickness */
+}
+
+.button:hover {
+    -fx-background-color: #e6e6e6; /* Hover effect (lighten the background) */
+}
+
+.button:pressed {
+    -fx-background-color: #d0d0d0; /* Pressed effect (darken the background) */
+}
+
+.button:focused {
+    -fx-border-color: #0078d4; /* Border color when focused (Windows blue) */
+}

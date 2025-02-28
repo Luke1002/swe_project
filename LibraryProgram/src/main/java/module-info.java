@@ -12,4 +12,6 @@ module com.swe.libraryprogram {
 
     opens com.swe.libraryprogram to javafx.fxml;
     exports com.swe.libraryprogram;
+    exports com.swe.libraryprogram.view;
+    opens com.swe.libraryprogram.view to javafx.fxml;
 }

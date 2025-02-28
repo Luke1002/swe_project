@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Pos?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.swe.libraryprogram.view.ErrorWindowController"
+            prefWidth="300" prefHeight="100">
+
+<Label fx:id="errorLabel" text="Errore!"
+       style="-fx-font-size: 16px; -fx-alignment: center;"
+       BorderPane.alignment="CENTER"/>
+
+<!-- Pulsante in basso a destra -->
+<HBox alignment="BOTTOM_RIGHT" spacing="10" BorderPane.alignment="BOTTOM_RIGHT">
+    <Button text="Close" onAction="#closeWindow"/>
+</HBox>
+</BorderPane>
