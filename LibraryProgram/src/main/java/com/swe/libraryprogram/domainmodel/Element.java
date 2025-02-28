@@ -21,7 +21,7 @@ public class Element {
     private LinkedList<Genre> genres;
 
 
-
+    /*
     public Element(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres) {
 
         this.id = id;
@@ -34,7 +34,7 @@ public class Element {
         this.genres = genres;
 
     }
-
+    */
     public Element(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres) {
 
         this.id = nextId++;
