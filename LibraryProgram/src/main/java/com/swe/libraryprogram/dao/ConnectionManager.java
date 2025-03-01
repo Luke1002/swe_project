@@ -22,7 +22,7 @@ public class ConnectionManager {
 
     public Boolean startingConnectionCheck() {
         try {
-            Class.forName("org.postgresql.Driver");
+            //Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(dbUrl, dbUser, dbPass);
             return connection.isValid(5);
         } catch (Exception e) {

@@ -2,11 +2,10 @@ package com.swe.libraryprogram;
 
 import com.swe.libraryprogram.dao.ConnectionManager;
 import com.swe.libraryprogram.dao.UserManager;
-import com.swe.libraryprogram.view.ErrorWindowController;
+import com.swe.libraryprogram.view.ErrorController;
 import com.swe.libraryprogram.view.HelloController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -21,21 +20,15 @@ public class HelloApplication extends Application {
         try{
             if(error){
                 FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("error-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 300, 150);
-                ErrorWindowController controller = fxmlLoader.getController();
-                controller.setErrorText("Connection not established");
-                stage.setMinHeight(240);
-                stage.setMinWidth(320);
-                stage.setTitle("Error");
-                stage.setScene(scene);
+                Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+                ErrorController controller = fxmlLoader.getController();
+                controller.setStage(stage, scene);
                 stage.show();
             }else{
                 FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 640, 480);
-                stage.setMinHeight(480);
-                stage.setMinWidth(640);
-                stage.setTitle("Library Management System");
-                stage.setScene(scene);
+                HelloController controller = fxmlLoader.getController();
+                controller.setStage(stage, scene);
                 stage.show();
             }
         }catch (Exception e){
@@ -46,7 +39,7 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         ConnectionManager conman  = ConnectionManager.getInstance();
-        if (conman.startingConnectionCheck()) {
+        if (!conman.startingConnectionCheck()) {
             UserManager userman = new UserManager(conman);
             String res = userman.getUser();
             HelloController.labelText =res;
@@ -55,5 +48,6 @@ public class HelloApplication extends Application {
         }
 
         launch();
+        System.out.println("a");
     }
 }

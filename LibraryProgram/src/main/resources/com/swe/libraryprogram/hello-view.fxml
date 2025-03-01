@@ -17,5 +17,5 @@
    <PasswordField />
 
     <Label fx:id="welcomeText" />
-    <Button onAction="#onHelloButtonClick" stylesheets="@../../../styles/button-style.css" text="Hello!" />
+    <Button onAction="#onHelloButtonClick" stylesheets="@../../../styles/button-style.css" text="Hello" />
 </VBox>
