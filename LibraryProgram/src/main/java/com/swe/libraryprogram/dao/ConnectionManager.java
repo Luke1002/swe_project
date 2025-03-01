@@ -1,4 +1,6 @@
 package com.swe.libraryprogram.dao;
+import com.swe.libraryprogram.domainmodel.User;
+
 import java.sql.*;
 
 public class ConnectionManager {
@@ -52,5 +54,31 @@ public class ConnectionManager {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean insertUser(User user) {
+
+        String query = "INSERT INTO users (email, password, name, surname, phone) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getName());
+            statement.setString(4, user.getSurname());
+            statement.setString(5, user.getPhone());
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0; // True se almeno una riga è stata inserita
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante l'inserimento dell'utente: " + e.getMessage());
+            return false;
+
+        }
+
+    }
+
+    //public boolean insertElement
 
 }
