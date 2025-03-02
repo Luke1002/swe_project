@@ -11,4 +11,32 @@
             fx:controller="com.swe.libraryprogram.view.HomeController"
             prefHeight="400.0" prefWidth="600.0">
 
+    <!-- Box per i filtri -->
+    <HBox layoutX="20.0" layoutY="20.0" spacing="10">
+        <Label text="Titolo:" />
+        <TextField fx:id="titleFilter" promptText="Inserisci titolo..." />
+
+        <Label text="Genere:" />
+        <TextField fx:id="genreFilter" promptText="Inserisci genere..." />
+
+        <Label text="Anno:" />
+        <TextField fx:id="yearFilter" promptText="Inserisci anno..." />
+
+        <Button text="Cerca" onAction="#onSearchButtonClick"/>
+    </HBox>
+
+    <TableView fx:id="elementsTable" layoutX="20.0" layoutY="20.0" prefWidth="560.0" prefHeight="360.0">
+
+        <columns>
+
+            <TableColumn fx:id="titleColumn" text="Titolo" prefWidth="150"/>
+            <TableColumn fx:id="releaseYearColumn" text="Anno di pubblicazione" prefWidth="100"/>
+            <TableColumn fx:id="quantityAvailableColumn" text="Disponibili" prefWidth="100"/>
+            <TableColumn fx:id="genresColumn" text="Generi" prefWidth="150"/>
+            <TableColumn fx:id="actionsColumn" text="Azioni" prefWidth="100"/>
+
+        </columns>
+
+    </TableView>
+
 </AnchorPane>

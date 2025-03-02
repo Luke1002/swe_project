@@ -61,7 +61,7 @@ public class Genre {
     private final String description;
 
 
-    Genre(String name, Integer code, String description) {
+    public Genre(String name, Integer code, String description) {
 
         this.name = name;
         this.code = code;

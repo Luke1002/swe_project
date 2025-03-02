@@ -5,7 +5,9 @@ import com.swe.libraryprogram.domainmodel.User;
 import java.sql.ResultSet;
 
 public class UserManager {
+
     ConnectionManager connectionManager;
+
 
     public UserManager(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
