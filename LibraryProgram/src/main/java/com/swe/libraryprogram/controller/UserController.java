@@ -4,22 +4,22 @@ package com.swe.libraryprogram.controller;
 
 
 import com.swe.libraryprogram.domainmodel.User;
-
-import java.util.LinkedList;
+import com.swe.libraryprogram.dao.UserManager;
 
 public class UserController {
 
+    private final UserManager userManager = new UserManager();
 
-    //TODO: ha un UserManager?
+    public Boolean login (String email, String password) {
+        return userManager.authenticate(email, password);
+    }
 
-    //TODO: public void getElementDetails () {}
-
-    public void login () {}
-
-    public void signup () {}
-
-    public void getIndex () {}
-
-    public void search () {}
-
+    public Boolean signup (String email, String password, String name, String surname, String phone) {
+        if(userManager.getUser(email) != null){
+            return false;
+        }
+        else{
+            return userManager.addUser(email, password, name, surname, phone);
+        }
+    }
 }
