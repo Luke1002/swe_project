@@ -10,50 +10,45 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.LoginController">
+<VBox alignment="CENTER" maxHeight="480.0" maxWidth="640.0" minHeight="480.0" minWidth="640.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.LoginController">
    <children>
-      <Label text="Library Manager Application">
+      <Label text="Library Application">
          <font>
-            <Font size="40.0" />
+            <Font size="35.0" />
          </font>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
       </Label>
-      <VBox alignment="CENTER_LEFT" prefHeight="226.0" prefWidth="545.0">
+      <HBox alignment="CENTER" minHeight="150.0" minWidth="350.0" prefHeight="280.0" prefWidth="580.0" style="-fx-background-color: cccccc; -fx-background-radius: 15;">
          <children>
-            <Label text="E-mail">
-               <VBox.margin>
-                  <Insets left="100.0" right="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextField prefHeight="25.0" prefWidth="400.0">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="100.0" right="100.0" top="5.0" />
-               </VBox.margin>
-            </TextField>
-            <Label text="Password">
-               <VBox.margin>
-                  <Insets left="100.0" right="5.0" />
-               </VBox.margin>
-            </Label>
-            <PasswordField prefHeight="25.0" prefWidth="524.0">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="100.0" right="100.0" top="5.0" />
-               </VBox.margin>
-            </PasswordField>
+            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="E-mail" />
+                  <TextField fx:id="emailField" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Password" />
+                  <PasswordField fx:id="passwordField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
+                  <Label fx:id="welcomeText" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="313.0" prefWidth="94.0">
+               <children>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onLoginButtonClick" prefHeight="28.0" prefWidth="60.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" text="Login">
+                     <VBox.margin>
+                        <Insets bottom="35.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onSignupButtonClick" prefHeight="28.0" prefWidth="60.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" text="Signup" />
+               </children>
+            </VBox>
          </children>
-      </VBox>
-      <HBox alignment="CENTER" prefHeight="71.0" prefWidth="640.0">
-         <children>
-            <Button mnemonicParsing="false" stylesheets="@../../../styles/button-style.css" text="Signup" onAction="#onSignupButtonClick">
-               <HBox.margin>
-                  <Insets bottom="40.0" left="10.0" right="40.0" top="40.0" />
-               </HBox.margin>
-            </Button>
-            <Button mnemonicParsing="false" text="Login" onAction="#onLoginButtonClick">
-               <HBox.margin>
-                  <Insets bottom="40.0" left="20.0" right="10.0" top="40.0" />
-               </HBox.margin>
-            </Button>
-         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="30.0" right="30.0" top="15.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>

@@ -1,10 +1,12 @@
 package com.swe.libraryprogram.view;
 
 
+import com.swe.libraryprogram.HelloApplication;
 import com.swe.libraryprogram.dao.UserManager;
 import com.swe.libraryprogram.dao.ConnectionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
@@ -25,7 +27,6 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
 
-
     @FXML
     protected void onLoginButtonClick() {
 
@@ -35,29 +36,31 @@ public class LoginController {
 
         if (email.isEmpty() || password.isEmpty()) {
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.NONE);
             alert.setTitle("Error");
-            alert.setHeaderText("Error");
             alert.setContentText("Email e password devono essere compilati");
+            ButtonType okButton = new ButtonType("Ok");
+            alert.getButtonTypes().add(okButton);
             alert.showAndWait();
             return;
-
         }
 
         if (userManager.authenticate(email, password)) {
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.NONE);
             alert.setTitle("Success");
-            alert.setHeaderText("Success");
             alert.setContentText("Login successful");
+            ButtonType okButton = new ButtonType("Ok");
+            alert.getButtonTypes().add(okButton);
             alert.showAndWait();
 
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.NONE);
             alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("Login failed");
+            alert.setContentText("Email e/o password errate");
+            ButtonType okButton = new ButtonType("Ok");
+            alert.getButtonTypes().add(okButton);
             alert.showAndWait();
 
         }
@@ -66,11 +69,10 @@ public class LoginController {
     @FXML
     private void onSignupButtonClick(ActionEvent event) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/signup-view.fxml"));
-        Parent root = loader.load();
+        FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("signup-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Ottiene la finestra attuale
-        stage.setScene(new Scene(root));
-        stage.setTitle("Registrazione");
+        stage.setScene(new Scene(loader.load(), stage.getMinWidth(), stage.getMinHeight()));
+        stage.setTitle("Signup");
         stage.show();
 
     }

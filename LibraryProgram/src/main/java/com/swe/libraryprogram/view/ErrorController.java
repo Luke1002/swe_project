@@ -3,8 +3,10 @@ package com.swe.libraryprogram.view;
 import com.swe.libraryprogram.HelloApplication;
 import com.swe.libraryprogram.view.*;
 import com.swe.libraryprogram.dao.ConnectionManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -15,33 +17,23 @@ public class ErrorController {
     @FXML
     private Label errorLabel;
 
-    public void setStage(Stage stage, Scene scene) {
-        setErrorText("a");
-        stage.setMinHeight(480);
-        stage.setMinWidth(640);
-        stage.setTitle("Error");
-        stage.setScene(scene);
-    }
-
     public void setErrorText(String message) {
         errorLabel.setText(message); // Imposta il messaggio di errore dinamicamente
     }
 
     @FXML
-    private void onQuit() {
-        Stage stage = (Stage) errorLabel.getScene().getWindow();
-        stage.close(); // Chiude la finestra
+    private void onQuit(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     @FXML
-    private void onTryAgain() throws IOException {
+    private void onTryAgain(ActionEvent event) throws IOException {
         ConnectionManager cM = ConnectionManager.getInstance();
         if(cM.startingConnectionCheck()){
-            Stage stage = (Stage) errorLabel.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
-            HelloController controller = fxmlLoader.getController();
-            controller.setStage(stage, scene);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+            stage.setScene(new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight()));
             stage.show();
         }
         else{
