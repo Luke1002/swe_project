@@ -39,7 +39,7 @@ public class HomeController {
     private TableColumn<Element, Integer> yearColumn;
 
 
-    private ElementManager elementManager = new ElementManager(ConnectionManager.getInstance());
+    private ElementManager elementManager = new ElementManager();
 
 
 

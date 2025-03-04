@@ -74,4 +74,6 @@ public class User {
         this.phone = phone;
     }
 
+    public Boolean isAdmin() { return isAdmin; }
+
 }
