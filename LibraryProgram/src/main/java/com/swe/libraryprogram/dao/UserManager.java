@@ -17,9 +17,9 @@ public class UserManager {
     public UserManager() {}
 
 
-    public User getUser(Integer email) {
+    public User getUser(String email) {
 
-        if (email == null || email <= 0) {
+        if (email == null) {
 
             System.err.println("ID utente non valido.");
             return null;
@@ -38,7 +38,7 @@ public class UserManager {
 
             }
 
-            stmt.setInt(1, email);
+            stmt.setString(1, email);
 
             try (ResultSet rs = stmt.executeQuery()) {
 
