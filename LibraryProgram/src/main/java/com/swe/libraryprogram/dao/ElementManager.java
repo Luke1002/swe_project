@@ -19,7 +19,7 @@ public class ElementManager {
     public ElementManager() {}
 
 
-    public Boolean addElement(Element element) {
+    public Integer addElement(Element element) {
 
         String query = "INSERT INTO elements (title, release_year, description, quantity, quantity_available, length) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -30,7 +30,7 @@ public class ElementManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return false;
+                return null;
 
             }
 
@@ -44,15 +44,25 @@ public class ElementManager {
             //Inserimento e ritorno del numero di righe inserite
             int rowsInserted = stmt.executeUpdate();
 
-            //Se è stata inserita almeno una riga, ritorna true
-            return rowsInserted > 0;
+            if (rowsInserted > 0) {
+
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);  // Restituisce l'ID generato
+                    }
+
+                }
+
+            }
 
         } catch (SQLException e) {
 
             e.printStackTrace();
-            return false;
 
         }
+
+        return null;
 
     }
 
@@ -229,7 +239,6 @@ public class ElementManager {
 
     }
 
-
     public List<Element> getAllElements() {
 
         List<Element> elements = new ArrayList<>();
@@ -280,6 +289,26 @@ public class ElementManager {
 
         return elements;
 
+    }
+
+    public List<Element> getElementsByGenre (Integer genreCode) {
+        //TODO implement here
+        return null;
+    }
+
+    public List<Element> getElementsByTitle (String title) {
+        //TODO implement here
+        return null;
+    }
+
+    public List<Element> getElementsByReleaseYear (Integer releaseYear) {
+        //TODO implement here
+        return null;
+    }
+
+    public List<Element> getElementsByLength (Integer length) {
+        //TODO implement here
+        return null;
     }
 
 }
