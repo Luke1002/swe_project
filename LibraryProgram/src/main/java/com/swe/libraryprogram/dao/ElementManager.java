@@ -249,7 +249,7 @@ public class ElementManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return elements; //Lista vuota se la connessione è invalida
+                return elements;
 
             }
 
@@ -292,23 +292,240 @@ public class ElementManager {
     }
 
     public List<Element> getElementsByGenre (Integer genreCode) {
-        //TODO implement here
-        return null;
+
+        if (genreCode == null || genreCode <= 0) {
+
+            System.err.println("Codice genere non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT e.*, g.genre_code, g.genre_name FROM elements e JOIN elements_genre eg ON e.id = eg.element_id JOIN genres g ON eg.genre_code = g.genre_code WHERE g.genre_code = ?";
+        //TODO: fare tabella
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return null;
+
+            }
+
+            stmt.setInt(1, genreCode);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                List<Element> elements = new ArrayList<>();
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Element element = new Element(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres
+                    );
+
+                    elements.add(element);
+
+                }
+
+                return elements;
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il recupero degli elementi per genere: " + e.getMessage());
+            return null;
+
+        }
+
     }
 
     public List<Element> getElementsByTitle (String title) {
-        //TODO implement here
-        return null;
+
+        if (title == null || title.isEmpty()) {
+
+            System.err.println("Titolo non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements WHERE title = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return null;
+
+            }
+
+            stmt.setString(1, title);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                List<Element> elements = new ArrayList<>();
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Element element = new Element(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres
+                    );
+
+                    elements.add(element);
+
+                }
+
+                return elements;
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il recupero degli elementi per titolo: " + e.getMessage());
+            return null;
+
+        }
+
     }
 
     public List<Element> getElementsByReleaseYear (Integer releaseYear) {
-        //TODO implement here
-        return null;
+
+        if (releaseYear == null || releaseYear <= 0) {
+
+            System.err.println("Anno di rilascio non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements WHERE release_year = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return null;
+
+            }
+
+            stmt.setInt(1, releaseYear);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                List<Element> elements = new ArrayList<>();
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Element element = new Element(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres
+                    );
+
+                    elements.add(element);
+
+                }
+
+                return elements;
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il recupero degli elementi per anno di rilascio: " + e.getMessage());
+            return null;
+
+        }
+
     }
 
     public List<Element> getElementsByLength (Integer length) {
-        //TODO implement here
-        return null;
+
+        if (length == null || length <= 0) {
+
+            System.err.println("Durata non valida.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements WHERE length = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return null;
+
+            }
+
+            stmt.setInt(1, length);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                List<Element> elements = new ArrayList<>();
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Element element = new Element(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres
+                    );
+
+                    elements.add(element);
+
+                }
+
+                return elements;
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il recupero degli elementi per durata: " + e.getMessage());
+            return null;
+
+        }
+
     }
 
 }

@@ -19,9 +19,9 @@ public class DigitalMediaManager extends ElementManager {
         return false;
     }
 
-    public Boolean updateDigitalMedia() {
+    public Boolean updateDigitalMedia(DigitalMedia dm) {
         // TODO implement here
-        return false;
+        return null;
     }
 
     public DigitalMedia getDigitalMedia(Integer id) {

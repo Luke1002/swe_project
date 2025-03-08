@@ -58,6 +58,62 @@ public class BookManager extends ElementManager {
 
     }
 
+    //Metodo per aggiornare un libro
+    public Boolean updateBook(Book book) {
+
+        if (book == null) {
+
+            System.err.println("Libro non valido.");
+            return false;
+
+        }
+
+        if (book.getId() == null || book.getId() <= 0) {
+
+            System.err.println("ID non valido.");
+            return false;
+
+        }
+
+        if (!updateElement(book)) {
+
+            System.err.println("Errore durante l'aggiornamento dell'elemento base.");
+            return false;
+
+        }
+
+        String updateBookQuery = "UPDATE books SET isbn = ?, author = ?, publisher = ?, edition = ? WHERE id = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement bookStmt = connection.prepareStatement(updateBookQuery)) {
+
+            bookStmt.setInt(1, book.getIsbn());
+            bookStmt.setString(2, book.getAuthor());
+            bookStmt.setString(3, book.getPublisher());
+            bookStmt.setInt(4, book.getEdition());
+            bookStmt.setInt(5, book.getId());
+
+            int rowsUpdated = bookStmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                return true;  //L'aggiornamento è andato a buon fine
+
+            } else {
+                System.err.println("Errore: il libro non è stato aggiornato.");
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore SQL durante l'aggiornamento del libro: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        return false;
+
+    }
+
     // Metodo per ottenere un libro tramite ID
     public Book getBook(Integer id) {
 
@@ -122,6 +178,62 @@ public class BookManager extends ElementManager {
         }
 
         return null;
+
+    }
+
+    //Metodo per ottenere tutti i libri
+    public List<Book> getAllBooks() {
+
+        List<Book> books = new ArrayList<>();
+
+        String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return books;
+
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Book book = new Book(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres,
+                            rs.getInt("isbn"),
+                            rs.getString("author"),
+                            rs.getString("publisher"),
+                            rs.getInt("edition")
+                    );
+
+                    books.add(book);
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        return books;
 
     }
 
@@ -255,12 +367,19 @@ public class BookManager extends ElementManager {
 
     }
 
-    //Metodo per ottenere tutti i libri
-    public List<Book> getAllBooks() {
+    // Metodo per ottenere i libri di una certa edizione
+    public List<Book> getBooksByEdition(Integer edition) {
 
         List<Book> books = new ArrayList<>();
 
-        String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id";
+        if (edition == null || edition <= 0) {
+
+            System.err.println("Edizione non valida.");
+            return books;
+
+        }
+
+        String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.edition = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -271,6 +390,8 @@ public class BookManager extends ElementManager {
                 return books;
 
             }
+
+            stmt.setInt(1, edition);
 
             try (ResultSet rs = stmt.executeQuery()) {
 
@@ -311,72 +432,69 @@ public class BookManager extends ElementManager {
 
     }
 
-    //Metodo per aggiornare un libro
-    public Boolean updateBook(Book book) {
+    // Metodo per ottenere i libri via ISBN
+    public List<Book> getBooksByIsbn(Integer isbn) {
 
-        if (book == null) {
+        List<Book> books = new ArrayList<>();
 
-            System.err.println("Libro non valido.");
-            return false;
+        if (isbn == null || isbn <= 0) {
 
-        }
-
-        if (book.getId() == null || book.getId() <= 0) {
-
-            System.err.println("ID non valido.");
-            return false;
+            System.err.println("ISBN non valido.");
+            return books;
 
         }
 
-        if (!updateElement(book)) {
-
-            System.err.println("Errore durante l'aggiornamento dell'elemento base.");
-            return false;
-
-        }
-
-        String updateBookQuery = "UPDATE books SET isbn = ?, author = ?, publisher = ?, edition = ? WHERE id = ?";
+        String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.isbn = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement bookStmt = connection.prepareStatement(updateBookQuery)) {
+             PreparedStatement stmt = connection.prepareStatement(query)) {
 
-            bookStmt.setInt(1, book.getIsbn());
-            bookStmt.setString(2, book.getAuthor());
-            bookStmt.setString(3, book.getPublisher());
-            bookStmt.setInt(4, book.getEdition());
-            bookStmt.setInt(5, book.getId());
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-            int rowsUpdated = bookStmt.executeUpdate();
+                System.err.println("Connessione al database non valida.");
+                return books;
 
-            if (rowsUpdated > 0) {
-                return true;  //L'aggiornamento è andato a buon fine
+            }
 
-            } else {
-                System.err.println("Errore: il libro non è stato aggiornato.");
+            stmt.setInt(1, isbn);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Book book = new Book(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres,
+                            rs.getInt("isbn"),
+                            rs.getString("author"),
+                            rs.getString("publisher"),
+                            rs.getInt("edition")
+                    );
+
+                    books.add(book);
+
+                }
 
             }
 
         } catch (SQLException e) {
 
-            System.err.println("Errore SQL durante l'aggiornamento del libro: " + e.getMessage());
+            System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
             e.printStackTrace();
 
         }
 
-        return false;
+        return books;
 
-    }
-
-    // Metodo per ottenere i libri di una certa edizione
-    public List<Book> getBooksByEdition(Integer edition) {
-        //TODO implement here
-        return null;
-    }
-
-    // Metodo per ottenere i libri via ISBN
-    public List<Book> getBooksByIsbn(Integer isbn) {
-        //TODO implement here
-        return null;
     }
 
 }
