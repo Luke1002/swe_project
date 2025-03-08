@@ -229,7 +229,7 @@ public class UserManager {
 
         }
 
-    }   //TODO: è necessario?
+    }
 
     public Boolean removeUser(String email) {
 

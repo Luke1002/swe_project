@@ -367,4 +367,62 @@ public class ElementManager {
 
     }
 
+    public Boolean isElementAvailable(Integer id) {
+
+        if (id == null || id <= 0) {
+
+            System.err.println("ID non valido.");
+            return false;
+
+        }
+
+        String query = "SELECT quantity_available FROM elements WHERE id = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return false;
+
+            }
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                if (rs.next()) {
+
+                    int quantityAvailable = rs.getInt("quantity_available");
+
+                    if (quantityAvailable > 0) {
+
+                        return true;
+
+                    } else {
+
+                        System.err.println("Elemento non disponibile.");
+                        return false;
+
+                    }
+
+                } else {
+
+                    System.err.println("Elemento non trovato.");
+                    return false;
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il controllo di disponibilità dell'elemento: " + e.getMessage());
+            return false;
+
+        }
+
+    }
+
 }

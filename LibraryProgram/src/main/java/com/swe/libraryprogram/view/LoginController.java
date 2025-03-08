@@ -32,7 +32,7 @@ public class LoginController {
 
         String email = emailField.getText();
         String password = passwordField.getText();
-        UserManager userManager = new UserManager(ConnectionManager.getInstance());
+        UserManager userManager = new UserManager();
 
         if (email.isEmpty() || password.isEmpty()) {
 

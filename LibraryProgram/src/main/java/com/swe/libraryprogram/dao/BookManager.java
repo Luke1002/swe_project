@@ -5,6 +5,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 
 
@@ -115,7 +117,7 @@ public class BookManager extends ElementManager {
     }
 
     // Metodo per ottenere un libro tramite ID
-    public Book getBook(Integer id) {
+    public List<Element> getBook(Integer id) {
 
         if (id == null || id <= 0) {
 
@@ -126,58 +128,7 @@ public class BookManager extends ElementManager {
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE e.id = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return null;
-
-            }
-
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-
-                    GenreManager genreManager = new GenreManager();
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(id);
-
-                    Book book = new Book(
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres,
-                            rs.getInt("isbn"),
-                            rs.getString("author"),
-                            rs.getString("publisher"),
-                            rs.getInt("edition")
-                    );
-
-                    return book;
-
-                } else {
-
-                    System.err.println("Libro non trovato con ID: " + id);
-                    return null;
-
-                }
-
-            }
-
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero del libro: " + e.getMessage());
-            e.printStackTrace();
-
-        }
-
-        return null;
+        return executeQueryWithSingleValue(query, id);
 
     }
 
@@ -238,228 +189,87 @@ public class BookManager extends ElementManager {
     }
 
     // Metodo per ottenere tutti i libri di un autore specifico
-    public List<Book> getBooksByAuthor(String author) {
-
-        List<Book> books = new ArrayList<>();
+    public List<Element> getBooksByAuthor(String author) {
 
         if (author == null || author.isEmpty()) {
 
             System.err.println("Autore non valido.");
-            return books;
+            return null;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.author = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return books;
-
-            }
-
-            stmt.setString(1, author);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Book book = new Book(
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres,
-                            rs.getInt("isbn"),
-                            rs.getString("author"),
-                            rs.getString("publisher"),
-                            rs.getInt("edition")
-                    );
-
-                    books.add(book);
-
-                }
-
-            }
-
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
-            e.printStackTrace();
-
-        }
-
-        return books;
+        return executeQueryWithSingleValue(query, author);
 
     }
 
     // Metodo per ottenere tutti i libri di una casa editrice specifica
-    public List<Book> getBooksByPublisher(String publisher) {
-
-        List<Book> books = new ArrayList<>();
+    public List<Element> getBooksByPublisher(String publisher) {
 
         if (publisher == null || publisher.isEmpty()) {
 
             System.err.println("Casa editrice non valida.");
-            return books;
+            return null;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.publisher = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return books;
-
-            }
-
-            stmt.setString(1, publisher);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Book book = new Book(
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres,
-                            rs.getInt("isbn"),
-                            rs.getString("author"),
-                            rs.getString("publisher"),
-                            rs.getInt("edition")
-                    );
-
-                    books.add(book);
-
-                }
-
-            }
-
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
-            e.printStackTrace();
-
-        }
-
-        return books;
+        return executeQueryWithSingleValue(query, publisher);
 
     }
 
     // Metodo per ottenere i libri di una certa edizione
-    public List<Book> getBooksByEdition(Integer edition) {
-
-        List<Book> books = new ArrayList<>();
+    public List<Element> getBooksByEdition(Integer edition) {
 
         if (edition == null || edition <= 0) {
 
             System.err.println("Edizione non valida.");
-            return books;
+            return null;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.edition = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return books;
-
-            }
-
-            stmt.setInt(1, edition);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Book book = new Book(
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres,
-                            rs.getInt("isbn"),
-                            rs.getString("author"),
-                            rs.getString("publisher"),
-                            rs.getInt("edition")
-                    );
-
-                    books.add(book);
-
-                }
-
-            }
-
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
-            e.printStackTrace();
-
-        }
-
-        return books;
+        return executeQueryWithSingleValue(query, edition);
 
     }
 
     // Metodo per ottenere i libri via ISBN
-    public List<Book> getBooksByIsbn(Integer isbn) {
-
-        List<Book> books = new ArrayList<>();
+    public List<Element> getBooksByIsbn(Integer isbn) {
 
         if (isbn == null || isbn <= 0) {
 
             System.err.println("ISBN non valido.");
-            return books;
+            return null;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.isbn = ?";
 
+        return executeQueryWithSingleValue(query, isbn);
+
+    }
+
+    @Override
+    public List<Element> executeQueryWithSingleValue(String query, Object value) {
+
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return books;
+                return null;
 
             }
 
-            stmt.setInt(1, isbn);
+            stmt.setObject(1, value);
 
             try (ResultSet rs = stmt.executeQuery()) {
 
+                List<Element> elements = new ArrayList<>();
                 GenreManager genreManager = new GenreManager();
 
                 while (rs.next()) {
@@ -480,9 +290,11 @@ public class BookManager extends ElementManager {
                             rs.getInt("edition")
                     );
 
-                    books.add(book);
+                    elements.add(book);
 
                 }
+
+                return elements;
 
             }
 
@@ -493,7 +305,7 @@ public class BookManager extends ElementManager {
 
         }
 
-        return books;
+        return null;
 
     }
 
