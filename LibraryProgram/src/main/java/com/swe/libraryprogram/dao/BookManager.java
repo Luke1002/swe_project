@@ -1,6 +1,5 @@
 package com.swe.libraryprogram.dao;
 
-import com.swe.libraryprogram.domainmodel.Book;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,6 +7,7 @@ import java.util.List;
 
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
+import com.swe.libraryprogram.domainmodel.Book;
 
 
 public class BookManager extends ElementManager {
@@ -98,7 +98,7 @@ public class BookManager extends ElementManager {
             int rowsUpdated = bookStmt.executeUpdate();
 
             if (rowsUpdated > 0) {
-                return true;  //L'aggiornamento è andato a buon fine
+                return true;
 
             } else {
                 System.err.println("Errore: il libro non è stato aggiornato.");

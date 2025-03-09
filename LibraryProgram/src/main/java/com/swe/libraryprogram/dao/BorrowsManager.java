@@ -24,15 +24,6 @@ public class BorrowsManager {
 
         }
 
-        ElementManager elementManager = new ElementManager();
-
-        if (!elementManager.isElementAvailable(element_id)) {
-
-            System.err.println("Elemento non disponibile per il prestito.");
-            return false;
-
-        }
-
         String query = "INSERT INTO borrows (element_id, user_id) VALUES (?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -48,21 +39,8 @@ public class BorrowsManager {
             stmt.setInt(1, element_id);
             stmt.setString(2, user_id);
 
-            int rowsInserted = stmt.executeUpdate();
-
-            if (rowsInserted > 0) {
-
-                Element elementToUpdate = elementManager.getElement(element_id);
-                elementToUpdate.setQuantityAvailable(elementToUpdate.getQuantityAvailable() - 1);
-                elementManager.updateElement(elementToUpdate);
-                return true;
-
-            } else {
-
-                System.err.println("Errore: il prestito non è stato registrato.");
-                return false;
-
-            }
+            stmt.executeUpdate();
+            return true;
 
         } catch (SQLException e) {
 
@@ -83,8 +61,6 @@ public class BorrowsManager {
 
         }
 
-        ElementManager elementManager = new ElementManager();
-
         String query = "DELETE FROM borrows WHERE element_id = ? AND user_id = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -100,21 +76,8 @@ public class BorrowsManager {
             stmt.setInt(1, element_id);
             stmt.setString(2, user_id);
 
-            int rowsDeleted = stmt.executeUpdate();
-
-            if (rowsDeleted > 0) {
-
-                Element elementToUpdate = elementManager.getElement(element_id);
-                elementToUpdate.setQuantityAvailable(elementToUpdate.getQuantityAvailable() + 1);
-                elementManager.updateElement(elementToUpdate);
-                return true;
-
-            } else {
-
-                System.err.println("Errore: il prestito non è stato rimosso.");
-                return false;
-
-            }
+            stmt.executeUpdate();
+            return true;
 
         } catch (SQLException e) {
 
