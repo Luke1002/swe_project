@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.Icon?>
-<?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane minHeight="480.0" minWidth="640.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane minHeight="480.0" minWidth="640.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="41.0" prefWidth="640.0" style="-fx-border-color: #000000;" />
       <VBox layoutY="42.0" prefHeight="438.0" prefWidth="640.0" style="-fx-border-color: #000000;">
@@ -55,7 +52,7 @@
                         <Insets />
                      </HBox.margin>
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Valutazione">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Valutazione:">
                            <VBox.margin>
                               <Insets left="10.0" top="20.0" />
                            </VBox.margin>
@@ -63,41 +60,50 @@
                               <Font size="18.0" />
                            </font>
                         </Text>
-                        <ToggleButtonGroup fx:id="starToggle" selectionType="SINGLE">
-                            <toggles>
-                                <ToggleButton fx:id="star1">
-                                    <graphic>
-                                        <Icon content="FORMAT_ALIGN_LEFT" />
-                                    </graphic>
-                                </ToggleButton>
-                                <ToggleButton fx:id="star2" selected="true">
-                                    <graphic>
-                                        <Icon content="FORMAT_ALIGN_CENTER" />
-                                    </graphic>
-                                 <padding>
-                                    <Insets left="5.0" right="5.0" />
-                                 </padding>
-                                </ToggleButton>
-                                <ToggleButton fx:id="star3">
-                                    <graphic>
-                                        <Icon content="FORMAT_ALIGN_RIGHT" />
-                                    </graphic>
-                                </ToggleButton>
-                              <ToggleButton fx:id="star4">
-                                 <graphic>
-                                    <Icon content="FORMAT_ALIGN_LEFT" />
-                                 </graphic>
-                              </ToggleButton>
-                              <ToggleButton fx:id="star5">
-                                 <graphic>
-                                    <Icon content="FORMAT_ALIGN_LEFT" />
-                                 </graphic>
-                              </ToggleButton>
-                            </toggles>
-                           <VBox.margin>
-                              <Insets left="10.0" top="20.0" />
-                           </VBox.margin>
-                        </ToggleButtonGroup>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button id="star1" fx:id="fxstar1" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star2" fx:id="fxstar2" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star3" fx:id="fxstar3" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star4" fx:id="fxstar4" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star5" fx:id="fxstar5" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Button fx:id="confirmButton" mnemonicParsing="false" style="-fx-background-color: #ffb000;" text="Button">
