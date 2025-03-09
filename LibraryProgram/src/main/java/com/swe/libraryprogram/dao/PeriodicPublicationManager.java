@@ -140,8 +140,59 @@ public class PeriodicPublicationManager extends ElementManager {
     }
 
     public List<PeriodicPublication> getAllPeriodicPublications() {
-        // TODO implement here
-        return null;
+
+        List<PeriodicPublication> periodics = new ArrayList<>();
+
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return null;
+
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    PeriodicPublication periodic = new PeriodicPublication(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres,
+                            rs.getString("publisher"),
+                            rs.getInt("frequency"),
+                            rs.getInt("release_month"),
+                            rs.getInt("release_day"),
+                            rs.getInt("issn")
+                    );
+
+                    periodics.add(periodic);
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il recupero dei periodici: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        return periodics;
+
     }
 
     public List<PeriodicPublication> getPeriodicPublicationsByPublisher(String publisher) {
