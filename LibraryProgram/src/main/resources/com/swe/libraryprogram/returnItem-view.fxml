@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane minHeight="480.0" minWidth="640.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="41.0" prefWidth="640.0" style="-fx-border-color: #000000;" />
+      <VBox layoutY="42.0" prefHeight="438.0" prefWidth="640.0" style="-fx-border-color: #000000;">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Restituzione...">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Text>
+            <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="312.0" prefWidth="600.0" style="-fx-border-color: #000000;">
+               <children>
+                  <VBox prefHeight="310.0" prefWidth="325.0">
+                     <opaqueInsets>
+                        <Insets top="-20.0" />
+                     </opaqueInsets>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recensione dettagliata (opzionale)">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </Text>
+                        <TextArea minHeight="-Infinity" minWidth="-Infinity" prefHeight="191.0" prefWidth="322.0" promptText="descrizione...">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="187.0" prefWidth="312.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Valutazione:">
+                           <VBox.margin>
+                              <Insets left="10.0" top="20.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button id="star1" fx:id="fxstar1" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star2" fx:id="fxstar2" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star3" fx:id="fxstar3" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star4" fx:id="fxstar4" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="star5" fx:id="fxstar5" mnemonicParsing="false" style="-fx-background-color: trasparent; -fx-border-color: trasparent;" text="☆">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="confirmButton" mnemonicParsing="false" style="-fx-background-color: #ffb000;" text="Button">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="cancelButton" mnemonicParsing="false" style="-fx-background-color: #fffff0;" text="Button" textFill="#381515">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="100.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</Pane>
