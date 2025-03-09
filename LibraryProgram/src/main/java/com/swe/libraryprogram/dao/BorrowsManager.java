@@ -1,12 +1,16 @@
 package com.swe.libraryprogram.dao;
 
+import com.swe.libraryprogram.domainmodel.Element;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 
 
 public class BorrowsManager {
+
 
     public BorrowsManager() {}
 
@@ -48,15 +52,9 @@ public class BorrowsManager {
 
             if (rowsInserted > 0) {
 
-                String updateQuery = "UPDATE elements SET quantity_available = quantity_available - 1 WHERE id = ?";
-
-                try (PreparedStatement stmtUpdate = connection.prepareStatement(updateQuery)) {
-
-                    stmtUpdate.setInt(1, element_id);
-                    stmtUpdate.executeUpdate();
-
-                }
-
+                Element elementToUpdate = elementManager.getElement(element_id);
+                elementToUpdate.setQuantityAvailable(elementToUpdate.getQuantityAvailable() - 1);
+                elementManager.updateElement(elementToUpdate);
                 return true;
 
             } else {
@@ -85,6 +83,8 @@ public class BorrowsManager {
 
         }
 
+        ElementManager elementManager = new ElementManager();
+
         String query = "DELETE FROM borrows WHERE element_id = ? AND user_id = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -104,15 +104,9 @@ public class BorrowsManager {
 
             if (rowsDeleted > 0) {
 
-                String updateQuery = "UPDATE elements SET quantity_available = quantity_available + 1 WHERE id = ?";
-
-                try (PreparedStatement stmtUpdate = connection.prepareStatement(updateQuery)) {
-
-                    stmtUpdate.setInt(1, element_id);
-                    stmtUpdate.executeUpdate();
-
-                }
-
+                Element elementToUpdate = elementManager.getElement(element_id);
+                elementToUpdate.setQuantityAvailable(elementToUpdate.getQuantityAvailable() + 1);
+                elementManager.updateElement(elementToUpdate);
                 return true;
 
             } else {

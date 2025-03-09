@@ -117,7 +117,7 @@ public class BookManager extends ElementManager {
     }
 
     // Metodo per ottenere un libro tramite ID
-    public List<Element> getBook(Integer id) {
+    public Element getBook(Integer id) {
 
         if (id == null || id <= 0) {
 
@@ -128,7 +128,8 @@ public class BookManager extends ElementManager {
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE e.id = ?";
 
-        return executeQueryWithSingleValue(query, id);
+        List<Element> elements = executeQueryWithSingleValue(query, id);
+        return elements.get(0);
 
     }
 

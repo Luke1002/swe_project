@@ -144,6 +144,7 @@ public class ElementManager {
                 stmt.setInt(4, element.getQuantity());
                 stmt.setInt(5, element.getQuantityAvailable());
                 stmt.setInt(6, element.getLength());
+                stmt.setInt(7, element.getId());
 
                 int rowsUpdated = stmt.executeUpdate();
 
@@ -179,7 +180,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getElement(Integer id){
+    public Element getElement(Integer id){
 
         if (id == null || id <= 0) {
 
@@ -190,7 +191,8 @@ public class ElementManager {
 
         String query = "SELECT * FROM elements WHERE id = ?";
 
-        return executeQueryWithSingleValue(query, id);
+        List<Element> elements = executeQueryWithSingleValue(query, id);
+        return elements.get(0);
 
     }
 
