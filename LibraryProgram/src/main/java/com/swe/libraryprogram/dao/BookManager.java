@@ -41,9 +41,11 @@ public class BookManager extends ElementManager {
             int rowsInserted = bookStmt.executeUpdate();
 
             if (rowsInserted > 0) {
+
                 return true;
 
             } else {
+
                 System.err.println("Errore: il libro non è stato inserito.");
                 return false;
 
@@ -62,13 +64,6 @@ public class BookManager extends ElementManager {
 
     //Metodo per aggiornare un libro
     public Boolean updateBook(Book book) {
-
-        if (book == null) {
-
-            System.err.println("Libro non valido.");
-            return false;
-
-        }
 
         if (book.getId() == null || book.getId() <= 0) {
 

@@ -13,7 +13,7 @@ public class DigitalMedia extends Element{
 
 
 
-    public DigitalMedia(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String producer, Integer length1, Integer ageRating, String director) {
+    public DigitalMedia(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String producer, Integer ageRating, String director) {
 
         super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
 

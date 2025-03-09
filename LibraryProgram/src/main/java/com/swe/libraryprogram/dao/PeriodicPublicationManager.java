@@ -1,6 +1,5 @@
 package com.swe.libraryprogram.dao;
 
-import com.swe.libraryprogram.domainmodel.Book;
 import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.PeriodicPublication;
 import com.swe.libraryprogram.domainmodel.Element;
@@ -195,29 +194,79 @@ public class PeriodicPublicationManager extends ElementManager {
 
     }
 
-    public List<PeriodicPublication> getPeriodicPublicationsByPublisher(String publisher) {
-        // TODO implement here
-        return null;
+    public List<Element> getPeriodicPublicationsByPublisher(String publisher) {
+
+        if (publisher == null || publisher.isEmpty()) {
+
+            System.err.println("Editore non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE publisher = ?";
+
+        return executeQueryWithSingleValue(query, publisher);
+
     }
 
-    public List<PeriodicPublication> getPeriodicPublicationsByFrequency(Integer frequency) {
-        // TODO implement here
-        return null;
+    public List<Element> getPeriodicPublicationsByFrequency(Integer frequency) {
+
+        if (frequency == null || frequency <= 0) {
+
+            System.err.println("Frequenza non valida.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE frequency = ?";
+
+        return executeQueryWithSingleValue(query, frequency);
+
     }
 
-    public List<PeriodicPublication> getPeriodicPublicationsByReleaseMonth(Integer releaseMonth) {
-        // TODO implement here
-        return null;
+    public List<Element> getPeriodicPublicationsByReleaseMonth(Integer releaseMonth) {
+
+        if (releaseMonth == null || releaseMonth <= 0 || releaseMonth > 12) {
+
+            System.err.println("Mese di rilascio non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE release_month = ?";
+
+        return executeQueryWithSingleValue(query, releaseMonth);
+
     }
 
-    public List<PeriodicPublication> getPeriodicPublicationsByReleaseDay(Integer releaseDay) {
-        // TODO implement here
-        return null;
+    public List<Element> getPeriodicPublicationsByReleaseDay(Integer releaseDay) {
+
+        if (releaseDay == null || releaseDay <= 0 || releaseDay > 31) {
+
+            System.err.println("Giorno di rilascio non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE release_day = ?";
+
+        return executeQueryWithSingleValue(query, releaseDay);
+
     }
 
-    public List<PeriodicPublication> getPeriodicPublicationsByIssn(Integer issn) {
-        // TODO implement here
-        return null;
+    public List<Element> getPeriodicPublicationsByIssn(Integer issn) {
+
+        if (issn == null || issn <= 0) {
+
+            System.err.println("ISSN non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE issn = ?";
+
+        return executeQueryWithSingleValue(query, issn);
+
     }
 
     @Override
