@@ -19,7 +19,7 @@ public class UserController {
             return false;
         }
         else{
-            return userManager.addUser(email, password, name, surname, phone);
+            return userManager.addUser(new User(email, password, name, surname, phone));
         }
     }
 }

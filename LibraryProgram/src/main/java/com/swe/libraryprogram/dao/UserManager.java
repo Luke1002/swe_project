@@ -129,16 +129,16 @@ public class UserManager {
 
     }
 
-    public Boolean addUser(String email, String password, String name, String surname, String phone) {
+    public Boolean addUser(User user) {
 
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+        if (user == null) {
 
-            System.err.println("Dati non validi per l'utente.");
+            System.err.println("Errore: utente nullo");
             return false;
 
         }
 
-        String query = "INSERT INTO users (email, password, name, surname, phone) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (email, password, name, surname, phone, isadmin) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -150,11 +150,12 @@ public class UserManager {
 
             }
 
-            stmt.setString(1, email);
-            stmt.setString(2, password); // Per semplicità, senza hashing
-            stmt.setString(3, name);
-            stmt.setString(4, surname);
-            stmt.setString(5, phone);
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getName());
+            stmt.setString(4, user.getSurname());
+            stmt.setString(5, user.getPhone());
+            stmt.setBoolean(6, user.isAdmin());
 
             int rowsInserted = stmt.executeUpdate();
 
@@ -179,11 +180,11 @@ public class UserManager {
 
     }
 
-    public Boolean updateUser(String email, String password, String name, String surname, String phone, Boolean isAdmin) {
+    public Boolean updateUser(User user) {
 
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+        if (user == null) {
 
-            System.err.println("Dati non validi per l'utente.");
+            System.err.println("Errore: utente nullo");
             return false;
 
         }
@@ -200,12 +201,12 @@ public class UserManager {
 
             }
 
-            stmt.setString(1, password);
-            stmt.setString(2, name);
-            stmt.setString(3, surname);
-            stmt.setString(4, phone);
-            stmt.setBoolean(5, isAdmin);
-            stmt.setString(6, email);
+            stmt.setString(1, user.getPassword());
+            stmt.setString(2, user.getName());
+            stmt.setString(3, user.getSurname());
+            stmt.setString(4, user.getPhone());
+            stmt.setBoolean(5, user.isAdmin());
+            stmt.setString(6, user.getEmail());
 
             int rowsUpdated = stmt.executeUpdate();
 

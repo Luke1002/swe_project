@@ -144,6 +144,7 @@ public class ElementManager {
                 stmt.setInt(4, element.getQuantity());
                 stmt.setInt(5, element.getQuantityAvailable());
                 stmt.setInt(6, element.getLength());
+                stmt.setInt(7, element.getId());
 
                 int rowsUpdated = stmt.executeUpdate();
 
@@ -190,8 +191,16 @@ public class ElementManager {
 
         String query = "SELECT * FROM elements WHERE id = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        List<Element> elements = executeQueryWithSingleValue(query, id);
+        return elements.get(0);
+
+    }
+
+    public List<Element> getAllElements() {
+
+        String query = "SELECT * FROM elements";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection()) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -200,69 +209,15 @@ public class ElementManager {
 
             }
 
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-
-                    GenreManager genreManager = new GenreManager();
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(id);
-
-                    Element element = new Element(
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres
-                    );
-
-                    return element;
-
-                } else {
-
-                    System.err.println("Elemento non trovato con ID: " + id);
-                    return null;
-
-                }
-
-            }
-
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dell'elemento: " + e.getMessage());
-            return null;
-
-        }
-
-    }
-
-    public List<Element> getAllElements() {
-
-        List<Element> elements = new ArrayList<>();
-        String query = "SELECT * FROM elements";
-
-        try (Connection connection = ConnectionManager.getInstance().getConnection()) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return elements; //Lista vuota se la connessione è invalida
-
-            }
-
             try (PreparedStatement stmt = connection.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {
 
+                List<Element> elements = new ArrayList<>();
                 GenreManager genreManager = new GenreManager();
 
                 while (rs.next()) {
 
-                    Integer elementId = rs.getInt("id");
-
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(elementId);
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Element element = new Element(
                             rs.getString("title"),
@@ -278,6 +233,8 @@ public class ElementManager {
 
                 }
 
+                return elements;
+
             }
 
         } catch (SQLException e) {
@@ -287,28 +244,187 @@ public class ElementManager {
 
         }
 
-        return elements;
+        return null;
 
     }
 
-    public List<Element> getElementsByGenre (Integer genreCode) {
-        //TODO implement here
-        return null;
+    public List<Element> getElementsByGenre (String genreName) {
+
+        if (genreName == null || genreName.isEmpty()) {
+
+            System.err.println("Genere non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT e.* FROM elements e " +
+                "JOIN elements_genre eg ON e.id = eg.element_id " +
+                "JOIN genres g ON eg.genre_code = g.genre_code " +
+                "WHERE g.genre_name = ?";
+        //TODO: fare tabella
+
+        return executeQueryWithSingleValue(query, genreName);
+
     }
 
     public List<Element> getElementsByTitle (String title) {
-        //TODO implement here
-        return null;
+
+        if (title == null || title.isEmpty()) {
+
+            System.err.println("Titolo non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements WHERE title = ?";
+
+        return executeQueryWithSingleValue(query, title);
+
     }
 
     public List<Element> getElementsByReleaseYear (Integer releaseYear) {
-        //TODO implement here
-        return null;
+
+        if (releaseYear == null || releaseYear <= 0) {
+
+            System.err.println("Anno di rilascio non valido.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements WHERE release_year = ?";
+
+        return executeQueryWithSingleValue(query, releaseYear);
+
     }
 
     public List<Element> getElementsByLength (Integer length) {
-        //TODO implement here
-        return null;
+
+        if (length == null || length <= 0) {
+
+            System.err.println("Durata non valida.");
+            return null;
+
+        }
+
+        String query = "SELECT * FROM elements WHERE length = ?";
+
+        return executeQueryWithSingleValue(query, length);
+
+    }
+
+    public List<Element> executeQueryWithSingleValue(String query, Object value) {
+
+        if (query == null || query.isEmpty() || value == null) {
+
+            System.err.println("Query non valida.");
+            return null;
+
+        }
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return null;
+
+            }
+
+            stmt.setObject(1, value);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                List<Element> elements = new ArrayList<>();
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Element element = new Element(
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            genres
+                    );
+
+                    elements.add(element);
+
+                }
+
+                return elements;
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il recupero degli elementi: " + e.getMessage());
+            return null;
+
+        }
+
+    }
+
+    public Boolean isElementAvailable(Integer id) {
+
+        if (id == null || id <= 0) {
+
+            System.err.println("ID non valido.");
+            return false;
+
+        }
+
+        String query = "SELECT quantity_available FROM elements WHERE id = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return false;
+
+            }
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                if (rs.next()) {
+
+                    int quantityAvailable = rs.getInt("quantity_available");
+
+                    if (quantityAvailable > 0) {
+
+                        return true;
+
+                    } else {
+
+                        System.err.println("Elemento non disponibile.");
+                        return false;
+
+                    }
+
+                } else {
+
+                    System.err.println("Elemento non trovato.");
+                    return false;
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println("Errore durante il controllo di disponibilità dell'elemento: " + e.getMessage());
+            return false;
+
+        }
+
     }
 
 }
