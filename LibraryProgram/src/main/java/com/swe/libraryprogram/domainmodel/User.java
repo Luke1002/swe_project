@@ -1,7 +1,6 @@
 package com.swe.libraryprogram.domainmodel;
 
 
-
 public class User {
 
 
@@ -11,7 +10,6 @@ public class User {
     private String surname;
     private String phone;
     private Boolean isAdmin = false;
-
 
 
     public User(String email, String password, String name, String surname, String phone) {
@@ -32,7 +30,6 @@ public class User {
         this.surname = surname;
 
     }
-
 
     public String getEmail() {
         return email;
@@ -74,6 +71,8 @@ public class User {
         this.phone = phone;
     }
 
-    public Boolean isAdmin() { return isAdmin; }
+    public Boolean isAdmin() {
+        return isAdmin;
+    }
 
 }

@@ -15,9 +15,9 @@ public class Book extends Element {
 
 
 
-    public Book(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, Integer isbn, String author, String publisher, Integer edition) {
+    public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, Integer isbn, String author, String publisher, Integer edition) {
 
-        super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
+        super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
         this.isbn = isbn;
         this.author = author;

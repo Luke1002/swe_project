@@ -7,10 +7,7 @@ import java.util.LinkedList;
 public class Element {
 
 
-    private static Integer nextId = 1;
-
     private final Integer id;
-
     private String title;
     private Integer releaseYear;
     private String description;
@@ -21,23 +18,10 @@ public class Element {
     private LinkedList<Genre> genres;
 
 
-    /*
+
     public Element(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres) {
 
         this.id = id;
-        this.title = title;
-        this.releaseYear = releaseYear;
-        this.description = description;
-        this.quantity = quantity;
-        this.quantityAvailable = quantityAvailable;
-        this.length = length;
-        this.genres = genres;
-
-    }
-    */
-    public Element(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres) {
-
-        this.id = nextId++;
         this.title = title;
         this.releaseYear = releaseYear;
         this.description = description;
