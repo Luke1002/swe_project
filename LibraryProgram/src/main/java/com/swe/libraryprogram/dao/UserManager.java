@@ -12,8 +12,6 @@ import java.util.List;
 
 public class UserManager {
 
-
-
     public UserManager() {}
 
 
@@ -21,7 +19,7 @@ public class UserManager {
 
         if (email == null) {
 
-            System.err.println("ID utente non valido.");
+            System.err.println("email utente non valida.");
             return null;
 
         }
@@ -46,16 +44,18 @@ public class UserManager {
 
                     User user = new User(
                             rs.getString("email"),
+                            rs.getString("password"),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            rs.getString("phone")
+                            rs.getString("phone"),
+                            rs.getBoolean("isadmin")
                     );
 
                     return user;
 
                 } else {
 
-                    System.err.println("Utente non trovato con ID: " + email);
+                    System.err.println("Utente non trovato con la seguente email: " + email);
                     return null;
 
                 }
@@ -64,7 +64,7 @@ public class UserManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante il recupero dell'utente: " + e.getMessage());
+            System.err.println("Errore SQL durante il recupero dell'utente: " + e.getMessage());
             e.printStackTrace();
             return null;
 
@@ -101,7 +101,6 @@ public class UserManager {
                     String storedPassword = rs.getString("password");
 
                     if (password.equals(storedPassword)) {
-
                         return true;
 
                     } else {
@@ -110,6 +109,7 @@ public class UserManager {
                         return false;
 
                     }
+
                 } else {
 
                     System.err.println("Utente non trovato.");
@@ -121,7 +121,7 @@ public class UserManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante l'autenticazione: " + e.getMessage());
+            System.err.println("Errore SQL durante l'autenticazione: " + e.getMessage());
             e.printStackTrace();
             return false;
 
@@ -131,9 +131,12 @@ public class UserManager {
 
     public Boolean addUser(User user) {
 
-        if (user == null) {
+        if (user.getEmail() == null || user.getEmail().isEmpty() ||
+                user.getPassword() == null || user.getPassword().isEmpty() ||
+                user.getName() == null || user.getName().isEmpty() ||
+                user.getSurname() == null || user.getSurname().isEmpty()){
 
-            System.err.println("Errore: utente nullo");
+            System.err.println("Dati utente non validi.");
             return false;
 
         }
@@ -173,6 +176,7 @@ public class UserManager {
 
         } catch (SQLException e) {
 
+            System.err.println("Errore SQL durante l'inserimento dell'utente: " + e.getMessage());
             e.printStackTrace();
             return false;
 
@@ -182,9 +186,12 @@ public class UserManager {
 
     public Boolean updateUser(User user) {
 
-        if (user == null) {
+        if (user.getEmail() == null || user.getEmail().isEmpty() ||
+                user.getPassword() == null || user.getPassword().isEmpty() ||
+                user.getName() == null || user.getName().isEmpty() ||
+                user.getSurname() == null || user.getSurname().isEmpty()) {
 
-            System.err.println("Errore: utente nullo");
+            System.err.println("Dati utente non validi.");
             return false;
 
         }
@@ -224,6 +231,7 @@ public class UserManager {
 
         } catch (SQLException e) {
 
+            System.err.println("Errore SQL durante le modifiche all'utente: " + e.getMessage());
             e.printStackTrace();
             return false;
 
@@ -270,6 +278,7 @@ public class UserManager {
 
         } catch (SQLException e) {
 
+            System.err.println("Errore SQL durante la rimozione dell'utente: " + e.getMessage());
             e.printStackTrace();
             return false;
 
@@ -318,6 +327,7 @@ public class UserManager {
 
         } catch (SQLException e) {
 
+            System.err.println("Errore SQL durante il controllo delle email già in uso: " + e.getMessage());
             e.printStackTrace();
             return false;
 
@@ -326,6 +336,8 @@ public class UserManager {
     }
 
     public List<User> getAllUsers() {
+
+        List<User> users = new LinkedList<>();
 
         String query = "SELECT * FROM users";
 
@@ -341,15 +353,15 @@ public class UserManager {
 
             try (ResultSet rs = stmt.executeQuery()) {
 
-                List<User> users = new LinkedList<>();
-
                 while (rs.next()) {
 
                     User user = new User(
                             rs.getString("email"),
+                            rs.getString("password"),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            rs.getString("phone")
+                            rs.getString("phone"),
+                            rs.getBoolean("isadmin")
                     );
 
                     users.add(user);
@@ -362,8 +374,9 @@ public class UserManager {
 
         } catch (SQLException e) {
 
+            System.err.println("Errore SQL durante il recupero degli utenti: " + e.getMessage());
             e.printStackTrace();
-            return null;
+            return users;
 
         }
 

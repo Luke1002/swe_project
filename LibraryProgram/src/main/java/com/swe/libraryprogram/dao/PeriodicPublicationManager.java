@@ -18,16 +18,28 @@ public class PeriodicPublicationManager extends ElementManager {
 
     public Boolean addPeriodicPublication(PeriodicPublication periodic) {
 
-        Integer elementId = addElement(periodic);
+        if (periodic.getId() == null || periodic.getId() <= 0 ||
+                periodic.getPublisher() == null || periodic.getPublisher().isEmpty() ||
+                periodic.getFrequency() <= 0 ||
+                periodic.getReleaseMonth() <= 0 || periodic.getReleaseMonth() > 12 ||
+                periodic.getReleaseDay() <= 0 || periodic.getReleaseDay() > 31 ||
+                periodic.getIssn() == null || periodic.getIssn() <= 0) {
 
-        if (elementId == null) {
-
-            System.out.println("Errore: l'inserimento dell'elemento base è fallito.");
+            System.out.println("Informazioni del periodico non valide.");
             return false;
 
         }
 
-        String insertPeriodicQuery = "INSERT INTO periodic_publications (id, publisher, frequency, release_month, release_day, issn) VALUES (?, ?, ?, ?, ?, ?)";
+        Integer elementId = addElement(periodic);
+
+        if (elementId == null) {
+
+            System.out.println("Errore: l'inserimento delle informazioni base del periodico è fallito.");
+            return false;
+
+        }
+
+        String insertPeriodicQuery = "INSERT INTO periodicpublications (id, publisher, frequency, releasemonth, releaseday, issn) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement periodicStmt = connection.prepareStatement(insertPeriodicQuery)) {
@@ -42,46 +54,42 @@ public class PeriodicPublicationManager extends ElementManager {
             int rowsInserted = periodicStmt.executeUpdate();
 
             if (rowsInserted > 0) {
-
                 return true;
 
             } else {
 
-                System.err.println("Errore: la pubblicazione periodica non è stata inserita.");
+                System.err.println("Errore: il periodico non è stata inserito.");
                 return false;
 
             }
 
         } catch (SQLException e) {
 
-            System.err.println("Errore SQL durante l'inserimento della pubblicazione periodica: " + e.getMessage());
+            System.err.println("Errore SQL durante l'inserimento del periodico: " + e.getMessage());
             e.printStackTrace();
+            return false;
 
         }
-
-        return false;
 
     }
 
     public Boolean updatePeriodicPublication(PeriodicPublication periodic) {
 
-        if (periodic == null) {
+        if (periodic.getId() == null || periodic.getId() <= 0 ||
+                periodic.getPublisher() == null || periodic.getPublisher().isEmpty() ||
+                periodic.getFrequency() <= 0 ||
+                periodic.getReleaseMonth() <= 0 || periodic.getReleaseMonth() > 12 ||
+                periodic.getReleaseDay() <= 0 || periodic.getReleaseDay() > 31 ||
+                periodic.getIssn() == null || periodic.getIssn() <= 0) {
 
-            System.out.println("Periodico non valido.");
-            return false;
-
-        }
-
-        if (periodic.getId() == null || periodic.getId() <= 0) {
-
-            System.out.println("ID non valido.");
+            System.out.println("Informazioni del periodico non valide.");
             return false;
 
         }
 
         if (!updateElement(periodic)) {
 
-            System.out.println("Errore: l'aggiornamento dell'elemento base è fallito.");
+            System.out.println("Errore: l'aggiornamento delle informazioni base del periodico è fallito.");
             return false;
 
         }
@@ -101,7 +109,6 @@ public class PeriodicPublicationManager extends ElementManager {
             int rowsUpdated = periodicStmt.executeUpdate();
 
             if (rowsUpdated > 0) {
-
                 return true;
 
             } else {
@@ -115,10 +122,9 @@ public class PeriodicPublicationManager extends ElementManager {
 
             System.err.println("Errore SQL durante l'aggiornamento del periodico: " + e.getMessage());
             e.printStackTrace();
+            return false;
 
         }
-
-        return false;
 
     }
 
@@ -131,7 +137,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         }
 
-        String getPeriodicQuery = "SELECT * FROM periodic_publications WHERE id = ?";
+        String getPeriodicQuery = "SELECT * FROM periodicpublications WHERE id = ?";
 
         List<Element> elements = executeQueryWithSingleValue(getPeriodicQuery, id);
         return elements.get(0);
@@ -163,6 +169,7 @@ public class PeriodicPublicationManager extends ElementManager {
                     LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     PeriodicPublication periodic = new PeriodicPublication(
+                            rs.getInt("id"),
                             rs.getString("title"),
                             rs.getInt("release_year"),
                             rs.getString("description"),
@@ -181,16 +188,17 @@ public class PeriodicPublicationManager extends ElementManager {
 
                 }
 
+                return periodics;
+
             }
 
         } catch (SQLException e) {
 
             System.err.println("Errore durante il recupero dei periodici: " + e.getMessage());
             e.printStackTrace();
+            return periodics;
 
         }
-
-        return periodics;
 
     }
 
@@ -213,7 +221,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         if (frequency == null || frequency <= 0) {
 
-            System.err.println("Frequenza non valida.");
+            System.err.println("Frequenza di pubblicazione non valida.");
             return null;
 
         }
@@ -233,7 +241,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         }
 
-        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE release_month = ?";
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE releasemonth = ?";
 
         return executeQueryWithSingleValue(query, releaseMonth);
 
@@ -248,7 +256,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         }
 
-        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE release_day = ?";
+        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE releaseday = ?";
 
         return executeQueryWithSingleValue(query, releaseDay);
 
@@ -272,6 +280,8 @@ public class PeriodicPublicationManager extends ElementManager {
     @Override
     public List<Element> executeQueryWithSingleValue(String query, Object value) {
 
+        List<Element> elements = new ArrayList<>();
+
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
@@ -286,7 +296,6 @@ public class PeriodicPublicationManager extends ElementManager {
 
             try (ResultSet rs = stmt.executeQuery()) {
 
-                List<Element> elements = new ArrayList<>();
                 GenreManager genreManager = new GenreManager();
 
                 while (rs.next()) {
@@ -294,6 +303,7 @@ public class PeriodicPublicationManager extends ElementManager {
                     LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     PeriodicPublication periodic = new PeriodicPublication(
+                            rs.getInt("id"),
                             rs.getString("title"),
                             rs.getInt("release_year"),
                             rs.getString("description"),
@@ -320,10 +330,9 @@ public class PeriodicPublicationManager extends ElementManager {
 
             System.err.println("Errore durante il recupero dei periodici: " + e.getMessage());
             e.printStackTrace();
+            return elements;
 
         }
-
-        return null;
 
     }
 

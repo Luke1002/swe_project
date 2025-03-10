@@ -10,19 +10,29 @@ import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.Book;
 
 
+
 public class BookManager extends ElementManager {
 
     public BookManager() {}
 
 
-    // Metodo per aggiungere un libro
     public Boolean addBook(Book book) {
+
+        if (book.getAuthor() == null || book.getAuthor().isEmpty() ||
+            book.getPublisher() == null || book.getPublisher().isEmpty() ||
+            book.getIsbn() == null || book.getIsbn() <= 0 ||
+            book.getEdition() == null || book.getEdition() <= 0) {
+
+            System.err.println("Informazioni libro non valide.");
+            return false;
+
+        }
 
         Integer elementId = addElement(book);
 
         if (elementId == null) {
 
-            System.out.println("Errore: l'inserimento dell'elemento base è fallito.");
+            System.out.println("Errore: l'inserimento delle informazioni di base del libro è fallito.");
             return false;
 
         }
@@ -41,7 +51,6 @@ public class BookManager extends ElementManager {
             int rowsInserted = bookStmt.executeUpdate();
 
             if (rowsInserted > 0) {
-
                 return true;
 
             } else {
@@ -55,26 +64,25 @@ public class BookManager extends ElementManager {
 
             System.err.println("Errore SQL durante l'inserimento del libro: " + e.getMessage());
             e.printStackTrace();
+            return false;
 
         }
 
-        return false;
-
     }
 
-    //Metodo per aggiornare un libro
     public Boolean updateBook(Book book) {
 
-        if (book.getId() == null || book.getId() <= 0) {
+        if (book.getIsbn() == null || book.getIsbn() <= 0 ||
+                book.getId() == null || book.getId() <= 0) {
 
-            System.err.println("ID non valido.");
+            System.err.println("Informazioni libro non valide.");
             return false;
 
         }
 
         if (!updateElement(book)) {
 
-            System.err.println("Errore durante l'aggiornamento dell'elemento base.");
+            System.err.println("Errore durante l'aggiornamento delle informazioni base del libro.");
             return false;
 
         }
@@ -96,7 +104,9 @@ public class BookManager extends ElementManager {
                 return true;
 
             } else {
+
                 System.err.println("Errore: il libro non è stato aggiornato.");
+                return false;
 
             }
 
@@ -104,14 +114,12 @@ public class BookManager extends ElementManager {
 
             System.err.println("Errore SQL durante l'aggiornamento del libro: " + e.getMessage());
             e.printStackTrace();
+            return false;
 
         }
 
-        return false;
-
     }
 
-    // Metodo per ottenere un libro tramite ID
     public Element getBook(Integer id) {
 
         if (id == null || id <= 0) {
@@ -128,7 +136,6 @@ public class BookManager extends ElementManager {
 
     }
 
-    //Metodo per ottenere tutti i libri
     public List<Book> getAllBooks() {
 
         List<Book> books = new ArrayList<>();
@@ -154,6 +161,7 @@ public class BookManager extends ElementManager {
                     LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Book book = new Book(
+                            rs.getInt("id"),
                             rs.getString("title"),
                             rs.getInt("release_year"),
                             rs.getString("description"),
@@ -171,20 +179,20 @@ public class BookManager extends ElementManager {
 
                 }
 
+                return books;
+
             }
 
         } catch (SQLException e) {
 
             System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
             e.printStackTrace();
+            return books;
 
         }
 
-        return books;
-
     }
 
-    // Metodo per ottenere tutti i libri di un autore specifico
     public List<Element> getBooksByAuthor(String author) {
 
         if (author == null || author.isEmpty()) {
@@ -200,7 +208,6 @@ public class BookManager extends ElementManager {
 
     }
 
-    // Metodo per ottenere tutti i libri di una casa editrice specifica
     public List<Element> getBooksByPublisher(String publisher) {
 
         if (publisher == null || publisher.isEmpty()) {
@@ -216,7 +223,6 @@ public class BookManager extends ElementManager {
 
     }
 
-    // Metodo per ottenere i libri di una certa edizione
     public List<Element> getBooksByEdition(Integer edition) {
 
         if (edition == null || edition <= 0) {
@@ -232,7 +238,6 @@ public class BookManager extends ElementManager {
 
     }
 
-    // Metodo per ottenere i libri via ISBN
     public List<Element> getBooksByIsbn(Integer isbn) {
 
         if (isbn == null || isbn <= 0) {
@@ -251,13 +256,16 @@ public class BookManager extends ElementManager {
     @Override
     public List<Element> executeQueryWithSingleValue(String query, Object value) {
 
+        List<Element> elements = new ArrayList<>();
+
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
+
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return null;
+                return elements;
 
             }
 
@@ -265,7 +273,6 @@ public class BookManager extends ElementManager {
 
             try (ResultSet rs = stmt.executeQuery()) {
 
-                List<Element> elements = new ArrayList<>();
                 GenreManager genreManager = new GenreManager();
 
                 while (rs.next()) {
@@ -273,6 +280,7 @@ public class BookManager extends ElementManager {
                     LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Book book = new Book(
+                            rs.getInt("id"),
                             rs.getString("title"),
                             rs.getInt("release_year"),
                             rs.getString("description"),
@@ -296,12 +304,11 @@ public class BookManager extends ElementManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
+            System.err.println("Errore SQL durante il recupero dei libri: " + e.getMessage());
             e.printStackTrace();
+            return elements;
 
         }
-
-        return null;
 
     }
 

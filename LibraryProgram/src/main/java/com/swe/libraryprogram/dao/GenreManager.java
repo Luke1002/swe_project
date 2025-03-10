@@ -11,12 +11,10 @@ import java.util.LinkedList;
 
 public class GenreManager {
 
-
-
     public GenreManager() {}
 
 
-    public boolean addGenre(Genre genre) {
+    public Boolean addGenre(Genre genre) {
 
         if (genre == null) {
 
@@ -46,14 +44,14 @@ public class GenreManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante l'inserimento del genere: " + e.getMessage());
+            System.err.println("Errore SQL durante l'inserimento del genere: " + e.getMessage());
             return false;
 
         }
 
     }
 
-    public boolean removeGenre(Integer code) {
+    public Boolean removeGenre(Integer code) {
 
         String query = "DELETE FROM genres WHERE code = ?";
 
@@ -74,7 +72,7 @@ public class GenreManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante l'eliminazione del genere: " + e.getMessage());
+            System.err.println("Errore SQL durante l'eliminazione del genere: " + e.getMessage());
             return false;
 
         }
@@ -85,7 +83,7 @@ public class GenreManager {
 
         if (code == null || code <= 0) {
 
-            System.err.println("Codice non valido.");
+            System.err.println("Codice genere non valido.");
             return null;
 
         }
@@ -124,7 +122,7 @@ public class GenreManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante il recupero del genere: " + e.getMessage());
+            System.err.println("Errore SQL durante il recupero del genere: " + e.getMessage());
             return null;
 
         }
@@ -134,6 +132,7 @@ public class GenreManager {
     public LinkedList<Genre> getAllGenres() {
 
         LinkedList<Genre> genres = new LinkedList<>();
+
         String query = "SELECT * FROM genres";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -157,17 +156,18 @@ public class GenreManager {
 
             }
 
+            return genres;
+
         } catch (SQLException e) {
 
-            System.err.println("Errore durante il recupero di tutti i generi: " + e.getMessage());
+            System.err.println("Errore SQL durante il recupero di tutti i generi: " + e.getMessage());
+            return genres;
 
         }
 
-        return genres;
-
     }
 
-    public boolean associateGenreWithElement(Integer elementId, Integer genreCode) {
+    public Boolean associateGenreWithElement(Integer elementId, Integer genreCode) {
 
         if (elementId == null || genreCode == null || elementId <= 0 || genreCode <= 0) {
 
@@ -176,7 +176,7 @@ public class GenreManager {
 
         }
 
-        String query = "INSERT INTO element_genres (element_id, genre_code) VALUES (?, ?)";
+        String query = "INSERT INTO elementgenres (elementid, genrecode) VALUES (?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -209,8 +209,8 @@ public class GenreManager {
 
         String query = "SELECT g.code, g.name, g.description " +
                 "FROM genres g " +
-                "JOIN element_genres eg ON g.code = eg.genre_code " +
-                "WHERE eg.element_id = ?";
+                "JOIN elementgenres eg ON g.code = eg.genrecode " +
+                "WHERE eg.elementid = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -240,7 +240,9 @@ public class GenreManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore nel recupero dei generi per l'elemento: " + e.getMessage());
+            System.err.println("Errore SQL nel recupero dei generi per l'elemento: " + e.getMessage());
+            e.printStackTrace();
+            return genres;
 
         }
 
@@ -248,7 +250,7 @@ public class GenreManager {
 
     }
 
-    public boolean removeGenreFromElement(Integer elementId, Integer genreCode) {
+    public Boolean removeGenreFromElement(Integer elementId, Integer genreCode) {
 
         if (elementId == null || genreCode == null || elementId <= 0 || genreCode <= 0) {
 
@@ -257,7 +259,7 @@ public class GenreManager {
 
         }
 
-        String query = "DELETE FROM element_genres WHERE element_id = ? AND genre_code = ?";
+        String query = "DELETE FROM elementgenres WHERE elementid = ? AND genrecode = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -278,6 +280,7 @@ public class GenreManager {
         } catch (SQLException e) {
 
             System.err.println("Errore nell'eliminare il genere dall'elemento: " + e.getMessage());
+            e.printStackTrace();
             return false;
 
         }

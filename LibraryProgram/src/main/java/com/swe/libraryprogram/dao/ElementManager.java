@@ -14,16 +14,23 @@ import java.util.ArrayList;
 
 public class ElementManager {
 
-
-
     public ElementManager() {}
 
 
     public Integer addElement(Element element) {
 
-        String query = "INSERT INTO elements (title, release_year, description, quantity, quantity_available, length) VALUES (?, ?, ?, ?, ?, ?)";
+        if (element.getTitle() == null || element.getTitle().isEmpty() ||
+                element.getQuantity() < 0 ||
+                element.getQuantityAvailable() < 0 ||
+                element.getLength() <= 0) {
 
-        //Connessione dal ConnectionManager
+            System.err.println("Informazioni base dell'elemento non valide.");
+            return null;
+
+        }
+
+        String query = "INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length) VALUES (?, ?, ?, ?, ?, ?)";
+
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
@@ -50,14 +57,21 @@ public class ElementManager {
 
                     if (generatedKeys.next()) {
                         return generatedKeys.getInt(1);  // Restituisce l'ID generato
+
                     }
 
                 }
+
+            } else {
+
+                System.err.println("Errore: elemento non inserito");
+                return null;
 
             }
 
         } catch (SQLException e) {
 
+            System.err.println("Errore SQL durante l'inserimento delle informazioni di base dell'elemento: " + e.getMessage());
             e.printStackTrace();
 
         }
@@ -80,10 +94,8 @@ public class ElementManager {
 
             }
 
-            //Imposta l'ID dell'elemento da rimuovere
             stmt.setInt(1, id);
 
-            //Query di rimozione
             int rowsDeleted = stmt.executeUpdate();
 
             if (rowsDeleted > 0) {
@@ -100,6 +112,7 @@ public class ElementManager {
 
         } catch (SQLException e) {
 
+            System.err.println("Errore SQL durante la rimozione dell'elemento: " + e.getMessage());
             e.printStackTrace();
             return false;
 
@@ -109,24 +122,20 @@ public class ElementManager {
 
     public Boolean updateElement(Element element){
 
-        //Verifica la validità dei dati
         if (element.getTitle() == null || element.getTitle().isEmpty() ||
-                element.getReleaseYear() == null || element.getReleaseYear() <= 0 ||
                 element.getQuantity() < 0 ||
                 element.getQuantityAvailable() < 0 ||
-                element.getLength() == null || element.getLength() <= 0) {
+                element.getLength() <= 0) {
 
-            System.err.println("Dati non validi per l'elemento.");
-            return false;
+            System.err.println("Informazioni base dell'elemento non valide.");
+            return null;
 
         }
 
-        String query = "UPDATE elements SET title = ?, release_year = ?, description = ?, quantity = ?, quantity_available = ?, length = ? WHERE id = ?";
+        String query = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection()) {
-
-            //Inizia una transazione
-            connection.setAutoCommit(false);
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -135,45 +144,30 @@ public class ElementManager {
 
             }
 
-            //PreparedStatement per eseguire l'update
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, element.getTitle());
+            stmt.setInt(2, element.getReleaseYear());
+            stmt.setString(3, element.getDescription());
+            stmt.setInt(4, element.getQuantity());
+            stmt.setInt(5, element.getQuantityAvailable());
+            stmt.setInt(6, element.getLength());
+            stmt.setInt(7, element.getId());
 
-                stmt.setString(1, element.getTitle());
-                stmt.setInt(2, element.getReleaseYear());
-                stmt.setString(3, element.getDescription());
-                stmt.setInt(4, element.getQuantity());
-                stmt.setInt(5, element.getQuantityAvailable());
-                stmt.setInt(6, element.getLength());
-                stmt.setInt(7, element.getId());
+            int rowsUpdated = stmt.executeUpdate();
 
-                int rowsUpdated = stmt.executeUpdate();
-
-                //Se non è stato aggiornato alcun elemento annulla la transazione
-                if (rowsUpdated == 0) {
-
-                    connection.rollback();
-                    System.err.println("Nessun elemento trovato con l'ID fornito.");
-                    return false;
-
-                }
-
-                //Se tutto va a buon fine, conferma la transazione
-                connection.commit();
-                System.out.println("Elemento aggiornato con successo.");
+            if (rowsUpdated > 0) {
                 return true;
 
-            } catch (SQLException e) {
+            } else {
 
-                //Se c'è un errore, fai il rollback della transazione
-                connection.rollback();
-                System.err.println("Errore durante l'aggiornamento dell'elemento: " + e.getMessage());
+                System.err.println("Errore: informazioni base non aggiornate.");
                 return false;
 
             }
 
         } catch (SQLException e) {
 
-            System.err.println("Errore nella connessione al database: " + e.getMessage());
+            System.err.println("Errore SQL durante l'aggiornamento delle informazioni base: " + e.getMessage());
+            e.printStackTrace();
             return false;
 
         }
@@ -198,6 +192,8 @@ public class ElementManager {
 
     public List<Element> getAllElements() {
 
+        List<Element> elements = new ArrayList<>();
+
         String query = "SELECT * FROM elements";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection()) {
@@ -212,7 +208,6 @@ public class ElementManager {
             try (PreparedStatement stmt = connection.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {
 
-                List<Element> elements = new ArrayList<>();
                 GenreManager genreManager = new GenreManager();
 
                 while (rs.next()) {
@@ -220,6 +215,7 @@ public class ElementManager {
                     LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Element element = new Element(
+                            rs.getInt("id"),
                             rs.getString("title"),
                             rs.getInt("release_year"),
                             rs.getString("description"),
@@ -239,12 +235,11 @@ public class ElementManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante il recupero degli elementi: " + e.getMessage());
+            System.err.println("Errore SQL durante il recupero degli elementi: " + e.getMessage());
             e.printStackTrace();
+            return elements;
 
         }
-
-        return null;
 
     }
 
@@ -258,10 +253,9 @@ public class ElementManager {
         }
 
         String query = "SELECT e.* FROM elements e " +
-                "JOIN elements_genre eg ON e.id = eg.element_id " +
-                "JOIN genres g ON eg.genre_code = g.genre_code " +
-                "WHERE g.genre_name = ?";
-        //TODO: fare tabella
+                "JOIN elementgenres eg ON e.id = eg.elementid " +
+                "JOIN genres g ON eg.genrecode = g.genrecode " +
+                "WHERE g.name = ?";
 
         return executeQueryWithSingleValue(query, genreName);
 
@@ -291,7 +285,7 @@ public class ElementManager {
 
         }
 
-        String query = "SELECT * FROM elements WHERE release_year = ?";
+        String query = "SELECT * FROM elements WHERE releaseyear = ?";
 
         return executeQueryWithSingleValue(query, releaseYear);
 
@@ -321,6 +315,8 @@ public class ElementManager {
 
         }
 
+        List<Element> elements = new ArrayList<>();
+
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
@@ -335,7 +331,6 @@ public class ElementManager {
 
             try (ResultSet rs = stmt.executeQuery()) {
 
-                List<Element> elements = new ArrayList<>();
                 GenreManager genreManager = new GenreManager();
 
                 while (rs.next()) {
@@ -343,6 +338,7 @@ public class ElementManager {
                     LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Element element = new Element(
+                            rs.getInt("id"),
                             rs.getString("title"),
                             rs.getInt("release_year"),
                             rs.getString("description"),
@@ -362,8 +358,8 @@ public class ElementManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante il recupero degli elementi: " + e.getMessage());
-            return null;
+            System.err.println("Errore SQL durante il recupero degli elementi: " + e.getMessage());
+            return elements;
 
         }
 
@@ -378,7 +374,7 @@ public class ElementManager {
 
         }
 
-        String query = "SELECT quantity_available FROM elements WHERE id = ?";
+        String query = "SELECT quantityavailable FROM elements WHERE id = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -396,10 +392,9 @@ public class ElementManager {
 
                 if (rs.next()) {
 
-                    int quantityAvailable = rs.getInt("quantity_available");
+                    int quantityAvailable = rs.getInt("quantityavailable");
 
                     if (quantityAvailable > 0) {
-
                         return true;
 
                     } else {
@@ -420,7 +415,7 @@ public class ElementManager {
 
         } catch (SQLException e) {
 
-            System.err.println("Errore durante il controllo di disponibilità dell'elemento: " + e.getMessage());
+            System.err.println("Errore SQL durante il controllo di disponibilità dell'elemento: " + e.getMessage());
             return false;
 
         }
