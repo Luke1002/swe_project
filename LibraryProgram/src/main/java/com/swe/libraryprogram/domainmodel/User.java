@@ -11,6 +11,16 @@ public class User {
     private String phone;
     private Boolean isAdmin = false;
 
+    public User(String email, String password, String name, String surname, String phone, Boolean isAdmin) {
+
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.phone = phone;
+        this.isAdmin = isAdmin;
+
+    }
 
     public User(String email, String password, String name, String surname, String phone) {
 
