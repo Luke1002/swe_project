@@ -15,7 +15,7 @@ public class LibraryAdminController {
     private final DigitalMediaManager digitalMediaManager = new DigitalMediaManager();
     private final PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
     private final BorrowsManager borrowManager = new BorrowsManager();
-    private final ModifiedElements modifiedElemeents = new ModifiedElemeents();
+    private final ModifiedElementsManager modifiedElements = new ModifiedElementsManager();
     private User usr;
 
     LibraryAdminController(User usr) {
@@ -82,7 +82,7 @@ public class LibraryAdminController {
                 return false;
             }
             elementManager.updateElement(element);
-            modifiedElemeents.addEdit(element.getId(), usr.getEmail());
+            modifiedElements.addEdit(element.getId(), usr.getEmail());
             cM.getConnection().commit();
             cM.getConnection().setAutoCommit(true);
             return true;
