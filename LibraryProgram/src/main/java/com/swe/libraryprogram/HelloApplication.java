@@ -41,15 +41,14 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
+        ConnectionManager.setDbUser(args[0]);
+        ConnectionManager.setDbPass(args[1]);
         ConnectionManager conman  = ConnectionManager.getInstance();
-        if (!conman.startingConnectionCheck()) {
-            UserManager userman = new UserManager(conman);
-            String res = userman.getUser();
+        if (!conman.isConnectionValid()) {
         }else{
             error = true;
         }
 
         launch();
-        System.out.println("a");
     }
 }

@@ -11,8 +11,8 @@ public class ConnectionManager {
     private static Connection connection = null;
 
     private final String dbUrl = "jdbc:postgresql://berrettilove.minecraftnoob.com:5432/postgres";
-    private final String dbUser = "postgres";
-    private final String dbPass = "postgres";
+    private static String dbUser = "";
+    private static String dbPass = "";
 
 
 
@@ -30,6 +30,13 @@ public class ConnectionManager {
 
     }
 
+    public static void setDbUser(String dbUser) {
+        ConnectionManager.dbUser = dbUser;
+    }
+
+    public static void setDbPass(String dbPass) {
+        ConnectionManager.dbPass = dbPass;
+    }
 
     public Connection getConnection() {
 
