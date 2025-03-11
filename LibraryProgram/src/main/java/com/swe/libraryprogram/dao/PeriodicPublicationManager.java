@@ -16,7 +16,7 @@ public class PeriodicPublicationManager extends ElementManager {
     public PeriodicPublicationManager() {}
 
 
-    public Boolean addPeriodicPublication(PeriodicPublication periodic) {
+    public Boolean addPeriodicPublication(PeriodicPublication periodic) throws SQLException {
 
         if (periodic.getId() == null || periodic.getId() <= 0 ||
                 periodic.getPublisher() == null || periodic.getPublisher().isEmpty() ||
@@ -63,17 +63,11 @@ public class PeriodicPublicationManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'inserimento del periodico: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean updatePeriodicPublication(PeriodicPublication periodic) {
+    public Boolean updatePeriodicPublication(PeriodicPublication periodic) throws SQLException {
 
         if (periodic.getId() == null || periodic.getId() <= 0 ||
                 periodic.getPublisher() == null || periodic.getPublisher().isEmpty() ||
@@ -118,17 +112,11 @@ public class PeriodicPublicationManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'aggiornamento del periodico: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Element getPeriodicPublication(Integer id) {
+    public Element getPeriodicPublication(Integer id) throws SQLException {
 
         if (id == null || id <= 0) {
 
@@ -144,7 +132,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
     }
 
-    public List<PeriodicPublication> getAllPeriodicPublications() {
+    public List<PeriodicPublication> getAllPeriodicPublications() throws SQLException {
 
         List<PeriodicPublication> periodics = new ArrayList<>();
 
@@ -156,7 +144,7 @@ public class PeriodicPublicationManager extends ElementManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return null;
+                return periodics;
 
             }
 
@@ -192,93 +180,102 @@ public class PeriodicPublicationManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dei periodici: " + e.getMessage());
-            e.printStackTrace();
-            return periodics;
-
         }
 
     }
 
-    public List<Element> getPeriodicPublicationsByPublisher(String publisher) {
+    public List<Element> getPeriodicPublicationsByPublisher(String publisher) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (publisher == null || publisher.isEmpty()) {
 
             System.err.println("Editore non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE publisher = ?";
 
-        return executeQueryWithSingleValue(query, publisher);
+        elements = executeQueryWithSingleValue(query, publisher);
+        return elements;
 
     }
 
-    public List<Element> getPeriodicPublicationsByFrequency(Integer frequency) {
+    public List<Element> getPeriodicPublicationsByFrequency(Integer frequency) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (frequency == null || frequency <= 0) {
 
             System.err.println("Frequenza di pubblicazione non valida.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE frequency = ?";
 
-        return executeQueryWithSingleValue(query, frequency);
+        elements = executeQueryWithSingleValue(query, frequency);
+        return elements;
 
     }
 
-    public List<Element> getPeriodicPublicationsByReleaseMonth(Integer releaseMonth) {
+    public List<Element> getPeriodicPublicationsByReleaseMonth(Integer releaseMonth) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (releaseMonth == null || releaseMonth <= 0 || releaseMonth > 12) {
 
             System.err.println("Mese di rilascio non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE releasemonth = ?";
 
-        return executeQueryWithSingleValue(query, releaseMonth);
+        elements = executeQueryWithSingleValue(query, releaseMonth);
+        return elements;
 
     }
 
-    public List<Element> getPeriodicPublicationsByReleaseDay(Integer releaseDay) {
+    public List<Element> getPeriodicPublicationsByReleaseDay(Integer releaseDay) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (releaseDay == null || releaseDay <= 0 || releaseDay > 31) {
 
             System.err.println("Giorno di rilascio non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE releaseday = ?";
 
-        return executeQueryWithSingleValue(query, releaseDay);
+        elements = executeQueryWithSingleValue(query, releaseDay);
+        return elements;
 
     }
 
-    public List<Element> getPeriodicPublicationsByIssn(Integer issn) {
+    public List<Element> getPeriodicPublicationsByIssn(Integer issn) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (issn == null || issn <= 0) {
 
             System.err.println("ISSN non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE issn = ?";
 
-        return executeQueryWithSingleValue(query, issn);
+        elements = executeQueryWithSingleValue(query, issn);
+        return elements;
 
     }
 
     @Override
-    public List<Element> executeQueryWithSingleValue(String query, Object value) {
+    public List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
 
         List<Element> elements = new ArrayList<>();
 
@@ -288,7 +285,7 @@ public class PeriodicPublicationManager extends ElementManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return null;
+                return elements;
 
             }
 
@@ -326,14 +323,9 @@ public class PeriodicPublicationManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dei periodici: " + e.getMessage());
-            e.printStackTrace();
-            return elements;
-
         }
 
     }
+
 
 }

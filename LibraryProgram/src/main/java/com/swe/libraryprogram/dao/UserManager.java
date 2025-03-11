@@ -15,7 +15,7 @@ public class UserManager {
     public UserManager() {}
 
 
-    public User getUser(String email) {
+    public User getUser(String email) throws SQLException {
 
         if (email == null) {
 
@@ -62,17 +62,11 @@ public class UserManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero dell'utente: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-
         }
 
     }
 
-    public Boolean authenticate(String email, String password) {
+    public Boolean authenticate(String email, String password) throws SQLException {
 
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
 
@@ -119,17 +113,11 @@ public class UserManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'autenticazione: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean addUser(User user) {
+    public Boolean addUser(User user) throws SQLException {
 
         if (user.getEmail() == null || user.getEmail().isEmpty() ||
                 user.getPassword() == null || user.getPassword().isEmpty() ||
@@ -174,17 +162,11 @@ public class UserManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'inserimento dell'utente: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean updateUser(User user) {
+    public Boolean updateUser(User user) throws SQLException {
 
         if (user.getEmail() == null || user.getEmail().isEmpty() ||
                 user.getPassword() == null || user.getPassword().isEmpty() ||
@@ -229,17 +211,11 @@ public class UserManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante le modifiche all'utente: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean removeUser(String email) {
+    public Boolean removeUser(String email) throws SQLException {
 
         if (email == null || email.isEmpty()) {
 
@@ -276,17 +252,11 @@ public class UserManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante la rimozione dell'utente: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean isEmailTaken(String email) {
+    public Boolean isEmailTaken(String email) throws SQLException {
 
         if (email == null || email.isEmpty()) {
 
@@ -325,17 +295,11 @@ public class UserManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il controllo delle email già in uso: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers() throws SQLException {
 
         List<User> users = new LinkedList<>();
 
@@ -347,7 +311,7 @@ public class UserManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return null;
+                return users;
 
             }
 
@@ -372,14 +336,9 @@ public class UserManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero degli utenti: " + e.getMessage());
-            e.printStackTrace();
-            return users;
-
         }
 
     }
+
 
 }

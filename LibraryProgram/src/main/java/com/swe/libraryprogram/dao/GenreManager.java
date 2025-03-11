@@ -14,11 +14,11 @@ public class GenreManager {
     public GenreManager() {}
 
 
-    public Boolean addGenre(Genre genre) {
+    public Boolean addGenre(Genre genre) throws SQLException {
 
-        if (genre == null) {
+        if (genre.getName() == null || genre.getName().isEmpty()) {
 
-            System.err.println("Il genere è nullo.");
+            System.err.println("Errore: i dati del genere non sono validi.");
             return false;
 
         }
@@ -42,16 +42,11 @@ public class GenreManager {
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'inserimento del genere: " + e.getMessage());
-            return false;
-
         }
 
     }
 
-    public Boolean removeGenre(Integer code) {
+    public Boolean removeGenre(Integer code) throws SQLException {
 
         String query = "DELETE FROM genres WHERE code = ?";
 
@@ -70,16 +65,11 @@ public class GenreManager {
             int rowsDeleted = stmt.executeUpdate();
             return rowsDeleted > 0;
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'eliminazione del genere: " + e.getMessage());
-            return false;
-
         }
 
     }
 
-    public Genre getGenreByCode(Integer code) {
+    public Genre getGenreByCode(Integer code) throws SQLException {
 
         if (code == null || code <= 0) {
 
@@ -120,16 +110,11 @@ public class GenreManager {
                 }
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero del genere: " + e.getMessage());
-            return null;
-
         }
 
     }
 
-    public LinkedList<Genre> getAllGenres() {
+    public LinkedList<Genre> getAllGenres() throws SQLException {
 
         LinkedList<Genre> genres = new LinkedList<>();
 
@@ -158,16 +143,11 @@ public class GenreManager {
 
             return genres;
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero di tutti i generi: " + e.getMessage());
-            return genres;
-
         }
 
     }
 
-    public Boolean associateGenreWithElement(Integer elementId, Integer genreCode) {
+    public Boolean associateGenreWithElement(Integer elementId, Integer genreCode) throws SQLException {
 
         if (elementId == null || genreCode == null || elementId <= 0 || genreCode <= 0) {
 
@@ -194,16 +174,11 @@ public class GenreManager {
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore nell'associare il genere all'elemento: " + e.getMessage());
-            return false;
-
         }
 
     }
 
-    public LinkedList<Genre> getGenresForElement(Integer elementId) {
+    public LinkedList<Genre> getGenresForElement(Integer elementId) throws SQLException {
 
         LinkedList<Genre> genres = new LinkedList<>();
 
@@ -238,19 +213,13 @@ public class GenreManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL nel recupero dei generi per l'elemento: " + e.getMessage());
-            e.printStackTrace();
             return genres;
 
         }
 
-        return genres;
-
     }
 
-    public Boolean removeGenreFromElement(Integer elementId, Integer genreCode) {
+    public Boolean removeGenreFromElement(Integer elementId, Integer genreCode) throws SQLException {
 
         if (elementId == null || genreCode == null || elementId <= 0 || genreCode <= 0) {
 
@@ -277,14 +246,9 @@ public class GenreManager {
             int rowsDeleted = stmt.executeUpdate();
             return rowsDeleted > 0;
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore nell'eliminare il genere dall'elemento: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
+
 
 }

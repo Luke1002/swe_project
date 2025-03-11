@@ -19,7 +19,7 @@ public class DigitalMediaManager extends ElementManager {
     public DigitalMediaManager() {}
 
 
-    public Boolean addDigitalMedia(DigitalMedia media) {
+    public Boolean addDigitalMedia(DigitalMedia media) throws SQLException {
 
         if (media.getId() == null || media.getId() <=0 ||
                 media.getProducer() == null || media.getProducer().isEmpty() ||
@@ -61,17 +61,11 @@ public class DigitalMediaManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'inserimento del media: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean updateDigitalMedia(DigitalMedia media) {
+    public Boolean updateDigitalMedia(DigitalMedia media) throws SQLException {
 
         if (media.getId() == null || media.getId() <= 0 ||
                 media.getProducer() == null || media.getProducer().isEmpty() ||
@@ -111,17 +105,11 @@ public class DigitalMediaManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'aggiornamento del media: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Element getDigitalMedia(Integer id) {
+    public Element getDigitalMedia(Integer id) throws SQLException {
 
         if (id == null || id <= 0) {
 
@@ -137,7 +125,7 @@ public class DigitalMediaManager extends ElementManager {
 
     }
 
-    public List<DigitalMedia> getAllDigitalMedias() {
+    public List<DigitalMedia> getAllDigitalMedias() throws SQLException {
 
         List<DigitalMedia> digitalMedias = new ArrayList<>();
 
@@ -149,7 +137,7 @@ public class DigitalMediaManager extends ElementManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return null;
+                return digitalMedias;
 
             }
 
@@ -183,63 +171,66 @@ public class DigitalMediaManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dei media digitali: " + e.getMessage());
-            e.printStackTrace();
-            return digitalMedias;
-
         }
 
     }
 
-    public List<Element> getDigitalMediasByProducer(String producer) {
+    public List<Element> getDigitalMediasByProducer(String producer) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (producer == null || producer.isEmpty()) {
 
             System.err.println("Produttore non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN digitalmedias dm ON e.id = dm.id WHERE dm.producer = ?";
 
-        return executeQueryWithSingleValue(query, producer);
+        elements = executeQueryWithSingleValue(query, producer);
+        return elements;
 
     }
 
-    public List<Element> getDigitalMediasByDirector(String director) {
+    public List<Element> getDigitalMediasByDirector(String director) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (director == null || director.isEmpty()) {
 
             System.err.println("Regista non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN digitalmedias dm ON e.id = dm.id WHERE dm.director = ?";
 
-        return executeQueryWithSingleValue(query, director);
+        elements = executeQueryWithSingleValue(query, director);
+        return elements;
 
     }
 
-    public List<Element> getDigitalMediasByAgeRating(Integer ageRating) {
+    public List<Element> getDigitalMediasByAgeRating(Integer ageRating) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (ageRating == null || ageRating <= 0) {
 
             System.err.println("Classificazione per età non valida.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN digitalmedias dm ON e.id = dm.id WHERE dm.agerating = ?";
 
-        return executeQueryWithSingleValue(query, ageRating);
+        elements = executeQueryWithSingleValue(query, ageRating);
+        return elements;
 
     }
 
     @Override
-    public List<Element> executeQueryWithSingleValue(String query, Object value) {
+    public List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
 
         List<Element> elements = new ArrayList<>();
 
@@ -249,7 +240,7 @@ public class DigitalMediaManager extends ElementManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return null;
+                return elements;
 
             }
 
@@ -285,14 +276,9 @@ public class DigitalMediaManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero dei media digitali: " + e.getMessage());
-            e.printStackTrace();
-            return elements;
-
         }
 
     }
+
 
 }

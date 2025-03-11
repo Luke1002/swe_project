@@ -52,6 +52,7 @@ public class ConnectionManager {
 
     }
 
+    //TODO: da modificare
     public Boolean isConnectionValid() {
 
         try {
@@ -90,5 +91,6 @@ public class ConnectionManager {
         }
 
     }
+
 
 }
