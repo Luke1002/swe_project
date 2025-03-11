@@ -16,7 +16,7 @@ public class BookManager extends ElementManager {
     public BookManager() {}
 
 
-    public Boolean addBook(Book book) {
+    public Boolean addBook(Book book) throws SQLException {
 
         if (book.getAuthor() == null || book.getAuthor().isEmpty() ||
             book.getPublisher() == null || book.getPublisher().isEmpty() ||
@@ -60,17 +60,11 @@ public class BookManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'inserimento del libro: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean updateBook(Book book) {
+    public Boolean updateBook(Book book) throws SQLException {
 
         if (book.getIsbn() == null || book.getIsbn() <= 0 ||
                 book.getId() == null || book.getId() <= 0) {
@@ -110,17 +104,11 @@ public class BookManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'aggiornamento del libro: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Element getBook(Integer id) {
+    public Element getBook(Integer id) throws SQLException {
 
         if (id == null || id <= 0) {
 
@@ -136,7 +124,7 @@ public class BookManager extends ElementManager {
 
     }
 
-    public List<Book> getAllBooks() {
+    public List<Book> getAllBooks() throws SQLException {
 
         List<Book> books = new ArrayList<>();
 
@@ -183,78 +171,84 @@ public class BookManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore durante il recupero dei libri: " + e.getMessage());
-            e.printStackTrace();
-            return books;
-
         }
 
     }
 
-    public List<Element> getBooksByAuthor(String author) {
+    public List<Element> getBooksByAuthor(String author) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (author == null || author.isEmpty()) {
 
             System.err.println("Autore non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.author = ?";
 
-        return executeQueryWithSingleValue(query, author);
+        elements = executeQueryWithSingleValue(query, author);
+        return elements;
 
     }
 
-    public List<Element> getBooksByPublisher(String publisher) {
+    public List<Element> getBooksByPublisher(String publisher) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (publisher == null || publisher.isEmpty()) {
 
             System.err.println("Casa editrice non valida.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.publisher = ?";
 
-        return executeQueryWithSingleValue(query, publisher);
+        elements = executeQueryWithSingleValue(query, publisher);
+        return elements;
 
     }
 
-    public List<Element> getBooksByEdition(Integer edition) {
+    public List<Element> getBooksByEdition(Integer edition) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (edition == null || edition <= 0) {
 
             System.err.println("Edizione non valida.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.edition = ?";
 
-        return executeQueryWithSingleValue(query, edition);
+        elements = executeQueryWithSingleValue(query, edition);
+        return elements;
 
     }
 
-    public List<Element> getBooksByIsbn(Integer isbn) {
+    public List<Element> getBooksByIsbn(Integer isbn) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (isbn == null || isbn <= 0) {
 
             System.err.println("ISBN non valido.");
-            return null;
+            return elements;
 
         }
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.isbn = ?";
 
-        return executeQueryWithSingleValue(query, isbn);
+        elements = executeQueryWithSingleValue(query, isbn);
+        return elements;
 
     }
 
     @Override
-    public List<Element> executeQueryWithSingleValue(String query, Object value) {
+    public List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
 
         List<Element> elements = new ArrayList<>();
 
@@ -302,15 +296,10 @@ public class BookManager extends ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero dei libri: " + e.getMessage());
-            e.printStackTrace();
-            return elements;
-
         }
 
     }
+
 
 }
 

@@ -17,7 +17,7 @@ public class ElementManager {
     public ElementManager() {}
 
 
-    public Integer addElement(Element element) {
+    public Integer addElement(Element element) throws SQLException {
 
         if (element.getTitle() == null || element.getTitle().isEmpty() ||
                 element.getQuantity() < 0 ||
@@ -65,22 +65,16 @@ public class ElementManager {
             } else {
 
                 System.err.println("Errore: elemento non inserito");
-                return null;
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'inserimento delle informazioni di base dell'elemento: " + e.getMessage());
-            e.printStackTrace();
+            return null;
 
         }
 
-        return null;
-
     }
 
-    public Boolean removeElement(Integer id) {
+    public Boolean removeElement(Integer id) throws SQLException {
 
         String query = "DELETE FROM elements WHERE id = ?";
 
@@ -110,17 +104,11 @@ public class ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante la rimozione dell'elemento: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Boolean updateElement(Element element){
+    public Boolean updateElement(Element element) throws SQLException {
 
         if (element.getTitle() == null || element.getTitle().isEmpty() ||
                 element.getQuantity() < 0 ||
@@ -164,17 +152,11 @@ public class ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante l'aggiornamento delle informazioni base: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-
         }
 
     }
 
-    public Element getElement(Integer id){
+    public Element getElement(Integer id) throws SQLException {
 
         if (id == null || id <= 0) {
 
@@ -190,7 +172,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getAllElements() {
+    public List<Element> getAllElements() throws SQLException {
 
         List<Element> elements = new ArrayList<>();
 
@@ -201,7 +183,7 @@ public class ElementManager {
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
                 System.err.println("Connessione al database non valida.");
-                return null;
+                return elements;
 
             }
 
@@ -233,22 +215,18 @@ public class ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero degli elementi: " + e.getMessage());
-            e.printStackTrace();
-            return elements;
-
         }
 
     }
 
-    public List<Element> getElementsByGenre (String genreName) {
+    public List<Element> getElementsByGenre (String genreName) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
 
         if (genreName == null || genreName.isEmpty()) {
 
             System.err.println("Genere non valido.");
-            return null;
+            return elements;
 
         }
 
@@ -257,11 +235,12 @@ public class ElementManager {
                 "JOIN genres g ON eg.genrecode = g.genrecode " +
                 "WHERE g.name = ?";
 
-        return executeQueryWithSingleValue(query, genreName);
+        elements = executeQueryWithSingleValue(query, genreName);
+        return elements;
 
     }
 
-    public List<Element> getElementsByTitle (String title) {
+    public List<Element> getElementsByTitle (String title) throws SQLException {
 
         if (title == null || title.isEmpty()) {
 
@@ -276,7 +255,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getElementsByReleaseYear (Integer releaseYear) {
+    public List<Element> getElementsByReleaseYear (Integer releaseYear) throws SQLException {
 
         if (releaseYear == null || releaseYear <= 0) {
 
@@ -291,7 +270,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getElementsByLength (Integer length) {
+    public List<Element> getElementsByLength (Integer length) throws SQLException {
 
         if (length == null || length <= 0) {
 
@@ -306,7 +285,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> executeQueryWithSingleValue(String query, Object value) {
+    public List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
 
         if (query == null || query.isEmpty() || value == null) {
 
@@ -356,16 +335,11 @@ public class ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il recupero degli elementi: " + e.getMessage());
-            return elements;
-
         }
 
     }
 
-    public Boolean isElementAvailable(Integer id) {
+    public Boolean isElementAvailable(Integer id) throws SQLException {
 
         if (id == null || id <= 0) {
 
@@ -413,13 +387,9 @@ public class ElementManager {
 
             }
 
-        } catch (SQLException e) {
-
-            System.err.println("Errore SQL durante il controllo di disponibilità dell'elemento: " + e.getMessage());
-            return false;
-
         }
 
     }
+
 
 }
