@@ -79,9 +79,13 @@
                   <ChoiceBox id="choiceBox" fx:id="choiceBox" prefWidth="150.0">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
-                           <String>Book</String>
+
+                           <!--<String>Book</String>
                            <String>DigitalMedia</String>
                            <String>Periodic</String>
+                           <ItemType fx:value="BOOK" />
+                           <ItemType fx:value="DIGITAL_MEDIA" />
+                           <ItemType fx:value="PERIODIC" />-->
                         </FXCollections>
                      </items>
                      <VBox.margin>
