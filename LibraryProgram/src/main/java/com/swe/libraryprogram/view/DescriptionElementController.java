@@ -1,5 +1,8 @@
 package com.swe.libraryprogram.view;
 
+import com.swe.libraryprogram.controller.LibraryAdminController;
+import com.swe.libraryprogram.controller.LibraryUserController;
+import com.swe.libraryprogram.dao.ElementManager;
 import com.swe.libraryprogram.dao.UserManager;
 import com.swe.libraryprogram.domainmodel.*;
 
@@ -13,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.sql.SQLException;
 
 
 public class DescriptionElementController {
@@ -67,9 +71,15 @@ public class DescriptionElementController {
     //elemento da visualizzare
     private Element element;
 
+    private ElementManager elementManager;
+
+    private LibraryAdminController libraryAdminController;
+
+    private LibraryUserController libraryUserController;
+
 
     @FXML
-    private void initialize() {
+    private void initialize(Integer element_id) {
 
         action1.setOnAction(event -> handleAction1());
         action2.setOnAction(event -> handleAction2());
@@ -87,14 +97,25 @@ public class DescriptionElementController {
 
         //TODO: imposta messaggio di benvenuto
 
-        //TODO: recuperare l'elemento da visualizzare
+        //Recuperare l'elemento da visualizzare
+        try {
+
+            elementManager = new ElementManager();
+            element = elementManager.getElement(element_id);
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            //TODO: handle here
+
+        }
 
         //imposta la vista in base al tipo di elemento
         updateView();
 
     }
 
-    //TODO: da implementare
+    //TODO: da implementare e aggiungere appropriate azioni nel menù a tendina (uguale alla home?!)
     private void handleAction1() {
         System.out.println("Azione 1 selezionata.");
     }
@@ -104,18 +125,62 @@ public class DescriptionElementController {
     }
 
     private void handleTakeAction() {
-        System.out.println("Libro preso!");
+
+        libraryUserController = new LibraryUserController(user);
+
+        if (libraryUserController.borrowElement(element.getId())) {
+            //TODO: handle succesful borrow message
+
+        } else {
+           //TODO: handle unsuccesful borrow message
+
+        }
+
     }
 
     private void handleEditAction() {
-        System.out.println("Modifica libro.");
+
+        libraryAdminController = new LibraryAdminController(user);
+
+        if (libraryAdminController.updateElement(element)) {
+            updateView();
+            //TODO: handle succesful edit message
+
+        } else {
+            //TODO: handle unsuccesful edit message
+
+        }
+
     }
 
     private void handleRemoveAction() {
-        System.out.println("Libro rimosso.");
+
+        try {
+
+            if (elementManager.removeElement(element.getId())) {
+                //TODO: handle removal of element
+                //TODO: go back to home view
+
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            //TODO: handle failure
+
+        }
+
     }
 
     private void updateView() {
+
+        if (user.isAdmin()) {
+            //TODO: handle buttons
+
+        } else {
+            //TODO: handle buttons
+
+        }
 
         if (element instanceof Book) {
 

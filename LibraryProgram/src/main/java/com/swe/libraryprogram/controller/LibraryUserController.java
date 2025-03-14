@@ -17,7 +17,7 @@ public class LibraryUserController {
     private final BorrowsManager borrowManager = new BorrowsManager();
     private User usr;
 
-    LibraryUserController(User usr) {
+    public LibraryUserController(User usr) {
         this.usr = usr;
     }
 
