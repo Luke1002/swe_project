@@ -7,7 +7,7 @@ import com.swe.libraryprogram.domainmodel.*;
 import java.sql.SQLException;
 
 
-public class LibraryAdminController {
+public class LibraryAdminController extends UserController{
 
 
     private final ElementManager elementManager = new ElementManager();
@@ -18,7 +18,7 @@ public class LibraryAdminController {
     private final ModifiedElementsManager modifiedElements = new ModifiedElementsManager();
     private User usr;
 
-    LibraryAdminController(User usr) {
+    public LibraryAdminController(User usr) {
         this.usr = usr;
     }
 
