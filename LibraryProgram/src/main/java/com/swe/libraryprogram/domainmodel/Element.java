@@ -32,6 +32,19 @@ public class Element {
 
     }
 
+    public Element(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres) {
+
+        this.id = -1;
+        this.title = title;
+        this.releaseYear = releaseYear;
+        this.description = description;
+        this.quantity = quantity;
+        this.quantityAvailable = quantityAvailable;
+        this.length = length;
+        this.genres = genres;
+
+    }
+
 
     public Integer getId() {
         return id;

@@ -27,7 +27,6 @@ public class HelloApplication extends Application {
             Scene scene;
             fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("addItem-view.fxml"));
             scene = new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight());
-            ((AddItemController)fxmlLoader.getController()).initialize();
 //            if(error){
 //                fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("error-view.fxml"));
 //                scene = new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight());

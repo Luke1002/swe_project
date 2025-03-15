@@ -27,6 +27,18 @@ public class PeriodicPublication extends Element{
 
     }
 
+    public PeriodicPublication(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String publisher, Integer frequency, Integer releaseMonth, Integer releaseDay, Integer issn) {
+
+        super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
+
+        this.publisher = publisher;
+        this.frequency = frequency;
+        this.releaseMonth = releaseMonth;
+        this.releaseDay = releaseDay;
+        this.issn = issn;
+
+    }
+
 
     public String getPublisher() {
         return publisher;
