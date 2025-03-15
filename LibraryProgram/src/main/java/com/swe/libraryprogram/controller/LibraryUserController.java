@@ -11,7 +11,7 @@ import org.postgresql.util.PGJDBCMain;
 import java.sql.SQLException;
 
 
-public class LibraryUserController {
+public class LibraryUserController extends UserController {
 
     private final ElementManager elementManager = new ElementManager();
     private final BorrowsManager borrowManager = new BorrowsManager();

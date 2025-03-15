@@ -7,7 +7,7 @@ import com.swe.libraryprogram.domainmodel.*;
 import java.sql.SQLException;
 
 
-public class LibraryAdminController {
+public class LibraryAdminController extends UserController{
 
 
     private final ElementManager elementManager = new ElementManager();
