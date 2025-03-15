@@ -3,6 +3,7 @@ package com.swe.libraryprogram.view;
 
 import com.swe.libraryprogram.dao.ConnectionManager;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import com.swe.libraryprogram.dao.ElementManager;
 import com.swe.libraryprogram.domainmodel.Element;
@@ -14,39 +15,48 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 public class HomeController {
 
-    @FXML
-    private TextField titleField;
 
     @FXML
-    private TextField genreField;
-
-    @FXML
-    private TextField yearField;
-
-    @FXML
-    private TableView<Element> elementTable;
-
+    private TableView<Element> elementsTable;
     @FXML
     private TableColumn<Element, String> titleColumn;
-
     @FXML
-    private TableColumn<Element, String> genreColumn;
-
+    private TableColumn<Element, Integer> releaseYearColumn;
     @FXML
-    private TableColumn<Element, Integer> yearColumn;
+    private TableColumn<Element, Integer> quantityAvailableColumn;
+    @FXML
+    private TableColumn<Element, String> genresColumn;
+    @FXML
+    private TextField titleFilter;
+    @FXML
+    private TextField genreFilter;
+    @FXML
+    private TextField yearFilter;
+    @FXML
+    private Button searchButton;
 
-
+    private ObservableList<Element> elements = FXCollections.observableArrayList();
     private ElementManager elementManager = new ElementManager();
 
 
-
     @FXML
+    public void initialize() {
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
+        quantityAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("quantityAvailable"));
+        genresColumn.setCellValueFactory(new PropertyValueFactory<>("genres"));
+
+        loadElementData("", "", "");
+    }
+
+  /*  @FXML
     public void initialize() {
 
         // Collega le colonne ai campi della classe Book
@@ -55,37 +65,43 @@ public class HomeController {
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
 
         // Carica tutti i libri all'avvio
-        loadElementData("", "", "");
 
-    }
+
+    }*/
 
     @FXML
     private void onSearchButtonClick() {
 
-        String title = titleField.getText();
-        String genre = genreField.getText();
-        String year = yearField.getText();
+        String title = titleFilter.getText().trim();
+        String year = yearFilter.getText().trim();
+        //String genre = genreFilter.getText().trim();
 
-        loadElementData(title, genre, year);
+        //leggo una lista di generi inserita dall'utente e separata da virgole
+        List<String> genres = Arrays.stream(genreFilter.getText().trim().split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+        //TODO fare getFilteredElements nel manager
+        List<Element> filteredElements = elementManager.getFilteredElements(title, genres, year);
+        elementsTable.setItems(FXCollections.observableArrayList(filteredElements));
 
     }
 
     @FXML
     private void loadElementData(String title, String genre, String year) {
 
-        ObservableList<Element> elementList = FXCollections.observableArrayList();
-        List<Element> elements;
+        //ObservableList<Element> elementList = FXCollections.observableArrayList();
+        List<Element> elementsList;
         // Usa ElementManager per recuperare i dati dal database
         try {
 
-            elements = elementManager.getAllElements();
+            elementsList = elementManager.getAllElements();
         } catch (SQLException e) {
             //TODO handle exception better
-            elements = new ArrayList<>();
+            elementsList = new ArrayList<>();
         }
 
-        elementList.addAll(elements);
-        elementTable.setItems(elementList);
+        elements.addAll(elementsList);
+        elementsTable.setItems(elements);
 
     }
 
