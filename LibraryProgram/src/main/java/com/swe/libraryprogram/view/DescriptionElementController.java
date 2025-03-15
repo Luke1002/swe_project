@@ -2,21 +2,22 @@ package com.swe.libraryprogram.view;
 
 import com.swe.libraryprogram.controller.LibraryAdminController;
 import com.swe.libraryprogram.controller.LibraryUserController;
+import com.swe.libraryprogram.controller.UserController;
 import com.swe.libraryprogram.dao.ElementManager;
-import com.swe.libraryprogram.dao.UserManager;
 import com.swe.libraryprogram.domainmodel.*;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
 import java.sql.SQLException;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 
 
 public class DescriptionElementController {
@@ -63,52 +64,38 @@ public class DescriptionElementController {
     @FXML
     private Button removeButton;
 
-    // utente loggato
+    @FXML
+    private Button returnButton;
+
+    private Scene previousScene;
+
     private User user;
 
-    private UserManager userManager;
-
-    //elemento da visualizzare
     private Element element;
+
+    private UserController userController;
 
     private ElementManager elementManager;
 
-    private LibraryAdminController libraryAdminController;
-
-    private LibraryUserController libraryUserController;
-
 
     @FXML
-    private void initialize(Integer element_id) {
+    private void initialize() {
+
+        elementManager = new ElementManager();
 
         action1.setOnAction(event -> handleAction1());
         action2.setOnAction(event -> handleAction2());
         takeButton.setOnAction(event -> handleTakeAction());
         editButton.setOnAction(event -> handleEditAction());
         removeButton.setOnAction(event -> handleRemoveAction());
+        returnButton.setOnAction(event -> goBack());
 
         // Imposta il listener per il rating
         ratingSlider.valueProperty().addListener((obs, oldVal, newVal) ->
                 ratingText.setText(String.format("%.1f", newVal))
         );
 
-        //TODO: chiama il controller per recuperare l'utente loggato
-        userManager = new UserManager();
-
-        //TODO: imposta messaggio di benvenuto
-
-        //Recuperare l'elemento da visualizzare
-        try {
-
-            elementManager = new ElementManager();
-            element = elementManager.getElement(element_id);
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-            //TODO: handle here
-
-        }
+        welcomeText.setText("Benvenuto, " + user.getName() + "!");
 
         //imposta la vista in base al tipo di elemento
         updateView();
@@ -126,13 +113,13 @@ public class DescriptionElementController {
 
     private void handleTakeAction() {
 
-        libraryUserController = new LibraryUserController(user);
+        LibraryUserController userController = (LibraryUserController) this.userController;
 
-        if (libraryUserController.borrowElement(element.getId())) {
-            //TODO: handle succesful borrow message
+        if (userController.borrowElement(element.getId())) {
+            showAlert("Prestito dell'elemento", "Elemento preso!", AlertType.INFORMATION);
 
         } else {
-           //TODO: handle unsuccesful borrow message
+            showAlert("Prestito dell'elemento", "Errore durante il prestito dell'elemento", AlertType.ERROR);
 
         }
 
@@ -140,14 +127,15 @@ public class DescriptionElementController {
 
     private void handleEditAction() {
 
-        libraryAdminController = new LibraryAdminController(user);
+        LibraryAdminController userController = (LibraryAdminController) this.userController;
 
-        if (libraryAdminController.updateElement(element)) {
+        if (userController.updateElement(element)) {
+
+            showAlert("Modifica dell'elemento", "Elemento modificato con successo", AlertType.INFORMATION);
             updateView();
-            //TODO: handle succesful edit message
 
         } else {
-            //TODO: handle unsuccesful edit message
+            showAlert("Modifica dell'elemento", "Errore durante la modifica dell'elemento", AlertType.ERROR);
 
         }
 
@@ -158,15 +146,16 @@ public class DescriptionElementController {
         try {
 
             if (elementManager.removeElement(element.getId())) {
-                //TODO: handle removal of element
-                //TODO: go back to home view
+
+                showAlert("Rimozione dell'elemento", "Elemento rimosso con successo", AlertType.INFORMATION);
+                goBack();
 
             }
 
         } catch (SQLException e) {
 
+            showAlert("Rimozione dell'elemento", "Errore durante la rimozione dell'elemento", AlertType.ERROR);
             e.printStackTrace();
-            //TODO: handle failure
 
         }
 
@@ -175,10 +164,16 @@ public class DescriptionElementController {
     private void updateView() {
 
         if (user.isAdmin()) {
-            //TODO: handle buttons
+
+            editButton.setVisible(true);
+            removeButton.setVisible(true);
+            takeButton.setVisible(false);
 
         } else {
-            //TODO: handle buttons
+
+            editButton.setVisible(false);
+            removeButton.setVisible(false);
+            takeButton.setVisible(true);
 
         }
 
@@ -229,6 +224,92 @@ public class DescriptionElementController {
             directorText.setVisible(false);
 
         }
+
+    }
+
+    public void setUser(User user) {
+
+        if (this.user != null && this.user.equals(user)) {
+
+            System.out.println("Utente già impostato.");
+            return;
+
+        }
+
+        this.user = user;
+
+        if (user.isAdmin()) {
+            userController = new LibraryAdminController(user);
+
+        } else {
+            userController = new LibraryUserController(user);
+
+        }
+
+    }
+
+    public void setElement(Element element) {
+
+        this.element = element;
+
+        titleText.setText(element.getTitle());
+        yearText.setText(element.getReleaseYear().toString());
+        lengthText.setText(element.getLength().toString());
+        genresText.setText(element.getGenres().toString());
+
+        descriptionFlow.getChildren().add(new Text(element.getDescription()));
+
+        if (element instanceof Book) {
+
+            Book book = (Book) element;
+
+            ISBNText.setText(book.getIsbn().toString());
+            authorText.setText(book.getAuthor());
+            publisherText.setText(book.getPublisher());
+            editionText.setText(book.getEdition().toString());
+
+        } else if (element instanceof DigitalMedia) {
+
+            DigitalMedia digitalMedia = (DigitalMedia) element;
+
+            producerText.setText(digitalMedia.getProducer());
+            ageRatingText.setText(digitalMedia.getAgeRating().toString());
+            directorText.setText(digitalMedia.getDirector());
+
+        } else if (element instanceof PeriodicPublication) {
+
+            PeriodicPublication periodicPublication = (PeriodicPublication) element;
+
+            frequencyText.setText(periodicPublication.getFrequency().toString());
+            releaseMonthText.setText(periodicPublication.getReleaseMonth().toString());
+            releaseDayText.setText(periodicPublication.getReleaseDay().toString());
+            ISSNText.setText(periodicPublication.getIssn().toString());
+            publisherText.setText(periodicPublication.getPublisher());
+
+        }
+
+    }
+
+    private void showAlert(String titolo, String messaggio, AlertType tipo) {
+
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titolo);
+        alert.setHeaderText(null);
+        alert.setContentText(messaggio);
+        alert.showAndWait();
+
+    }
+
+    private void goBack() {
+
+        Stage stage = (Stage) returnButton.getScene().getWindow();
+        stage.setScene(previousScene);
+        stage.show();
+
+    }
+
+    private void setPreviousScene(Scene scene) {
+        this.previousScene = scene;
 
     }
 
