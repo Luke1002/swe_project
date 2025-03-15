@@ -14,7 +14,7 @@
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<Pane minHeight="480.0" minWidth="640.0" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
+<Pane minHeight="480.0" minWidth="640.0" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.AddItemController">
    <children>
       <HBox minHeight="-Infinity" minWidth="640.0" prefHeight="45.0" prefWidth="640.0" style="-fx-border-color: #000000;">
          <children>
@@ -77,29 +77,18 @@
                      </VBox.margin>
                   </TextField>
                   <ChoiceBox id="choiceBox" fx:id="choiceBox" prefWidth="150.0">
-                     <items>
-                        <FXCollections fx:factory="observableArrayList">
-
-                           <!--<String>Book</String>
-                           <String>DigitalMedia</String>
-                           <String>Periodic</String>
-                           <ItemType fx:value="BOOK" />
-                           <ItemType fx:value="DIGITAL_MEDIA" />
-                           <ItemType fx:value="PERIODIC" />-->
-                        </FXCollections>
-                     </items>
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
                   </ChoiceBox>
                   <HBox alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" style="-fx-background-color: #ffa000;" text="Save">
+                        <Button mnemonicParsing="false" style="-fx-background-color: #ffa000;" text="Save" fx:id="addButton">
                            <HBox.margin>
                               <Insets right="20.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" text="Cancel" />
+                        <Button mnemonicParsing="false" text="Cancel" fx:id="cancelButton"/>
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />

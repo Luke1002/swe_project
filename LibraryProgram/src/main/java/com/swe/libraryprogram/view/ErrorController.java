@@ -30,7 +30,7 @@ public class ErrorController {
     @FXML
     private void onTryAgain(ActionEvent event) throws IOException {
         ConnectionManager cM = ConnectionManager.getInstance();
-        if(cM.startingConnectionCheck()){
+        if(cM.isConnectionValid()){
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
             stage.setScene(new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight()));
