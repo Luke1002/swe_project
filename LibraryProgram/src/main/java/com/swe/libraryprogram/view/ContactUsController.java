@@ -56,7 +56,7 @@ public class ContactUsController {
     //TODO a chi o dove mando il messsaggio?
     private void sendMessage()  {
         ConnectionManager cM = ConnectionManager.getInstance();
-        if(cM.startingConnectionCheck()){
+        if(cM.isConnectionValid()){
             String name = contactName.getText().trim();
             String email = contactEmail.getText().trim();
             String motivation = motivetionCamp.getText().trim();

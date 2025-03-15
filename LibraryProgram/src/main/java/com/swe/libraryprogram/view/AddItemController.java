@@ -7,6 +7,7 @@ import com.swe.libraryprogram.domainmodel.User;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -37,7 +38,10 @@ public class AddItemController {
     @FXML
     private Button cancelButton;
 
-    private User user;
+    @FXML
+    private ChoiceBox<String> choiceBox;
+
+    private User user = new User();
 
     private Scene previousScene;
 
@@ -46,12 +50,14 @@ public class AddItemController {
     private LibraryAdminController libraryAdminController;
 
 
-    private void initialize() {
+
+    public void initialize() {
 
         libraryAdminController = new LibraryAdminController(user);
 
         addButton.setOnAction(event -> handleAddButton());
         cancelButton.setOnAction(event -> goBack());
+        choiceBox.getItems().addAll("Book", "Digital Media", "Periodic Publication");
 
         welcomeText.setText("Benvenuto, " + user.getName() + "!");
 

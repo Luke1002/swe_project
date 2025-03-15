@@ -2,6 +2,7 @@ package com.swe.libraryprogram;
 
 import com.swe.libraryprogram.dao.ConnectionManager;
 import com.swe.libraryprogram.dao.UserManager;
+import com.swe.libraryprogram.view.AddItemController;
 import com.swe.libraryprogram.view.ErrorController;
 import com.swe.libraryprogram.view.LoginController;
 import javafx.application.Application;
@@ -24,14 +25,17 @@ public class HelloApplication extends Application {
             stage.setTitle("Library Management System");
             stage.setResizable(false);
             Scene scene;
-            if(error){
-                fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("error-view.fxml"));
-                scene = new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight());
-                ((ErrorController)fxmlLoader.getController()).setErrorText("Cavalli bruni");
-            }else{
-                fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-                scene = new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight());
-            }
+            fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("addItem-view.fxml"));
+            scene = new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight());
+            ((AddItemController)fxmlLoader.getController()).initialize();
+//            if(error){
+//                fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("error-view.fxml"));
+//                scene = new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight());
+//                ((ErrorController)fxmlLoader.getController()).setErrorText("Cavalli bruni");
+//            }else{
+//                fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+//                scene = new Scene(fxmlLoader.load(), stage.getMinWidth(), stage.getMinHeight());
+//            }
             stage.setScene(scene);
             stage.show();
         }catch (Exception e){

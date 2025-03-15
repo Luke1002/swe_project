@@ -11,6 +11,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -71,9 +74,15 @@ public class HomeController {
     private void loadElementData(String title, String genre, String year) {
 
         ObservableList<Element> elementList = FXCollections.observableArrayList();
-
+        List<Element> elements;
         // Usa ElementManager per recuperare i dati dal database
-        List<Element> elements = elementManager.getAllElements();
+        try {
+
+            elements = elementManager.getAllElements();
+        } catch (SQLException e) {
+            //TODO handle exception better
+            elements = new ArrayList<>();
+        }
 
         elementList.addAll(elements);
         elementTable.setItems(elementList);

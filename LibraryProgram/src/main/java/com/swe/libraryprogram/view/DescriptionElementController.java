@@ -1,9 +1,8 @@
 package com.swe.libraryprogram.view;
 
-import com.swe.libraryprogram.controller.LibraryAdminController;
-import com.swe.libraryprogram.controller.LibraryUserController;
-import com.swe.libraryprogram.controller.UserController;
+import com.swe.libraryprogram.controller.*;
 import com.swe.libraryprogram.dao.ElementManager;
+import com.swe.libraryprogram.dao.UserManager;
 import com.swe.libraryprogram.domainmodel.*;
 
 import javafx.fxml.FXML;

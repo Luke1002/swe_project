@@ -1,5 +1,6 @@
 package com.swe.libraryprogram.view;
 
+import com.swe.libraryprogram.controller.UserController;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -54,9 +55,9 @@ public class SignupController {
 
         }
 
-        UserManager userManager = new UserManager(ConnectionManager.getInstance());
+        UserController usrController = new UserController();
 
-        if(userManager.addUser(email, password, name, surname, phone)){
+        if(usrController.signup(email, password, name, surname, phone)){
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
