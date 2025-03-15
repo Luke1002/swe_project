@@ -20,6 +20,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 
+
 public class DescriptionElementController {
 
     @FXML
@@ -127,17 +128,7 @@ public class DescriptionElementController {
 
     private void handleEditAction() {
 
-        LibraryAdminController userController = (LibraryAdminController) this.userController;
-
-        if (userController.updateElement(element)) {
-
-            showAlert("Modifica dell'elemento", "Elemento modificato con successo", AlertType.INFORMATION);
-            updateView();
-
-        } else {
-            showAlert("Modifica dell'elemento", "Errore durante la modifica dell'elemento", AlertType.ERROR);
-
-        }
+        //TODO: implementare la modifica dell'elemento, va chiamata un'altra vista
 
     }
 
@@ -290,12 +281,12 @@ public class DescriptionElementController {
 
     }
 
-    private void showAlert(String titolo, String messaggio, AlertType tipo) {
+    private void showAlert(String title, String message, AlertType type) {
 
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titolo);
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(messaggio);
+        alert.setContentText(message);
         alert.showAndWait();
 
     }
