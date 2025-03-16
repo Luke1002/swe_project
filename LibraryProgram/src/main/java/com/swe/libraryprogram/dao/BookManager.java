@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
@@ -295,6 +296,44 @@ public class BookManager extends ElementManager {
                 return elements;
 
             }
+
+        }
+
+    }
+
+    @Override
+    protected void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
+
+        if (customFilters.isEmpty()) {
+            return;
+
+        }
+
+        if (customFilters.containsKey("author")) {
+
+            query.append(" AND author = ?");
+            parameters.add(customFilters.get("author"));
+
+        }
+
+        if (customFilters.containsKey("publisher")) {
+
+            query.append(" AND publisher = ?");
+            parameters.add(customFilters.get("publisher"));
+
+        }
+
+        if (customFilters.containsKey("edition")) {
+
+            query.append(" AND edition = ?");
+            parameters.add(customFilters.get("edition"));
+
+        }
+
+        if (customFilters.containsKey("isbn")) {
+
+            query.append(" AND isbn = ?");
+            parameters.add(customFilters.get("isbn"));
 
         }
 

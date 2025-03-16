@@ -10,10 +10,11 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class ElementManager {
+public abstract class ElementManager {
 
     public ElementManager() {}
 
@@ -392,7 +393,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getFilteredElements(String title, Integer releaseYear, List<Genre> genres) throws SQLException {
+    public List<Element> getFilteredElements(String title, Integer releaseYear, List<Genre> genres, Map<String, Object> additionalFilters) throws SQLException {
 
         List<Element> elements = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
@@ -429,6 +430,8 @@ public class ElementManager {
             parameters.addAll(genres.stream().map(Genre::getCode).collect(Collectors.toList()));
 
         }
+
+        addCustomFilters(query, parameters, additionalFilters);
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query.toString())) {
@@ -482,6 +485,8 @@ public class ElementManager {
         return elements;
 
     }
+
+    protected abstract void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters);
 
 
 }
