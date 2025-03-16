@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 public class ElementManager {
@@ -388,6 +389,97 @@ public class ElementManager {
             }
 
         }
+
+    }
+
+    public List<Element> getFilteredElements(String title, Integer releaseYear, List<Genre> genres) throws SQLException {
+
+        List<Element> elements = new ArrayList<>();
+        List<Object> parameters = new ArrayList<>();
+
+        // Costruzione dinamica della query,
+        // In questo modo tutti i filtri successivi possono iniziare con "AND",
+        // senza dover controllare se WHERE esiste già
+        StringBuilder query = new StringBuilder("SELECT * FROM elements WHERE 1=1");
+
+        if (title != null && !title.isEmpty()) {
+
+            query.append(" AND title = ?");
+            parameters.add(title);
+
+        }
+
+        if (releaseYear != null) {
+
+            query.append(" AND releaseyear = ?");
+            parameters.add(releaseYear);
+
+        }
+
+        if (genres != null && !genres.isEmpty()) {
+
+            query.append(" AND id IN (SELECT elementid FROM elementgenres WHERE genreid IN (");
+
+            // Aggiunta di segnaposti "?" per ogni genere nella lista
+            // ricavando i dati dalla struttura dati usando stream e collect di java
+            query.append(genres.stream().map(g -> "?").collect(Collectors.joining(", ")));
+            query.append("))"); // Chiusura della query
+
+            // Estrazione e aggiunta dei codici (id) dei generi alla lista dei parametri
+            parameters.addAll(genres.stream().map(Genre::getCode).collect(Collectors.toList()));
+
+        }
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return elements;
+
+            }
+
+            // Imposta i parametri dinamici IN ORDINE
+            for (int i = 0; i < parameters.size(); i++) {
+
+                if (parameters.get(i) instanceof String) {
+                    stmt.setString(i + 1, (String) parameters.get(i));
+
+                } else if (parameters.get(i) instanceof Integer) {
+                    stmt.setInt(i + 1, (Integer) parameters.get(i));
+
+                }
+
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                GenreManager genreManager = new GenreManager();
+
+                while (rs.next()) {
+
+                    LinkedList<Genre> elementGenres = genreManager.getGenresForElement(rs.getInt("id"));
+
+                    Element element = new Element(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getInt("release_year"),
+                            rs.getString("description"),
+                            rs.getInt("quantity"),
+                            rs.getInt("quantity_available"),
+                            rs.getInt("length"),
+                            elementGenres
+                    );
+
+                    elements.add(element);
+
+                }
+
+            }
+
+        }
+
+        return elements;
 
     }
 
