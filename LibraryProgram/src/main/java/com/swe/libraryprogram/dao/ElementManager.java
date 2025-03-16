@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public abstract class ElementManager {
+public class ElementManager {
 
     public ElementManager() {}
 
@@ -486,7 +486,8 @@ public abstract class ElementManager {
 
     }
 
-    protected abstract void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters);
-
+    protected  void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
+        // Metodo vuoto per essere sovrascritto nelle classi figlie
+    }
 
 }
