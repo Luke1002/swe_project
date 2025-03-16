@@ -8,14 +8,14 @@ import java.util.LinkedList;
 public class Book extends Element {
 
 
-    private Integer isbn;
+    private String isbn;
     private String author;
     private String publisher;
     private Integer edition;
 
 
 
-    public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, Integer isbn, String author, String publisher, Integer edition) {
+    public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String isbn, String author, String publisher, Integer edition) {
 
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -26,7 +26,7 @@ public class Book extends Element {
 
     }
 
-    public Book(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, Integer isbn, String author, String publisher, Integer edition) {
+    public Book(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String isbn, String author, String publisher, Integer edition) {
 
         super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -37,11 +37,11 @@ public class Book extends Element {
 
     }
 
-    public Integer getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(Integer isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 

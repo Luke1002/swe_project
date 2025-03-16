@@ -23,7 +23,7 @@ public class PeriodicPublicationManager extends ElementManager {
                 periodic.getFrequency() <= 0 ||
                 periodic.getReleaseMonth() <= 0 || periodic.getReleaseMonth() > 12 ||
                 periodic.getReleaseDay() <= 0 || periodic.getReleaseDay() > 31 ||
-                periodic.getIssn() == null || periodic.getIssn() <= 0) {
+                periodic.getIssn() == null || periodic.getIssn().isEmpty()) {
 
             System.out.println("Informazioni del periodico non valide.");
             return false;
@@ -49,7 +49,7 @@ public class PeriodicPublicationManager extends ElementManager {
             periodicStmt.setInt(3, periodic.getFrequency());
             periodicStmt.setInt(4, periodic.getReleaseMonth());
             periodicStmt.setInt(5, periodic.getReleaseDay());
-            periodicStmt.setInt(6, periodic.getIssn());
+            periodicStmt.setString(6, periodic.getIssn());
 
             int rowsInserted = periodicStmt.executeUpdate();
 
@@ -74,7 +74,7 @@ public class PeriodicPublicationManager extends ElementManager {
                 periodic.getFrequency() <= 0 ||
                 periodic.getReleaseMonth() <= 0 || periodic.getReleaseMonth() > 12 ||
                 periodic.getReleaseDay() <= 0 || periodic.getReleaseDay() > 31 ||
-                periodic.getIssn() == null || periodic.getIssn() <= 0) {
+                periodic.getIssn() == null || periodic.getIssn().isEmpty()) {
 
             System.out.println("Informazioni del periodico non valide.");
             return false;
@@ -97,7 +97,7 @@ public class PeriodicPublicationManager extends ElementManager {
             periodicStmt.setInt(2, periodic.getFrequency());
             periodicStmt.setInt(3, periodic.getReleaseMonth());
             periodicStmt.setInt(4, periodic.getReleaseDay());
-            periodicStmt.setInt(5, periodic.getIssn());
+            periodicStmt.setString(5, periodic.getIssn());
             periodicStmt.setInt(6, periodic.getId());
 
             int rowsUpdated = periodicStmt.executeUpdate();
@@ -169,7 +169,7 @@ public class PeriodicPublicationManager extends ElementManager {
                             rs.getInt("frequency"),
                             rs.getInt("release_month"),
                             rs.getInt("release_day"),
-                            rs.getInt("issn")
+                            rs.getString("issn")
                     );
 
                     periodics.add(periodic);
@@ -312,7 +312,7 @@ public class PeriodicPublicationManager extends ElementManager {
                             rs.getInt("frequency"),
                             rs.getInt("release_month"),
                             rs.getInt("release_day"),
-                            rs.getInt("issn")
+                            rs.getString("issn")
                     );
 
                     elements.add(periodic);

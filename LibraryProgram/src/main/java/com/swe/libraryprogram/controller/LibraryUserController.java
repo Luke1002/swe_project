@@ -1,12 +1,10 @@
 package com.swe.libraryprogram.controller;
 
 import com.swe.libraryprogram.dao.ConnectionManager;
-import com.swe.libraryprogram.dao.UserManager;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.dao.ElementManager;
 import com.swe.libraryprogram.dao.BorrowsManager;
 import com.swe.libraryprogram.domainmodel.User;
-import org.postgresql.util.PGJDBCMain;
 
 import java.sql.SQLException;
 

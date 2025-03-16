@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" minHeight="480.0" minWidth="640.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" minHeight="480.0" minWidth="640.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.AddItemController">
    <children>
-      <HBox minHeight="-Infinity" minWidth="640.0" prefHeight="45.0" prefWidth="640.0" style="-fx-border-color: #000000; -fx-border-width: 0 0 1px 0;">
+      <HBox minHeight="-Infinity" minWidth="640.0" style="-fx-border-color: #000000; -fx-border-width: 0 0 1px 0;">
          <children>
-            <MenuBar fx:id="managerButton" prefHeight="26.0" prefWidth="60.0">
+            <MenuBar fx:id="managerButton"  >
                <menus>
                   <Menu mnemonicParsing="false" text="User">
                      <items>
@@ -32,13 +32,13 @@
             <Insets />
          </VBox.margin>
       </HBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #000000;" VBox.vgrow="ALWAYS">
+      <VBox prefHeight="200.0" style="-fx-border-color: #000000;" VBox.vgrow="ALWAYS">
          <children>
-            <HBox alignment="CENTER" prefHeight="327.0" prefWidth="525.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox id="#commonElements" alignment="CENTER" prefHeight="348.0" prefWidth="256.0" HBox.hgrow="ALWAYS">
+                  <VBox fx:id="generalBox" alignment="CENTER" HBox.hgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                        <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                            <children>
                               <Label text="Tipologia: " />
                               <ChoiceBox id="choiceBox" fx:id="choiceBox" prefWidth="150.0">
@@ -48,37 +48,37 @@
                               </ChoiceBox>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                        <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                            <children>
                               <Label text="Titolo: " />
                               <TextField fx:id="titleField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                        <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                            <children>
                               <Label text="Quantità: " />
                               <TextField fx:id="quantityField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                        <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                            <children>
                               <Label fx:id="editorText" text="Casa Editrice: " />
                               <TextField fx:id="publisherField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                        <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                            <children>
                               <Label text="Lunghezza: " />
                               <TextField fx:id="lengthField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                        <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                            <children>
                               <Label text="Anno: " />
                               <TextField fx:id="yearField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                        <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                            <children>
                               <Label text="Generi: " />
                               <TextField fx:id="genresField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
@@ -102,13 +102,13 @@
                      <children>
                         <VBox id="#bookBox" fx:id="bookBox" alignment="CENTER" prefHeight="90.0" prefWidth="260.0">
                            <children>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label text="ISBN: " />
                                     <TextField fx:id="isbnField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label text="Edizione: " />
                                     <TextField fx:id="editionField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
@@ -118,17 +118,13 @@
                         </VBox>
                         <VBox id="#digitalMediaBox" fx:id="digitalMediaBox" alignment="CENTER" prefHeight="91.0" prefWidth="260.0">
                            <children>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
-                                    <Label text="PEGI: " />
-                                    <ChoiceBox id="choiceBox" fx:id="ageRatingBox" prefHeight="26.0" prefWidth="150.0">
-                                       <items>
-                                          <FXCollections fx:factory="observableArrayList" />
-                                       </items>
-                                    </ChoiceBox>
+                                    <Label text="Età minima: " />
+                                    <TextField fx:id="ageField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label text="Producer: " />
                                     <TextField fx:id="producerField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
@@ -138,19 +134,19 @@
                         </VBox>
                         <VBox id="#periodicBox" fx:id="periodicPublicationBox" alignment="TOP_CENTER" prefHeight="182.0" prefWidth="260.0">
                            <children>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label text="ISSN: " />
                                     <TextField fx:id="issnField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label text="Cadenza: " />
                                     <TextField fx:id="frequencyField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" promptText="Giornaliera, Bimestrale..." />
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label text="Giorno: " />
                                     <ChoiceBox id="choiceBox" fx:id="dayBox" prefHeight="26.0" prefWidth="150.0">
@@ -160,7 +156,7 @@
                                     </ChoiceBox>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="270.0">
+                              <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label text="Mese: " />
                                     <ChoiceBox id="choiceBox" fx:id="monthBox" prefHeight="26.0" prefWidth="150.0">
@@ -187,12 +183,12 @@
             </HBox>
             <HBox alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" prefWidth="60.0" style="-fx-background-color: #ffa000;" text="Save">
+                  <Button mnemonicParsing="false" prefWidth="60.0" style="-fx-background-color: #ffa000;" text="Save" fx:id="addButton">
                      <HBox.margin>
                         <Insets left="10.0" right="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefWidth="60.0" text="Cancel">
+                  <Button mnemonicParsing="false" prefWidth="60.0" text="Cancel" fx:id="cancelButton">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>

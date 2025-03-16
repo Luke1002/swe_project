@@ -20,7 +20,7 @@ public class BookManager extends ElementManager {
 
         if (book.getAuthor() == null || book.getAuthor().isEmpty() ||
             book.getPublisher() == null || book.getPublisher().isEmpty() ||
-            book.getIsbn() == null || book.getIsbn() <= 0 ||
+            book.getIsbn() == null || book.getIsbn().isEmpty()||
             book.getEdition() == null || book.getEdition() <= 0) {
 
             System.err.println("Informazioni libro non valide.");
@@ -43,7 +43,7 @@ public class BookManager extends ElementManager {
              PreparedStatement bookStmt = connection.prepareStatement(insertBookQuery)) {
 
             bookStmt.setInt(1, elementId);
-            bookStmt.setInt(2, book.getIsbn());
+            bookStmt.setString(12, book.getIsbn());
             bookStmt.setString(3, book.getAuthor());
             bookStmt.setString(4, book.getPublisher());
             bookStmt.setInt(5, book.getEdition());
@@ -66,7 +66,7 @@ public class BookManager extends ElementManager {
 
     public Boolean updateBook(Book book) throws SQLException {
 
-        if (book.getIsbn() == null || book.getIsbn() <= 0 ||
+        if (book.getIsbn() == null || book.getIsbn().isEmpty() ||
                 book.getId() == null || book.getId() <= 0) {
 
             System.err.println("Informazioni libro non valide.");
@@ -86,7 +86,7 @@ public class BookManager extends ElementManager {
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement bookStmt = connection.prepareStatement(updateBookQuery)) {
 
-            bookStmt.setInt(1, book.getIsbn());
+            bookStmt.setString(1, book.getIsbn());
             bookStmt.setString(2, book.getAuthor());
             bookStmt.setString(3, book.getPublisher());
             bookStmt.setInt(4, book.getEdition());
@@ -157,7 +157,7 @@ public class BookManager extends ElementManager {
                             rs.getInt("quantity_available"),
                             rs.getInt("length"),
                             genres,
-                            rs.getInt("isbn"),
+                            rs.getString("isbn"),
                             rs.getString("author"),
                             rs.getString("publisher"),
                             rs.getInt("edition")
@@ -282,7 +282,7 @@ public class BookManager extends ElementManager {
                             rs.getInt("quantity_available"),
                             rs.getInt("length"),
                             genres,
-                            rs.getInt("isbn"),
+                            rs.getString("isbn"),
                             rs.getString("author"),
                             rs.getString("publisher"),
                             rs.getInt("edition")
