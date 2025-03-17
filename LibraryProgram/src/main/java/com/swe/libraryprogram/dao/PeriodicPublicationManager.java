@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.sql.*;
+import java.util.Map;
 
 
 
@@ -17,18 +18,6 @@ public class PeriodicPublicationManager extends ElementManager {
 
 
     public Boolean addPeriodicPublication(PeriodicPublication periodic) throws SQLException {
-
-        if (periodic.getId() == null || periodic.getId() <= 0 ||
-                periodic.getPublisher() == null || periodic.getPublisher().isEmpty() ||
-                periodic.getFrequency() <= 0 ||
-                periodic.getReleaseMonth() <= 0 || periodic.getReleaseMonth() > 12 ||
-                periodic.getReleaseDay() <= 0 || periodic.getReleaseDay() > 31 ||
-                periodic.getIssn() == null || periodic.getIssn().isEmpty()) {
-
-            System.out.println("Informazioni del periodico non valide.");
-            return false;
-
-        }
 
         Integer elementId = addElement(periodic);
 
@@ -69,18 +58,6 @@ public class PeriodicPublicationManager extends ElementManager {
 
     public Boolean updatePeriodicPublication(PeriodicPublication periodic) throws SQLException {
 
-        if (periodic.getId() == null || periodic.getId() <= 0 ||
-                periodic.getPublisher() == null || periodic.getPublisher().isEmpty() ||
-                periodic.getFrequency() <= 0 ||
-                periodic.getReleaseMonth() <= 0 || periodic.getReleaseMonth() > 12 ||
-                periodic.getReleaseDay() <= 0 || periodic.getReleaseDay() > 31 ||
-                periodic.getIssn() == null || periodic.getIssn().isEmpty()) {
-
-            System.out.println("Informazioni del periodico non valide.");
-            return false;
-
-        }
-
         if (!updateElement(periodic)) {
 
             System.out.println("Errore: l'aggiornamento delle informazioni base del periodico è fallito.");
@@ -118,17 +95,10 @@ public class PeriodicPublicationManager extends ElementManager {
 
     public Element getPeriodicPublication(Integer id) throws SQLException {
 
-        if (id == null || id <= 0) {
-
-            System.err.println("ID non valido.");
-            return null;
-
-        }
-
         String getPeriodicQuery = "SELECT * FROM periodicpublications WHERE id = ?";
 
         List<Element> elements = executeQueryWithSingleValue(getPeriodicQuery, id);
-        return elements.get(0);
+        return elements.getFirst();
 
     }
 
@@ -186,91 +156,41 @@ public class PeriodicPublicationManager extends ElementManager {
 
     public List<Element> getPeriodicPublicationsByPublisher(String publisher) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (publisher == null || publisher.isEmpty()) {
-
-            System.err.println("Editore non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE publisher = ?";
 
-        elements = executeQueryWithSingleValue(query, publisher);
-        return elements;
+        return executeQueryWithSingleValue(query, publisher);
 
     }
 
     public List<Element> getPeriodicPublicationsByFrequency(Integer frequency) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (frequency == null || frequency <= 0) {
-
-            System.err.println("Frequenza di pubblicazione non valida.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE frequency = ?";
 
-        elements = executeQueryWithSingleValue(query, frequency);
-        return elements;
+        return executeQueryWithSingleValue(query, frequency);
 
     }
 
     public List<Element> getPeriodicPublicationsByReleaseMonth(Integer releaseMonth) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (releaseMonth == null || releaseMonth <= 0 || releaseMonth > 12) {
-
-            System.err.println("Mese di rilascio non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE releasemonth = ?";
 
-        elements = executeQueryWithSingleValue(query, releaseMonth);
-        return elements;
+        return executeQueryWithSingleValue(query, releaseMonth);
 
     }
 
     public List<Element> getPeriodicPublicationsByReleaseDay(Integer releaseDay) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (releaseDay == null || releaseDay <= 0 || releaseDay > 31) {
-
-            System.err.println("Giorno di rilascio non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE releaseday = ?";
 
-        elements = executeQueryWithSingleValue(query, releaseDay);
-        return elements;
+        return executeQueryWithSingleValue(query, releaseDay);
 
     }
 
     public List<Element> getPeriodicPublicationsByIssn(Integer issn) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (issn == null || issn <= 0) {
-
-            System.err.println("ISSN non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE issn = ?";
 
-        elements = executeQueryWithSingleValue(query, issn);
-        return elements;
+        return executeQueryWithSingleValue(query, issn);
 
     }
 
@@ -324,6 +244,55 @@ public class PeriodicPublicationManager extends ElementManager {
             }
 
         }
+
+    }
+
+    @Override
+    public void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
+
+        if (customFilters.isEmpty()) {
+            return;
+
+        }
+
+        query.append("AND id IN (SELECT id FROM periodicpublications WHERE 1=1");
+
+        if (customFilters.containsKey("publisher")) {
+
+            query.append(" AND publisher = ?");
+            parameters.add(customFilters.get("publisher"));
+
+        }
+
+        if (customFilters.containsKey("frequency")) {
+
+            query.append(" AND frequency = ?");
+            parameters.add(customFilters.get("frequency"));
+
+        }
+
+        if (customFilters.containsKey("releaseMonth")) {
+
+            query.append(" AND releasemonth = ?");
+            parameters.add(customFilters.get("releaseMonth"));
+
+        }
+
+        if (customFilters.containsKey("releaseDay")) {
+
+            query.append(" AND releaseday = ?");
+            parameters.add(customFilters.get("releaseDay"));
+
+        }
+
+        if (customFilters.containsKey("issn")) {
+
+            query.append(" AND issn = ?");
+            parameters.add(customFilters.get("issn"));
+
+        }
+
+        query.append(")");
 
     }
 

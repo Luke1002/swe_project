@@ -12,11 +12,6 @@ public class ModifiedElementsManager {
 
     public void addEdit(Integer element_id, String admin_id) throws SQLException {
 
-        if (element_id == null || element_id <= 0 || admin_id == null) {
-            throw new IllegalArgumentException("ID admin o ID elemento non validi.");
-
-        }
-
         String query = "INSERT INTO modifiedelements (adminid, elid) VALUES (?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();

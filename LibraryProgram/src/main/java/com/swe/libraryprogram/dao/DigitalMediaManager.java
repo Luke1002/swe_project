@@ -11,7 +11,7 @@ import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+import java.util.Map;
 
 
 public class DigitalMediaManager extends ElementManager {
@@ -20,15 +20,6 @@ public class DigitalMediaManager extends ElementManager {
 
 
     public Boolean addDigitalMedia(DigitalMedia media) throws SQLException {
-
-        if (media.getId() == null || media.getId() <=0 ||
-                media.getProducer() == null || media.getProducer().isEmpty() ||
-                media.getDirector() == null || media.getDirector().isEmpty()) {
-
-            System.out.println("Informazioni del media non valide.");
-            return false;
-
-        }
 
         Integer elementId = addElement(media);
 
@@ -67,15 +58,6 @@ public class DigitalMediaManager extends ElementManager {
 
     public Boolean updateDigitalMedia(DigitalMedia media) throws SQLException {
 
-        if (media.getId() == null || media.getId() <= 0 ||
-                media.getProducer() == null || media.getProducer().isEmpty() ||
-                media.getDirector() == null || media.getDirector().isEmpty()) {
-
-            System.out.println("Informazioni del media non valide.");
-            return false;
-
-        }
-
         if (!updateElement(media)) {
 
             System.out.println("Errore: l'aggiornamento delle informazioni base del media è fallito.");
@@ -111,17 +93,10 @@ public class DigitalMediaManager extends ElementManager {
 
     public Element getDigitalMedia(Integer id) throws SQLException {
 
-        if (id == null || id <= 0) {
-
-            System.err.println("ID del media non valido.");
-            return null;
-
-        }
-
         String getMediaQuery = "SELECT * FROM digitalmedias WHERE id = ?";
 
         List<Element> elements = executeQueryWithSingleValue(getMediaQuery, id);
-        return elements.get(0);
+        return elements.getFirst();
 
     }
 
@@ -177,55 +152,25 @@ public class DigitalMediaManager extends ElementManager {
 
     public List<Element> getDigitalMediasByProducer(String producer) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (producer == null || producer.isEmpty()) {
-
-            System.err.println("Produttore non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN digitalmedias dm ON e.id = dm.id WHERE dm.producer = ?";
 
-        elements = executeQueryWithSingleValue(query, producer);
-        return elements;
+        return executeQueryWithSingleValue(query, producer);
 
     }
 
     public List<Element> getDigitalMediasByDirector(String director) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (director == null || director.isEmpty()) {
-
-            System.err.println("Regista non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN digitalmedias dm ON e.id = dm.id WHERE dm.director = ?";
 
-        elements = executeQueryWithSingleValue(query, director);
-        return elements;
+        return executeQueryWithSingleValue(query, director);
 
     }
 
     public List<Element> getDigitalMediasByAgeRating(Integer ageRating) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (ageRating == null || ageRating <= 0) {
-
-            System.err.println("Classificazione per età non valida.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN digitalmedias dm ON e.id = dm.id WHERE dm.agerating = ?";
 
-        elements = executeQueryWithSingleValue(query, ageRating);
-        return elements;
+        return executeQueryWithSingleValue(query, ageRating);
 
     }
 
@@ -277,6 +222,41 @@ public class DigitalMediaManager extends ElementManager {
             }
 
         }
+
+    }
+
+    @Override
+    public void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
+
+        if (customFilters.isEmpty()) {
+            return;
+
+        }
+
+        query.append("AND id IN (SELECT id FROM digitalmedias WHERE 1=1");
+
+        if (customFilters.containsKey("producer")) {
+
+            query.append(" AND producer = ?");
+            parameters.add(customFilters.get("producer"));
+
+        }
+
+        if (customFilters.containsKey("director")) {
+
+            query.append(" AND director = ?");
+            parameters.add(customFilters.get("director"));
+
+        }
+
+        if (customFilters.containsKey("ageRating")) {
+
+            query.append(" AND agerating = ?");
+            parameters.add(customFilters.get("ageRating"));
+
+        }
+
+        query.append(")");
 
     }
 

@@ -16,13 +16,6 @@ public class GenreManager {
 
     public Boolean addGenre(Genre genre) throws SQLException {
 
-        if (genre.getName() == null || genre.getName().isEmpty()) {
-
-            System.err.println("Errore: i dati del genere non sono validi.");
-            return false;
-
-        }
-
         String query = "INSERT INTO genres (code, name, description) VALUES (?, ?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -70,13 +63,6 @@ public class GenreManager {
     }
 
     public Genre getGenreByCode(Integer code) throws SQLException {
-
-        if (code == null || code <= 0) {
-
-            System.err.println("Codice genere non valido.");
-            return null;
-
-        }
 
         String query = "SELECT * FROM genres WHERE code = ?";
 
@@ -149,13 +135,6 @@ public class GenreManager {
 
     public Boolean associateGenreWithElement(Integer elementId, Integer genreCode) throws SQLException {
 
-        if (elementId == null || genreCode == null || elementId <= 0 || genreCode <= 0) {
-
-            System.err.println("ID elemento o codice genere non valido.");
-            return false;
-
-        }
-
         String query = "INSERT INTO elementgenres (elementid, genrecode) VALUES (?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -220,13 +199,6 @@ public class GenreManager {
     }
 
     public Boolean removeGenreFromElement(Integer elementId, Integer genreCode) throws SQLException {
-
-        if (elementId == null || genreCode == null || elementId <= 0 || genreCode <= 0) {
-
-            System.err.println("ID elemento o codice genere non valido.");
-            return false;
-
-        }
 
         String query = "DELETE FROM elementgenres WHERE elementid = ? AND genrecode = ?";
 

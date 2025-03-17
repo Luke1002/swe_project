@@ -19,11 +19,6 @@ public class BorrowsManager {
 
     public void addBorrow(Integer element_id, String user_id) throws SQLException {
 
-        if (element_id == null || element_id <= 0 || user_id == null) {
-            throw new IllegalArgumentException("ID utente o ID elemento non validi.");
-
-        }
-
         String query = "INSERT INTO borrows (elementid, userid) VALUES (?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -45,11 +40,6 @@ public class BorrowsManager {
 
     public void removeBorrow(Integer element_id, String user_id) throws SQLException {
 
-        if (element_id == null || element_id <= 0 || user_id == null) {
-            throw new IllegalArgumentException("ID utente o ID elemento non validi.");
-
-        }
-
         String query = "DELETE FROM borrows WHERE elementid = ? AND userid = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -70,11 +60,6 @@ public class BorrowsManager {
     }
 
     public List<Element> getBorrowedElementsForUser(String user_id) throws SQLException {
-
-        if (user_id == null) {
-            throw new IllegalArgumentException("ID utente non valido.");
-
-        }
 
         List<Element> elements = new ArrayList<>();
 

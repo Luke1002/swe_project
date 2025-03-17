@@ -17,13 +17,6 @@ public class UserManager {
 
     public User getUser(String email) throws SQLException {
 
-        if (email == null) {
-
-            System.err.println("email utente non valida.");
-            return null;
-
-        }
-
         String query = "SELECT * FROM users WHERE email = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -67,13 +60,6 @@ public class UserManager {
     }
 
     public Boolean authenticate(String email, String password) throws SQLException {
-
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-
-            System.err.println("Credenziali non valide.");
-            return false;
-
-        }
 
         String query = "SELECT password FROM users WHERE email = ?";
 
@@ -119,16 +105,6 @@ public class UserManager {
 
     public Boolean addUser(User user) throws SQLException {
 
-        if (user.getEmail() == null || user.getEmail().isEmpty() ||
-                user.getPassword() == null || user.getPassword().isEmpty() ||
-                user.getName() == null || user.getName().isEmpty() ||
-                user.getSurname() == null || user.getSurname().isEmpty()){
-
-            System.err.println("Dati utente non validi.");
-            return false;
-
-        }
-
         String query = "INSERT INTO users (email, password, name, surname, phone, isadmin) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -167,16 +143,6 @@ public class UserManager {
     }
 
     public Boolean updateUser(User user) throws SQLException {
-
-        if (user.getEmail() == null || user.getEmail().isEmpty() ||
-                user.getPassword() == null || user.getPassword().isEmpty() ||
-                user.getName() == null || user.getName().isEmpty() ||
-                user.getSurname() == null || user.getSurname().isEmpty()) {
-
-            System.err.println("Dati utente non validi.");
-            return false;
-
-        }
 
         String query = "UPDATE users SET password = ?, name = ?, surname = ?, phone = ?, isadmin = ? WHERE email = ?";
 
@@ -217,13 +183,6 @@ public class UserManager {
 
     public Boolean removeUser(String email) throws SQLException {
 
-        if (email == null || email.isEmpty()) {
-
-            System.err.println("Email utente non valida.");
-            return false;
-
-        }
-
         String query = "DELETE FROM users WHERE email = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -257,13 +216,6 @@ public class UserManager {
     }
 
     public Boolean isEmailTaken(String email) throws SQLException {
-
-        if (email == null || email.isEmpty()) {
-
-            System.err.println("Email utente non valida.");
-            return false;
-
-        }
 
         String query = "SELECT COUNT(*) FROM users WHERE email = ?";
 

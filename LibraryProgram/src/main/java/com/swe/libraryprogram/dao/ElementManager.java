@@ -21,16 +21,6 @@ public class ElementManager {
 
     public Integer addElement(Element element) throws SQLException {
 
-        if (element.getTitle() == null || element.getTitle().isEmpty() ||
-                element.getQuantity() < 0 ||
-                element.getQuantityAvailable() < 0 ||
-                element.getLength() <= 0) {
-
-            System.err.println("Informazioni base dell'elemento non valide.");
-            return null;
-
-        }
-
         String query = "INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -112,16 +102,6 @@ public class ElementManager {
 
     public Boolean updateElement(Element element) throws SQLException {
 
-        if (element.getTitle() == null || element.getTitle().isEmpty() ||
-                element.getQuantity() < 0 ||
-                element.getQuantityAvailable() < 0 ||
-                element.getLength() <= 0) {
-
-            System.err.println("Informazioni base dell'elemento non valide.");
-            return null;
-
-        }
-
         String query = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
@@ -160,17 +140,10 @@ public class ElementManager {
 
     public Element getElement(Integer id) throws SQLException {
 
-        if (id == null || id <= 0) {
-
-            System.err.println("ID non valido.");
-            return null;
-
-        }
-
         String query = "SELECT * FROM elements WHERE id = ?";
 
         List<Element> elements = executeQueryWithSingleValue(query, id);
-        return elements.get(0);
+        return elements.getFirst();
 
     }
 
@@ -223,33 +196,16 @@ public class ElementManager {
 
     public List<Element> getElementsByGenre (String genreName) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (genreName == null || genreName.isEmpty()) {
-
-            System.err.println("Genere non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT e.* FROM elements e " +
                 "JOIN elementgenres eg ON e.id = eg.elementid " +
                 "JOIN genres g ON eg.genrecode = g.genrecode " +
                 "WHERE g.name = ?";
 
-        elements = executeQueryWithSingleValue(query, genreName);
-        return elements;
+        return executeQueryWithSingleValue(query, genreName);
 
     }
 
     public List<Element> getElementsByTitle (String title) throws SQLException {
-
-        if (title == null || title.isEmpty()) {
-
-            System.err.println("Titolo non valido.");
-            return null;
-
-        }
 
         String query = "SELECT * FROM elements WHERE title = ?";
 
@@ -259,13 +215,6 @@ public class ElementManager {
 
     public List<Element> getElementsByReleaseYear (Integer releaseYear) throws SQLException {
 
-        if (releaseYear == null || releaseYear <= 0) {
-
-            System.err.println("Anno di rilascio non valido.");
-            return null;
-
-        }
-
         String query = "SELECT * FROM elements WHERE releaseyear = ?";
 
         return executeQueryWithSingleValue(query, releaseYear);
@@ -274,13 +223,6 @@ public class ElementManager {
 
     public List<Element> getElementsByLength (Integer length) throws SQLException {
 
-        if (length == null || length <= 0) {
-
-            System.err.println("Durata non valida.");
-            return null;
-
-        }
-
         String query = "SELECT * FROM elements WHERE length = ?";
 
         return executeQueryWithSingleValue(query, length);
@@ -288,13 +230,6 @@ public class ElementManager {
     }
 
     public List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
-
-        if (query == null || query.isEmpty() || value == null) {
-
-            System.err.println("Query non valida.");
-            return null;
-
-        }
 
         List<Element> elements = new ArrayList<>();
 
@@ -342,13 +277,6 @@ public class ElementManager {
     }
 
     public Boolean isElementAvailable(Integer id) throws SQLException {
-
-        if (id == null || id <= 0) {
-
-            System.err.println("ID non valido.");
-            return false;
-
-        }
 
         String query = "SELECT quantityavailable FROM elements WHERE id = ?";
 
@@ -400,13 +328,13 @@ public class ElementManager {
 
         // Costruzione dinamica della query,
         // In questo modo tutti i filtri successivi possono iniziare con "AND",
-        // senza dover controllare se WHERE esiste già
+        // senza dover controllare se WHERE esiste già (1=1 è sempre vero)
         StringBuilder query = new StringBuilder("SELECT * FROM elements WHERE 1=1");
 
         if (title != null && !title.isEmpty()) {
 
-            query.append(" AND title = ?");
-            parameters.add(title);
+            query.append(" AND title LIKE ?");
+            parameters.add("%" + title + "%");
 
         }
 
@@ -427,7 +355,7 @@ public class ElementManager {
             query.append("))"); // Chiusura della query
 
             // Estrazione e aggiunta dei codici (id) dei generi alla lista dei parametri
-            parameters.addAll(genres.stream().map(Genre::getCode).collect(Collectors.toList()));
+            parameters.addAll(genres.stream().map(Genre::getCode).toList());
 
         }
 
@@ -457,6 +385,7 @@ public class ElementManager {
             }
 
             try (ResultSet rs = stmt.executeQuery()) {
+
                 GenreManager genreManager = new GenreManager();
 
                 while (rs.next()) {
@@ -489,5 +418,6 @@ public class ElementManager {
     protected  void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
         // Metodo vuoto per essere sovrascritto nelle classi figlie
     }
+
 
 }

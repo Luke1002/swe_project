@@ -19,16 +19,6 @@ public class BookManager extends ElementManager {
 
     public Boolean addBook(Book book) throws SQLException {
 
-        if (book.getAuthor() == null || book.getAuthor().isEmpty() ||
-            book.getPublisher() == null || book.getPublisher().isEmpty() ||
-            book.getIsbn() == null || book.getIsbn().isEmpty()||
-            book.getEdition() == null || book.getEdition() <= 0) {
-
-            System.err.println("Informazioni libro non valide.");
-            return false;
-
-        }
-
         Integer elementId = addElement(book);
 
         if (elementId == null) {
@@ -67,14 +57,6 @@ public class BookManager extends ElementManager {
 
     public Boolean updateBook(Book book) throws SQLException {
 
-        if (book.getIsbn() == null || book.getIsbn().isEmpty() ||
-                book.getId() == null || book.getId() <= 0) {
-
-            System.err.println("Informazioni libro non valide.");
-            return false;
-
-        }
-
         if (!updateElement(book)) {
 
             System.err.println("Errore durante l'aggiornamento delle informazioni base del libro.");
@@ -111,17 +93,10 @@ public class BookManager extends ElementManager {
 
     public Element getBook(Integer id) throws SQLException {
 
-        if (id == null || id <= 0) {
-
-            System.err.println("ID non valido.");
-            return null;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE e.id = ?";
 
         List<Element> elements = executeQueryWithSingleValue(query, id);
-        return elements.get(0);
+        return elements.getFirst();
 
     }
 
@@ -178,73 +153,33 @@ public class BookManager extends ElementManager {
 
     public List<Element> getBooksByAuthor(String author) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (author == null || author.isEmpty()) {
-
-            System.err.println("Autore non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.author = ?";
 
-        elements = executeQueryWithSingleValue(query, author);
-        return elements;
+        return executeQueryWithSingleValue(query, author);
 
     }
 
     public List<Element> getBooksByPublisher(String publisher) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (publisher == null || publisher.isEmpty()) {
-
-            System.err.println("Casa editrice non valida.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.publisher = ?";
 
-        elements = executeQueryWithSingleValue(query, publisher);
-        return elements;
+        return executeQueryWithSingleValue(query, publisher);
 
     }
 
     public List<Element> getBooksByEdition(Integer edition) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (edition == null || edition <= 0) {
-
-            System.err.println("Edizione non valida.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.edition = ?";
 
-        elements = executeQueryWithSingleValue(query, edition);
-        return elements;
+        return executeQueryWithSingleValue(query, edition);
 
     }
 
     public List<Element> getBooksByIsbn(Integer isbn) throws SQLException {
 
-        List<Element> elements = new ArrayList<>();
-
-        if (isbn == null || isbn <= 0) {
-
-            System.err.println("ISBN non valido.");
-            return elements;
-
-        }
-
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.isbn = ?";
 
-        elements = executeQueryWithSingleValue(query, isbn);
-        return elements;
+        return executeQueryWithSingleValue(query, isbn);
 
     }
 
@@ -309,6 +244,8 @@ public class BookManager extends ElementManager {
 
         }
 
+        query.append("AND id IN (SELECT id FROM books WHERE 1=1");
+
         if (customFilters.containsKey("author")) {
 
             query.append(" AND author = ?");
@@ -336,6 +273,8 @@ public class BookManager extends ElementManager {
             parameters.add(customFilters.get("isbn"));
 
         }
+
+        query.append(")");
 
     }
 
