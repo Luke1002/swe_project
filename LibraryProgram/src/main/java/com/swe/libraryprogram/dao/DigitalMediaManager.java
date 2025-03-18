@@ -19,14 +19,14 @@ public class DigitalMediaManager extends ElementManager {
     public DigitalMediaManager() {}
 
 
-    public Boolean addDigitalMedia(DigitalMedia media) throws SQLException {
+    public Integer addDigitalMedia(DigitalMedia media) throws SQLException {
 
         Integer elementId = addElement(media);
 
         if (elementId == null) {
 
             System.out.println("Errore: l'inserimento delle informazioni di base del media è fallito.");
-            return false;
+            return null;
 
         }
 
@@ -38,17 +38,17 @@ public class DigitalMediaManager extends ElementManager {
             mediaStmt.setInt(1, elementId);
             mediaStmt.setString(2, media.getProducer());
             mediaStmt.setString(3, media.getDirector());
-            mediaStmt.setInt(4, media.getAgeRating());
+            mediaStmt.setString(4, media.getAgeRating());
 
             int rowsInserted = mediaStmt.executeUpdate();
 
             if (rowsInserted > 0) {
-                return true;
+                return elementId;
 
             } else {
 
                 System.err.println("Errore: il media non è stato inserito.");
-                return false;
+                return null;
 
             }
 
@@ -72,7 +72,7 @@ public class DigitalMediaManager extends ElementManager {
 
             mediaStmt.setString(1, media.getProducer());
             mediaStmt.setString(2, media.getDirector());
-            mediaStmt.setInt(3, media.getAgeRating());
+            mediaStmt.setString(3, media.getAgeRating());
             mediaStmt.setInt(4, media.getId());
 
             int rowsUpdated = mediaStmt.executeUpdate();
@@ -134,7 +134,7 @@ public class DigitalMediaManager extends ElementManager {
                             rs.getInt("length"),
                             genres,
                             rs.getString("producer"),
-                            rs.getInt("age_rating"),
+                            rs.getString("age_rating"),
                             rs.getString("director")
                     );
 
@@ -209,7 +209,7 @@ public class DigitalMediaManager extends ElementManager {
                             rs.getInt("length"),
                             genres,
                             rs.getString("producer"),
-                            rs.getInt("agerating"),
+                            rs.getString("agerating"),
                             rs.getString("director")
                     );
 

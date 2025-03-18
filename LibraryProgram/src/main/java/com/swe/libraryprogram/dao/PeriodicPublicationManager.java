@@ -17,14 +17,14 @@ public class PeriodicPublicationManager extends ElementManager {
     public PeriodicPublicationManager() {}
 
 
-    public Boolean addPeriodicPublication(PeriodicPublication periodic) throws SQLException {
+    public Integer addPeriodicPublication(PeriodicPublication periodic) throws SQLException {
 
         Integer elementId = addElement(periodic);
 
         if (elementId == null) {
 
             System.out.println("Errore: l'inserimento delle informazioni base del periodico è fallito.");
-            return false;
+            return null;
 
         }
 
@@ -43,12 +43,12 @@ public class PeriodicPublicationManager extends ElementManager {
             int rowsInserted = periodicStmt.executeUpdate();
 
             if (rowsInserted > 0) {
-                return true;
+                return elementId;
 
             } else {
 
                 System.err.println("Errore: il periodico non è stata inserito.");
-                return false;
+                return null;
 
             }
 
@@ -186,7 +186,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
     }
 
-    public List<Element> getPeriodicPublicationsByIssn(Integer issn) throws SQLException {
+    public List<Element> getPeriodicPublicationsByIssn(String issn) throws SQLException {
 
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE issn = ?";
 

@@ -17,14 +17,14 @@ public class BookManager extends ElementManager {
     public BookManager() {}
 
 
-    public Boolean addBook(Book book) throws SQLException {
+    public Integer addBook(Book book) throws SQLException {
 
         Integer elementId = addElement(book);
 
         if (elementId == null) {
 
             System.out.println("Errore: l'inserimento delle informazioni di base del libro è fallito.");
-            return false;
+            return null;
 
         }
 
@@ -42,12 +42,12 @@ public class BookManager extends ElementManager {
             int rowsInserted = bookStmt.executeUpdate();
 
             if (rowsInserted > 0) {
-                return true;
+                return elementId;
 
             } else {
 
                 System.err.println("Errore: il libro non è stato inserito.");
-                return false;
+                return null;
 
             }
 
@@ -175,7 +175,7 @@ public class BookManager extends ElementManager {
 
     }
 
-    public List<Element> getBooksByIsbn(Integer isbn) throws SQLException {
+    public List<Element> getBooksByIsbn(String isbn) throws SQLException {
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.isbn = ?";
 

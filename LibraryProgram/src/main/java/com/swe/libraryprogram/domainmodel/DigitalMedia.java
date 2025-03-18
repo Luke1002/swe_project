@@ -8,12 +8,12 @@ public class DigitalMedia extends Element{
 
 
     private String producer;
-    private Integer ageRating;
+    private String ageRating;
     private String director;
 
 
 
-    public DigitalMedia(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String producer, Integer ageRating, String director) {
+    public DigitalMedia(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String producer, String ageRating, String director) {
 
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -23,7 +23,7 @@ public class DigitalMedia extends Element{
 
     }
 
-    public DigitalMedia(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String producer, Integer ageRating, String director) {
+    public DigitalMedia(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String producer, String ageRating, String director) {
 
         super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -42,11 +42,11 @@ public class DigitalMedia extends Element{
         this.producer = producer;
     }
 
-    public Integer getAgeRating() {
+    public String getAgeRating() {
         return ageRating;
     }
 
-    public void setAgeRating(Integer ageRating) {
+    public void setAgeRating(String ageRating) {
         this.ageRating = ageRating;
     }
 
