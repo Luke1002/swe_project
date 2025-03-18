@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 
 
-public class DescriptionElementController {
+public class DescriptionElementController extends BaseViewController {
 
     @FXML
     private MenuButton menuButton;
@@ -78,8 +78,8 @@ public class DescriptionElementController {
 
 
     @FXML
-    private void initialize() {
-
+    protected void initialize() {
+        super.initialize();
         elementManager = new ElementManager();
 
         action1.setOnAction(event -> handleAction1());
@@ -228,10 +228,10 @@ public class DescriptionElementController {
         this.user = user;
 
         if (user.isAdmin()) {
-            userController = new LibraryAdminController(user);
+            userController = new LibraryAdminController();
 
         } else {
-            userController = new LibraryUserController(user);
+            userController = new LibraryUserController();
 
         }
 

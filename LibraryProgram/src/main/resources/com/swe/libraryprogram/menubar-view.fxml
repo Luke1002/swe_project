@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="26.0" maxWidth="-Infinity" minHeight="26.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="640.0" style="-fx-border-width: 0 0 2px 0; -fx-border-color: #000000; -fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+       <MenuBar prefHeight="22.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-9.0" AnchorPane.topAnchor="0.0">
+           <menus>
+               <Menu mnemonicParsing="false" text="Navigazione">
+                   <items>
+                       <MenuItem mnemonicParsing="false" text="Home" />
+                   </items>
+               </Menu>
+               <Menu mnemonicParsing="false" text="Modifiche">
+                   <items>
+                  <MenuItem mnemonicParsing="false" text="Aggiungi elemento" />
+                       <MenuItem mnemonicParsing="false" text="Delete" />
+                   </items>
+               </Menu>
+               <Menu mnemonicParsing="false" text="Aiuto">
+                   <items>
+                       <MenuItem mnemonicParsing="false" text="About" />
+                   </items>
+               </Menu>
+           </menus>
+       </MenuBar>
+       <Label fx:id="menubarLabel" alignment="CENTER" text="Benvenuto, UserName!" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>

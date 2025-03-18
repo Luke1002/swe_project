@@ -1,4 +1,4 @@
 package com.swe.libraryprogram.view;
 
-public class ReturnItemController {
+public class ReturnItemController extends BaseViewController {
 }

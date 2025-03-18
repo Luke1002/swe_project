@@ -17,7 +17,7 @@ import java.io.IOException;
 
 
 
-public class SignupController {
+public class SignupController extends BaseViewController {
 
     @FXML
     private TextField emailField;

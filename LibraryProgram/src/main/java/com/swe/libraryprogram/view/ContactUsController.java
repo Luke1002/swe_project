@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ContactUsController {
+public class ContactUsController extends BaseViewController {
 
     @FXML
     private TextField contactName;

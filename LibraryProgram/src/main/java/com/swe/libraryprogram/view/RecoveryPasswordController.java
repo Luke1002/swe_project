@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-public class RecoveryPasswordController {
+public class RecoveryPasswordController extends BaseViewController {
 
     @FXML
     private TextField email;

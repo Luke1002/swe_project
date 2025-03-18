@@ -15,8 +15,7 @@ public class LibraryUserController extends UserController {
     private final BorrowsManager borrowManager = new BorrowsManager();
     private User usr;
 
-    public LibraryUserController(User usr) {
-        this.usr = usr;
+    public LibraryUserController() {
     }
 
     public Boolean borrowElement (Integer element_id) {

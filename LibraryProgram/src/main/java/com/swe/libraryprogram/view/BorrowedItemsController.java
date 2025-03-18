@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 
-public class BorrowedItemsController {
+public class BorrowedItemsController extends BaseViewController {
 
     @FXML
     private Button returnButton, reportButton, backButton;
@@ -51,7 +51,7 @@ public class BorrowedItemsController {
 
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
 
         borrowsManager = new BorrowsManager();
 
@@ -111,7 +111,7 @@ public class BorrowedItemsController {
     public void setUser(User user) {
 
         this.user = user;
-        libraryUserController = new LibraryUserController(user);
+        libraryUserController = new LibraryUserController();
 
         getBorrowedElements();
 

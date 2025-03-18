@@ -24,7 +24,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 
-public class AddItemController {
+public class AddItemController extends CheckViewController {
 
     @FXML
     private TextField titleField, descriptionField, yearField, quantityField, lengthField, genresField, publisherField;
@@ -128,11 +128,12 @@ public class AddItemController {
         }
     };
 
-
-    public void initialize() {
+    @FXML
+    protected void initialize() {
+        super.initialize();
         setFieldsRestrictions();
 
-        libraryAdminController = new LibraryAdminController(user);
+        libraryAdminController = new LibraryAdminController();
 
         addButton.setOnAction(event -> handleAddButton());
         cancelButton.setOnAction(event -> goBack());

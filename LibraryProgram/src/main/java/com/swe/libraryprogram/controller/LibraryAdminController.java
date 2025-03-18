@@ -18,10 +18,6 @@ public class LibraryAdminController extends UserController{
     private final ModifiedElementsManager modifiedElements = new ModifiedElementsManager();
     private User usr;
 
-    public LibraryAdminController(User usr) {
-        this.usr = usr;
-    }
-
 
 
     public Boolean addElement (Element element) {

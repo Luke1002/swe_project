@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class HomeController {
+public class HomeController extends BaseViewController {
 
 
     @FXML
@@ -47,7 +47,7 @@ public class HomeController {
 
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
         quantityAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("quantityAvailable"));
@@ -81,8 +81,8 @@ public class HomeController {
                 .map(String::trim)
                 .collect(Collectors.toList());
         //TODO fare getFilteredElements nel manager
-        List<Element> filteredElements = elementManager.getFilteredElements(title, genres, year);
-        elementsTable.setItems(FXCollections.observableArrayList(filteredElements));
+        //List<Element> filteredElements = elementManager.getFilteredElements(title, genres, year);
+        //elementsTable.setItems(FXCollections.observableArrayList(filteredElements));
 
     }
 
