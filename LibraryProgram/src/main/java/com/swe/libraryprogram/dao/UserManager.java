@@ -1,4 +1,5 @@
 package com.swe.libraryprogram.dao;
+
 import com.swe.libraryprogram.domainmodel.User;
 
 import java.sql.Connection;
@@ -9,18 +10,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-
 public class UserManager {
 
-    public UserManager() {}
+    public UserManager() {
+    }
 
 
     public User getUser(String email) throws SQLException {
 
         String query = "SELECT * FROM users WHERE email = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -35,14 +35,7 @@ public class UserManager {
 
                 if (rs.next()) {
 
-                    User user = new User(
-                            rs.getString("email"),
-                            rs.getString("password"),
-                            rs.getString("name"),
-                            rs.getString("surname"),
-                            rs.getString("phone"),
-                            rs.getBoolean("isadmin")
-                    );
+                    User user = new User(rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getString("phone"), rs.getBoolean("isadmin"));
 
                     return user;
 
@@ -59,46 +52,18 @@ public class UserManager {
 
     }
 
-    public Boolean authenticate(String email, String password) throws SQLException {
+    public User authenticate(String email, String password) throws SQLException {
+        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
 
-        String query = "SELECT password FROM users WHERE email = ?";
-
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
-
-            stmt.setString(1, email);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-                    String storedPassword = rs.getString("password");
-
-                    if (password.equals(storedPassword)) {
-                        return true;
-
-                    } else {
-
-                        System.err.println("Password errata.");
-                        return false;
-
-                    }
-
-                } else {
-
-                    System.err.println("Utente non trovato.");
-                    return false;
-
-                }
-
-            }
-
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, email);
+        stmt.setString(2, password);
+        ResultSet rs = stmt.executeQuery();
+        if (!rs.next()) {
+            return null;
+        } else {
+            return getUser(rs.getString("email"));
         }
 
     }
@@ -107,8 +72,7 @@ public class UserManager {
 
         String query = "INSERT INTO users (email, password, name, surname, phone, isadmin) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -146,8 +110,7 @@ public class UserManager {
 
         String query = "UPDATE users SET password = ?, name = ?, surname = ?, phone = ?, isadmin = ? WHERE email = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -185,8 +148,7 @@ public class UserManager {
 
         String query = "DELETE FROM users WHERE email = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -219,8 +181,7 @@ public class UserManager {
 
         String query = "SELECT COUNT(*) FROM users WHERE email = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -257,8 +218,7 @@ public class UserManager {
 
         String query = "SELECT * FROM users";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -271,14 +231,7 @@ public class UserManager {
 
                 while (rs.next()) {
 
-                    User user = new User(
-                            rs.getString("email"),
-                            rs.getString("password"),
-                            rs.getString("name"),
-                            rs.getString("surname"),
-                            rs.getString("phone"),
-                            rs.getBoolean("isadmin")
-                    );
+                    User user = new User(rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getString("phone"), rs.getBoolean("isadmin"));
 
                     users.add(user);
 
