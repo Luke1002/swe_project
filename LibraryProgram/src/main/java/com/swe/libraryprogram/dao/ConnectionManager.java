@@ -10,7 +10,7 @@ public class ConnectionManager {
     private static ConnectionManager singleton;
     private static Connection connection = null;
 
-    private final String dbUrl = "jdbc:postgresql://berrettilove.minecraftnoob.com:5432/postgres";
+    private final String dbUrl = "jdbc:postgresql://sweproject.ladatap.com:8445/lb_db";
     private static String dbUser = "";
     private static String dbPass = "";
 
@@ -59,7 +59,7 @@ public class ConnectionManager {
 
     }
 
-    //TODO: da modificare
+
     public Boolean isConnectionValid() {
 
         try {
@@ -73,8 +73,6 @@ public class ConnectionManager {
             return connection.isValid(5);
 
         } catch (SQLException e) {
-
-            e.printStackTrace();
             return false;
 
         }
