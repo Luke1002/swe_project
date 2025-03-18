@@ -184,7 +184,7 @@ public class BookManager extends ElementManager {
     }
 
     @Override
-    public List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
+    protected List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
 
         List<Element> elements = new ArrayList<>();
 
