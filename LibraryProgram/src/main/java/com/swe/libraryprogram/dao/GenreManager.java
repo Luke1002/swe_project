@@ -11,12 +11,13 @@ import java.util.LinkedList;
 
 public class GenreManager {
 
-    public GenreManager() {}
+    public GenreManager() {
+    }
 
 
     public Boolean addGenre(Genre genre) throws SQLException {
 
-        String query = "INSERT INTO genres (code, name, description) VALUES (?, ?, ?)";
+        String query = "INSERT INTO genres (code, name) VALUES (?, ?)";
 
         try (Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -30,7 +31,6 @@ public class GenreManager {
 
             stmt.setInt(1, genre.getCode());
             stmt.setString(2, genre.getName());
-            stmt.setString(3, genre.getDescription());
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -84,8 +84,7 @@ public class GenreManager {
 
                     return new Genre(
                             rs.getString("name"),
-                            rs.getInt("code"),
-                            rs.getString("description")
+                            rs.getInt("code")
                     );
 
                 } else {
@@ -96,6 +95,35 @@ public class GenreManager {
                 }
             }
 
+        }
+
+    }
+
+    public Genre getGenreByName(String name) throws SQLException {
+
+        String query = "SELECT * FROM genres WHERE name = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return null;
+
+            }
+
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Genre(
+                        rs.getString("name"),
+                        rs.getInt("code")
+                );
+            } else {
+                System.err.println("Genere non trovato con codice: " + name);
+                return null;
+            }
         }
 
     }
@@ -121,8 +149,7 @@ public class GenreManager {
 
                 genres.add(new Genre(
                         rs.getString("name"),
-                        rs.getInt("code"),
-                        rs.getString("description")
+                        rs.getInt("code")
                 ));
 
             }
@@ -161,7 +188,7 @@ public class GenreManager {
 
         LinkedList<Genre> genres = new LinkedList<>();
 
-        String query = "SELECT g.code, g.name, g.description " +
+        String query = "SELECT g.code, g.name " +
                 "FROM genres g " +
                 "JOIN elementgenres eg ON g.code = eg.genrecode " +
                 "WHERE eg.elementid = ?";
@@ -184,8 +211,7 @@ public class GenreManager {
 
                     genres.add(new Genre(
                             rs.getString("name"),
-                            rs.getInt("code"),
-                            rs.getString("description")
+                            rs.getInt("code")
                     ));
 
                 }

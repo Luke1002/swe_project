@@ -58,14 +58,12 @@ public class Genre {
 
     private final String name;
     private final Integer code;
-    private final String description;
 
 
-    public Genre(String name, Integer code, String description) {
+    public Genre(String name, Integer code) {
 
         this.name = name;
         this.code = code;
-        this.description = description;
 
     }
 
@@ -76,10 +74,6 @@ public class Genre {
 
     public Integer getCode() {
         return code;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
 }
