@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class GenreManager {
@@ -128,9 +130,9 @@ public class GenreManager {
 
     }
 
-    public LinkedList<Genre> getAllGenres() throws SQLException {
+    public List<Genre> getAllGenres() throws SQLException {
 
-        LinkedList<Genre> genres = new LinkedList<>();
+        List<Genre> genres = new ArrayList<>();
 
         String query = "SELECT * FROM genres";
 
