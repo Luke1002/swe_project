@@ -37,12 +37,12 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="313.0" prefWidth="94.0">
                <children>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onLoginButtonClick" prefHeight="28.0" prefWidth="60.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" text="Login">
+                  <Button fx:id="loginButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="60.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" text="Login">
                      <VBox.margin>
                         <Insets bottom="35.0" />
                      </VBox.margin>
                   </Button>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onSignupButtonClick" prefHeight="28.0" prefWidth="60.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" text="Signup" />
+                  <Button fx:id="signupButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="60.0" style="-fx-background-radius: 8; -fx-border-radius: 8;" text="Signup"/>
                </children>
             </VBox>
          </children>
