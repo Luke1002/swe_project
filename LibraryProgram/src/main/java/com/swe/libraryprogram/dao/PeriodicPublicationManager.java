@@ -124,7 +124,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     PeriodicPublication periodic = new PeriodicPublication(
                             rs.getInt("id"),
@@ -217,7 +217,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     PeriodicPublication periodic = new PeriodicPublication(
                             rs.getInt("id"),

@@ -122,7 +122,7 @@ public class DigitalMediaManager extends ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     DigitalMedia media = new DigitalMedia(
                             rs.getInt("id"),
@@ -197,7 +197,7 @@ public class DigitalMediaManager extends ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     DigitalMedia media = new DigitalMedia(
                             rs.getInt("id"),

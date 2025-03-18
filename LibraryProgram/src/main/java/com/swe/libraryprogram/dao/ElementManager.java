@@ -169,7 +169,7 @@ public class ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Element element = new Element(
                             rs.getInt("id"),
@@ -251,7 +251,7 @@ public class ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Element element = new Element(
                             rs.getInt("id"),
@@ -390,7 +390,7 @@ public class ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> elementGenres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> elementGenres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Element element = new Element(
                             rs.getInt("id"),

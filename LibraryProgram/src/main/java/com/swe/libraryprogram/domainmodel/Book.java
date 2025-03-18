@@ -1,7 +1,6 @@
 package com.swe.libraryprogram.domainmodel;
 
-import java.util.LinkedList;
-
+import java.util.List;
 
 
 
@@ -15,7 +14,7 @@ public class Book extends Element {
 
 
 
-    public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String isbn, String author, String publisher, Integer edition) {
+    public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String isbn, String author, String publisher, Integer edition) {
 
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -26,7 +25,7 @@ public class Book extends Element {
 
     }
 
-    public Book(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, LinkedList<Genre> genres, String isbn, String author, String publisher, Integer edition) {
+    public Book(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String isbn, String author, String publisher, Integer edition) {
 
         super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
 

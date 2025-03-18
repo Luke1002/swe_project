@@ -186,9 +186,9 @@ public class GenreManager {
 
     }
 
-    public LinkedList<Genre> getGenresForElement(Integer elementId) throws SQLException {
+    public List<Genre> getGenresForElement(Integer elementId) throws SQLException {
 
-        LinkedList<Genre> genres = new LinkedList<>();
+        List<Genre> genres = new ArrayList<>();
 
         String query = "SELECT g.code, g.name " +
                 "FROM genres g " +

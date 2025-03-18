@@ -122,7 +122,7 @@ public class BookManager extends ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Book book = new Book(
                             rs.getInt("id"),
@@ -207,7 +207,7 @@ public class BookManager extends ElementManager {
 
                 while (rs.next()) {
 
-                    LinkedList<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
                     Book book = new Book(
                             rs.getInt("id"),
