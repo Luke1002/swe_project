@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class BookManagerTest {
+public class BookManagerTest {
 
     @InjectMocks
     private BookManager bookManager;

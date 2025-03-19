@@ -1,15 +1,12 @@
 package com.swe.libraryprogram;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.Suite;
 
 
 
-class RunTests {
-
-    @Test
-    void runAllTests() {
-    }
-
-
+@Suite
+@SelectPackages({"dao", "controller", "view"})
+public class RunTests {
 }
+

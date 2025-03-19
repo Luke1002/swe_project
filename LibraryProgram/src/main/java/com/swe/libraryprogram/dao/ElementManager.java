@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.swe.libraryprogram.dao.ConnectionManager.connection;
-
 
 public class ElementManager {
 
