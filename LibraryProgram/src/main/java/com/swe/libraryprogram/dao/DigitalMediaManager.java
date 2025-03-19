@@ -60,7 +60,7 @@ public class DigitalMediaManager extends ElementManager {
             System.err.println("Errore: il digital media non è stato inserito.");
         }
 
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
         return result;
 
     }
@@ -92,7 +92,7 @@ public class DigitalMediaManager extends ElementManager {
         stmt.setString(9, media.getAgeRating());
 
         int rowsUpdated = stmt.executeUpdate();
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
         if (rowsUpdated > 0) {
             return true;
 
@@ -152,7 +152,7 @@ public class DigitalMediaManager extends ElementManager {
             digitalMedias.add(media);
 
         }
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
         for (Element element : digitalMedias){
@@ -227,7 +227,7 @@ public class DigitalMediaManager extends ElementManager {
             elements.add(media);
 
         }
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
         for (Element element : elements){

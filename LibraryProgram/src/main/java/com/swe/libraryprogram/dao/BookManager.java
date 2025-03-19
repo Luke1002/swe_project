@@ -56,7 +56,7 @@ public class BookManager extends ElementManager {
             System.err.println("Errore: il libro non è stato inserito.");
         }
 
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
         return result;
     }
 
@@ -92,7 +92,7 @@ public class BookManager extends ElementManager {
         }
 
         int rowsUpdated = stmt.executeUpdate();
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
         if (rowsUpdated > 0) {
             return true;
 
@@ -152,7 +152,7 @@ public class BookManager extends ElementManager {
             books.add(book);
 
         }
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
         for (Element element : books){
@@ -238,7 +238,7 @@ public class BookManager extends ElementManager {
             elements.add(book);
 
         }
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
         for (Element element : elements){

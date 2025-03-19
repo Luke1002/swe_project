@@ -1,5 +1,6 @@
 package com.swe.libraryprogram.dao;
 
+import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 
@@ -53,6 +54,44 @@ public class ElementManager {
 
     }
 
+    public Boolean updateElement(Element element) throws SQLException {
+
+        String query = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
+
+        try (Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            if (!ConnectionManager.getInstance().isConnectionValid()) {
+
+                System.err.println("Connessione al database non valida.");
+                return false;
+
+            }
+
+            stmt.setString(1, element.getTitle());
+            stmt.setInt(2, element.getReleaseYear());
+            stmt.setString(3, element.getDescription());
+            stmt.setInt(4, element.getQuantity());
+            stmt.setInt(5, element.getQuantityAvailable());
+            stmt.setInt(6, element.getLength());
+            stmt.setInt(7, element.getId());
+
+            int rowsUpdated = stmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                return true;
+
+            } else {
+
+                System.err.println("Errore: informazioni base non aggiornate.");
+                return false;
+
+            }
+
+        }
+
+    }
+
     public Element getElement(Integer id) throws SQLException {
 
         String query = "SELECT * FROM elements WHERE id = ?";
@@ -69,23 +108,12 @@ public class ElementManager {
         String query = "SELECT * FROM elements";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return elements;
-
-        }
         PreparedStatement stmt = connection.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
 
-        GenreManager genreManager = new GenreManager();
-
         while (rs.next()) {
 
-            List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-            Integer releaseYear = rs.getInt("release_year");
+            Integer releaseYear = rs.getInt("releaseyear");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -100,13 +128,20 @@ public class ElementManager {
                     releaseYear,
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     length,
-                    genres
+                    new ArrayList<>()
             );
 
             elements.add(element);
 
+        }
+        stmt.close();
+
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : elements) {
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
         }
 
         return elements;
@@ -152,46 +187,46 @@ public class ElementManager {
 
         List<Element> elements = new ArrayList<>();
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        stmt.setObject(1, value);
 
-                System.err.println("Connessione al database non valida.");
-                return null;
+        ResultSet rs = stmt.executeQuery();
 
+        while (rs.next()) {
+            Integer releaseYear = rs.getInt("releaseyear");
+            if (rs.wasNull()) {
+                releaseYear = null;
+            }
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
             }
 
-            stmt.setObject(1, value);
+            Element element = new Element(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear,
+                    rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantityavailable"),
+                    length,
+                    new ArrayList<>()
+            );
 
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Element element = new Element(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres
-                    );
-
-                    elements.add(element);
-
-                }
-
-                return elements;
-
-            }
+            elements.add(element);
 
         }
+        stmt.close();
+
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : elements) {
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
+        }
+
+        return elements;
 
     }
 
@@ -280,54 +315,53 @@ public class ElementManager {
 
         addCustomFilters(query, parameters, additionalFilters);
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query.toString());
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return elements;
+            System.err.println("Connessione al database non valida.");
+            return elements;
 
-            }
+        }
 
-            // Imposta i parametri dinamici IN ORDINE
-            for (int i = 0; i < parameters.size(); i++) {
+        // Imposta i parametri dinamici IN ORDINE
+        for (int i = 0; i < parameters.size(); i++) {
 
-                if (parameters.get(i) instanceof String) {
-                    stmt.setString(i + 1, (String) parameters.get(i));
+            if (parameters.get(i) instanceof String) {
+                stmt.setString(i + 1, (String) parameters.get(i));
 
-                } else if (parameters.get(i) instanceof Integer) {
-                    stmt.setInt(i + 1, (Integer) parameters.get(i));
-
-                }
+            } else if (parameters.get(i) instanceof Integer) {
+                stmt.setInt(i + 1, (Integer) parameters.get(i));
 
             }
 
-            try (ResultSet rs = stmt.executeQuery()) {
+        }
 
-                GenreManager genreManager = new GenreManager();
+        ResultSet rs = stmt.executeQuery();
 
-                while (rs.next()) {
+        while (rs.next()) {
 
-                    List<Genre> elementGenres = genreManager.getGenresForElement(rs.getInt("id"));
+            Element element = new Element(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getInt("release_year"),
+                    rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    rs.getInt("length"),
+                    new ArrayList<>()
+            );
 
-                    Element element = new Element(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            elementGenres
-                    );
+            elements.add(element);
 
-                    elements.add(element);
+        }
+        stmt.close();
 
-                }
-
-            }
-
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : elements){
+            List<Genre> genresList = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genresList);
         }
 
         return elements;

@@ -20,36 +20,32 @@ public class UserManager {
 
         String query = "SELECT * FROM users WHERE email = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return null;
-
-            }
-
-            stmt.setString(1, email);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-
-                    User user = new User(rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getString("phone"), rs.getBoolean("isadmin"));
-
-                    return user;
-
-                } else {
-
-                    System.err.println("Utente non trovato con la seguente email: " + email);
-                    return null;
-
-                }
-
-            }
+            System.err.println("Connessione al database non valida.");
+            return null;
 
         }
 
+        stmt.setString(1, email);
+        ResultSet rs = stmt.executeQuery();
+        User user = null;
+        if (rs.next()) {
+            user = new User(rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("name"),
+                    rs.getString("surname"),
+                    rs.getString("phone"),
+                    rs.getBoolean("isadmin"));
+
+        } else {
+            System.err.println("Utente non trovato con la seguente email: " + email);
+        }
+        stmt.close();
+        return user;
     }
 
     public User authenticate(String email, String password) throws SQLException {
@@ -60,47 +56,51 @@ public class UserManager {
         stmt.setString(1, email);
         stmt.setString(2, password);
         ResultSet rs = stmt.executeQuery();
-        if (!rs.next()) {
-            return null;
+        User user = null;
+        if (rs.next()) {
+            user = new User(rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("name"),
+                    rs.getString("surname"),
+                    rs.getString("phone"),
+                    rs.getBoolean("isadmin"));
         } else {
-            return getUser(rs.getString("email"));
+            System.err.println("Utente non trovato con la seguente email: " + email);
         }
-
+        stmt.close();
+        return user;
     }
 
     public Boolean addUser(User user) throws SQLException {
 
-        String query = "INSERT INTO users (email, password, name, surname, phone, isadmin) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (email, password, name, surname, phone, isadmin) VALUES (?, ?, ?, ?, COALESCE(?, ''), ?)";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
-
-            stmt.setString(1, user.getEmail());
-            stmt.setString(2, user.getPassword());
-            stmt.setString(3, user.getName());
-            stmt.setString(4, user.getSurname());
+        stmt.setString(1, user.getEmail());
+        stmt.setString(2, user.getPassword());
+        stmt.setString(3, user.getName());
+        stmt.setString(4, user.getSurname());
+        if(user.getPhone() == null){
+            stmt.setNull(5, java.sql.Types.VARCHAR);
+        }
+        else{
             stmt.setString(5, user.getPhone());
-            stmt.setBoolean(6, user.isAdmin());
+        }
+        stmt.setBoolean(6, user.isAdmin());
 
-            int rowsInserted = stmt.executeUpdate();
+        int rowsInserted = stmt.executeUpdate();
+        stmt.close();
+        if (rowsInserted > 0) {
 
-            if (rowsInserted > 0) {
+            System.out.println("Utente inserito correttamente.");
+            return true;
 
-                System.out.println("Utente inserito correttamente.");
-                return true;
+        } else {
 
-            } else {
-
-                System.err.println("Errore nell'inserimento dell'utente.");
-                return false;
-
-            }
+            System.err.println("Errore nell'inserimento dell'utente.");
+            return false;
 
         }
 
@@ -110,35 +110,34 @@ public class UserManager {
 
         String query = "UPDATE users SET password = ?, name = ?, surname = ?, phone = ?, isadmin = ? WHERE email = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return false;
+            System.err.println("Connessione al database non valida.");
+            return false;
 
-            }
+        }
 
-            stmt.setString(1, user.getPassword());
-            stmt.setString(2, user.getName());
-            stmt.setString(3, user.getSurname());
-            stmt.setString(4, user.getPhone());
-            stmt.setBoolean(5, user.isAdmin());
-            stmt.setString(6, user.getEmail());
+        stmt.setString(1, user.getPassword());
+        stmt.setString(2, user.getName());
+        stmt.setString(3, user.getSurname());
+        stmt.setString(4, user.getPhone());
+        stmt.setBoolean(5, user.isAdmin());
+        stmt.setString(6, user.getEmail());
 
-            int rowsUpdated = stmt.executeUpdate();
+        int rowsUpdated = stmt.executeUpdate();
 
-            if (rowsUpdated > 0) {
+        if (rowsUpdated > 0) {
 
-                System.out.println("Utente aggiornato correttamente.");
-                return true;
+            System.out.println("Utente aggiornato correttamente.");
+            return true;
 
-            } else {
+        } else {
 
-                System.err.println("Errore nell'aggiornamento dell'utente.");
-                return false;
-
-            }
+            System.err.println("Errore nell'aggiornamento dell'utente.");
+            return false;
 
         }
 

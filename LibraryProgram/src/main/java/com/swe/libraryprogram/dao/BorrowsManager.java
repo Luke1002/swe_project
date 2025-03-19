@@ -10,51 +10,53 @@ import java.util.List;
 import java.sql.ResultSet;
 
 
-
 public class BorrowsManager {
 
 
-    public BorrowsManager() {}
+    public BorrowsManager() {
+    }
 
 
-    public void addBorrow(Integer element_id, String user_id) throws SQLException {
+    public Boolean addBorrow(Integer element_id, String user_id) throws SQLException {
 
         String query = "INSERT INTO borrows (elementid, userid) VALUES (?, ?)";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-                System.err.println("Connessione al database non valida.");
+        stmt.setInt(1, element_id);
+        stmt.setString(2, user_id);
 
-            }
-
-            stmt.setInt(1, element_id);
-            stmt.setString(2, user_id);
-
-            stmt.executeUpdate();
-
+        int rowsAffected = stmt.executeUpdate();
+        stmt.close();
+        if (rowsAffected > 0) {
+            return true;
+        } else {
+            return false;
         }
-
     }
 
-    public void removeBorrow(Integer element_id, String user_id) throws SQLException {
+    public Boolean removeBorrow(Integer element_id, String user_id) throws SQLException {
 
         String query = "DELETE FROM borrows WHERE elementid = ? AND userid = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-                System.err.println("Connessione al database non valida.");
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
+            System.err.println("Connessione al database non valida.");
 
-            }
+        }
 
-            stmt.setInt(1, element_id);
-            stmt.setString(2, user_id);
+        stmt.setInt(1, element_id);
+        stmt.setString(2, user_id);
 
-            stmt.executeUpdate();
-
+        int rowsAffected = stmt.executeUpdate();
+        stmt.close();
+        if (rowsAffected > 0) {
+            return true;
+        } else {
+            return false;
         }
 
     }
@@ -65,41 +67,27 @@ public class BorrowsManager {
 
         String query = "SELECT elementid FROM borrows WHERE userid = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, user_id);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        ResultSet rs = stmt.executeQuery();
 
-                System.err.println("Connessione al database non valida.");
-                return elements;
+        ElementManager elementManager = new ElementManager();
 
-            }
+        while (rs.next()) {
 
-            stmt.setString(1, user_id);
+            int elementId = rs.getInt("elementid");
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            Element element = elementManager.getElement(elementId);
 
-                ElementManager elementManager = new ElementManager();
-
-                while (rs.next()) {
-
-                    int elementId = rs.getInt("elementid");
-
-                    Element element = elementManager.getElement(elementId);
-
-                    if (element != null) {
-                        elements.add(element);
-
-                    }
-
-                }
+            if (element != null) {
+                elements.add(element);
 
             }
-
         }
-
+        stmt.close();
         return elements;
-
     }
 
 

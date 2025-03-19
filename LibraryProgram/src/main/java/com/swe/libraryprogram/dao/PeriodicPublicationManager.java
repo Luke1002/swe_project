@@ -63,7 +63,7 @@ public class PeriodicPublicationManager extends ElementManager {
             } else {
                 System.err.println("Errore: il periodico non è stata inserito.");
             }
-            ConnectionManager.getInstance().closeConnection();
+            stmt.close();
             return result;
 
         } catch (SQLException e) {
@@ -108,7 +108,7 @@ public class PeriodicPublicationManager extends ElementManager {
         stmt.setString(11, periodicPublication.getIssn());
 
         int rowsUpdated = stmt.executeUpdate();
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
         if (rowsUpdated > 0) {
             return true;
         } else {
@@ -167,7 +167,7 @@ public class PeriodicPublicationManager extends ElementManager {
             periodics.add(periodic);
         }
 
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
         for (Element element : periodics){
@@ -260,7 +260,7 @@ public class PeriodicPublicationManager extends ElementManager {
             elements.add(periodic);
 
         }
-        ConnectionManager.getInstance().closeConnection();
+        stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
         for (Element element : elements){
