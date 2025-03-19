@@ -198,7 +198,7 @@
 | History                     | by Luca Lascialfari on 2024/09/30 "First creation" v1.0<br>v1.1 modified by Marco Siani on 18/03/25                                                                                         |
 | Source                      |                                                                                                                                                                                             |
 | Level*                      | User goal                                                                                                                                                                                   |
-| Description*                | Utente clicca sul bottone "prendi in prestito"                                                                                                                                              |
+| Description*                | Utente prende un elemento in prestito                                                                                                                                                       |
 | Scope                       |                                                                                                                                                                                             |
 | Actors                      | Cliente                                                                                                                                                                                     |
 | Pre-conditions*             | Disporre di un account<br>Essere connessi al database<br>Aver effettuato il login                                                                                                           |
@@ -237,66 +237,46 @@
 
 ### Use Case: Ricerca nel database
 
-| Use Case                    | Ricerca nel database                                                                                     |
-|-----------------------------|----------------------------------------------------------------------------------------------------------|
-| History                     | by Tommaso Puzzo on 2024/10/05 "First creation" v1.0                                                     |
-| Source                      |                                                                                                          |
-| Level*                      | User goal                                                                                                |
-| Description*                | Utente ricerca uno o più elementi nel database                                                           |
-| Scope                       |                                                                                                          |
-| Actors                      | Cliente, Manager                                                                                         |
-| Pre-conditions*             | Disporre di un account<br>Essere connessi al database<br>Aver acceduto a sfoglia catalogo                |
-| Post-conditions*            | Utente ha eseguito con successo una ricerca nel catalogo                                                 |
-| Normal flow*                | 1. Utente compila le opzioni di ricerca opportune                                                        |
-| Variations                  |                                                                                                          |
-| Alternative flows           | 1A.                                                                                                      |
-| References                  |                                                                                                          |
-| Non-functional requirements |                                                                                                          |
-| Issues                      | I flows alternativi vanno gestiti in base ai filtri e alle opzioni di ricerca che si vogliono aggiungere |
-| Priority                    |                                                                                                          |
-| Delivery date               |                                                                                                          |
+| Use Case                    | Ricerca nel database                                                                                       |
+|-----------------------------|------------------------------------------------------------------------------------------------------------|
+| History                     | by Tommaso Puzzo on 2024/10/05 "First creation" v1.0<br>v1.1 modified by Marco Siani on 18/03/25           |
+| Source                      |                                                                                                            |
+| Level*                      | User goal                                                                                                  |
+| Description*                | Utente ricerca uno o più elementi nel database                                                             |
+| Scope                       |                                                                                                            |
+| Actors                      | Cliente, Manager                                                                                           |
+| Pre-conditions*             | Disporre di un account<br>Essere connessi al database<br>Aver acceduto a sfoglia catalogo                  |
+| Post-conditions*            | Utente ha eseguito con successo una ricerca nel catalogo                                                   |
+| Normal flow*                | 1. Utente compila le opzioni di ricerca opportune e visualizza gli elementi con le caratteristiche cercate |
+| Variations                  | 1. Utente potrebbe non vedere risultati a causa dei filtri inseriti                                        |
+| Alternative flows           | 1A. Possono essere presenti uno o più elementi selezionabili                                               |
+| References                  |                                                                                                            |
+| Non-functional requirements |                                                                                                            |
+| Issues                      | I flows alternativi vanno gestiti in base ai filtri e alle opzioni di ricerca che si vogliono aggiungere   |
+| Priority                    |                                                                                                            |
+| Delivery date               |                                                                                                            |
 
 ### Use Case: Sfoglia catalogo
 
-| Use Case                    | Sfoglia catalogo                                                                                  |
-|-----------------------------|---------------------------------------------------------------------------------------------------|
-| History                     | by Tommaso Puzzo on 2024/10/05 "First creation" v1.0                                              |
-| Source                      |                                                                                                   |
-| Level*                      | User goal                                                                                         |
-| Description*                | Utente accede al catalogo degli elementi                                                          |
-| Scope                       |                                                                                                   |
-| Actors                      | Cliente, Manager                                                                                  |
-| Pre-conditions*             | Disporre di un account<br>Essere connessi al database                                             |
-| Post-conditions*            | Il catalogo viene caricato correttamente e l'utente può visualizzarlo                             |
-| Normal flow*                | 1. Utente clicca su "catalogo"                                                                    |
-| Variations                  | 1. Manager può vedere anche gli elementi non disponibili e chi li ha presi in prestito/prenotati  |
-| Alternative flows           | 1A. Se non c'è connessione al database, compare scritta "Impossibile connettersi con il database" |
-| References                  |                                                                                                   |
-| Non-functional requirements |                                                                                                   |
-| Issues                      |                                                                                                   |
-| Priority                    |                                                                                                   |
-| Delivery date               |                                                                                                   |
+| Use Case                    | Sfoglia catalogo                                                                                 |
+|-----------------------------|--------------------------------------------------------------------------------------------------|
+| History                     | by Tommaso Puzzo on 2024/10/05 "First creation" v1.0<br>v1.1 modified by Marco Siani on 18/03/25 |
+| Source                      |                                                                                                  |
+| Level*                      | User goal                                                                                        |
+| Description*                | Utente accede al catalogo degli elementi                                                         |
+| Scope                       |                                                                                                  |
+| Actors                      | Cliente, Manager                                                                                 |
+| Pre-conditions*             | Disporre di un account<br>Essere connessi al database<br>Aver effettuato il login                |
+| Post-conditions*            | Il catalogo viene caricato correttamente e l'utente può visualizzarlo                            |
+| Normal flow*                | 1. Utente clicca su "catalogo"                                                                   |
+| Variations                  | 1. Manager può vedere anche gli elementi non disponibili e chi li ha presi in prestito/prenotati |
+| Alternative flows           | 1A. Se non c'è connessione al database, un messaggio di errore                                   |
+| References                  |                                                                                                  |
+| Non-functional requirements |                                                                                                  |
+| Issues                      |                                                                                                  |
+| Priority                    |                                                                                                  |
+| Delivery date               |                                                                                                  |
 
-### Use Case: Visione Statistiche Cliente
-
-| Use Case                    | Visione statistiche Cliente                                                                       |
-|-----------------------------|---------------------------------------------------------------------------------------------------|
-| History                     | by Luca Lascialfari on 2024/10/07 "First creation" v1.0                                           |
-| Source                      |                                                                                                   |
-| Level*                      | User goal                                                                                         |
-| Description*                | Cliente controlla le proprie statistiche relativo all'utilizzo dei servizi della biblioteca       |
-| Scope                       |                                                                                                   |
-| Actors                      | Cliente                                                                                           |
-| Pre-conditions*             | Disporre di un account<br>Essere connessi al database                                             |
-| Post-conditions*            | Cliente vede statistiche personali o viene generato un errore                                     |
-| Normal flow*                | 1. Cliente clicca su "Vedi statistiche"<br>2. Pagina delle statistiche viene caricata             |
-| Variations                  |                                                                                                   |
-| Alternative flows           | 2A. Se non c'è connessione al database, compare scritta "Impossibile connettersi con il database" |
-| References                  |                                                                                                   |
-| Non-functional requirements |                                                                                                   |
-| Issues                      |                                                                                                   |
-| Priority                    |                                                                                                   |
-| Delivery date               |                                                                                                   |
 
 ### Use Case: Report elemento as missing/ruined (rimborso oppure 2 warning)
 
@@ -322,24 +302,24 @@
 
 ### Use Case: Gestione segnalazione
 
-| Use Case                    | Gestione segnalazione                                   |
-|-----------------------------|---------------------------------------------------------|
-| History                     | by Luca Lascialfari on 2024/10/07 "First creation" v1.0 |
-| Source                      |                                                         |
-| Level*                      | Function                                                |
-| Description*                | Gestione delle segnalazioni                             |
-| Scope                       |                                                         |
-| Actors                      | Sistema                                                 |
-| Pre-conditions*             |                                                         |
-| Post-conditions*            |                                                         |
-| Normal flow*                |                                                         |
-| Variations                  |                                                         |
-| Alternative flows           |                                                         |
-| References                  |                                                         |
-| Non-functional requirements |                                                         |
-| Issues                      |                                                         |
-| Priority                    |                                                         |
-| Delivery date               |                                                         |
+| Use Case                    | Gestione segnalazione                                                                                                                          |
+|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| History                     | by Luca Lascialfari on 2024/10/07 "First creation" v1.0<br>v1.1 modified by Marco Siani on 18/03/25                                            |
+| Source                      |                                                                                                                                                |
+| Level*                      | Function                                                                                                                                       |
+| Description*                | Gestione delle segnalazioni tramite opportuni messaggi di errore                                                                               |
+| Scope                       |                                                                                                                                                |
+| Actors                      | Sistema                                                                                                                                        |
+| Pre-conditions*             | Connessione al database<br>Verificarsi di un errore                                                                                            |
+| Post-conditions*            |                                                                                                                                                |
+| Normal flow*                | 1. Si verifica un errore<br>2. Il sistema risponde al problema mostrando il corretto messaggio di errore<br>3. Il messaggio informerà l'utente |
+| Variations                  | 2A. Errore di connessione<br>2B. Errore dati di compilazione mancanti<br>2C. Errore inserimento dati                                           |
+| Alternative flows           | Il sistema funziona correttamente                                                                                                              |
+| References                  |                                                                                                                                                |
+| Non-functional requirements |                                                                                                                                                |
+| Issues                      |                                                                                                                                                |
+| Priority                    |                                                                                                                                                |
+| Delivery date               |                                                                                                                                                |
 
 
 Quando un cliente supera il tempo di restituzione di un libro, riceve un avviso e ha tempo una settimana per consegnare il libro durante i quale non può prenotare altri libri.
