@@ -23,8 +23,8 @@ public class HelloApplication extends Application {
             Scene mainScene = new Scene(loader.load(), stage.getMinWidth(), stage.getMinHeight());
             mainViewController = loader.getController();
             mainViewController.loadTopPane();
-            mainViewController.loadBottomPane("home");
-            //mainViewController.loadBottomPane("login");
+            //mainViewController.loadBottomPane("home");
+            mainViewController.loadBottomPane("login");
             stage.setScene(mainScene);
             stage.setResizable(true);
             stage.setTitle("Library Management System");

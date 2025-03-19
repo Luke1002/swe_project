@@ -53,11 +53,22 @@ public class HomeController extends BaseViewController {
     @FXML
     protected void initialize() {
         super.initialize();
+        searchButton.setOnAction(event -> onSearchButtonClick());
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
         quantityAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("quantityAvailable"));
         genresColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGenresAsString()));
         lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
+        elementsTable.setRowFactory(tv -> {
+            TableRow<Element> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    MainController.getInstance().setSelectedElementId(row.getItem().getId());
+                    mainViewController.loadBottomPane("descriptionElement");
+                }
+            });
+            return row;
+        });
         loadElementData();
     }
 
