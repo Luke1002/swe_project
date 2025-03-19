@@ -48,12 +48,16 @@ public class BookManager extends ElementManager {
         }
 
         ResultSet rs = stmt.executeQuery();
+
+        Integer result = null;
         if (rs.next()) {
-            return rs.getInt(1);
+            result = rs.getInt(1);
         } else {
             System.err.println("Errore: il libro non è stato inserito.");
-            return null;
         }
+
+        ConnectionManager.getInstance().closeConnection();
+        return result;
     }
 
     public Boolean updateBook(Book book) throws SQLException {
@@ -88,15 +92,13 @@ public class BookManager extends ElementManager {
         }
 
         int rowsUpdated = stmt.executeUpdate();
-
+        ConnectionManager.getInstance().closeConnection();
         if (rowsUpdated > 0) {
             return true;
 
         } else {
-
             System.err.println("Errore: il libro non è stato aggiornato.");
             return false;
-
         }
 
     }
@@ -116,35 +118,48 @@ public class BookManager extends ElementManager {
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        ResultSet rs = stmt.executeQuery();
 
-                System.err.println("Connessione al database non valida.");
-                return books;
-
+        while (rs.next()) {
+            Integer releaseYear = rs.getInt("release_year");
+            if (rs.wasNull()) {
+                releaseYear = null;
             }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Book book = new Book(rs.getInt("id"), rs.getString("title"), rs.getInt("release_year"), rs.getString("description"), rs.getInt("quantity"), rs.getInt("quantity_available"), rs.getInt("length"), genres, rs.getString("isbn"), rs.getString("author"), rs.getString("publisher"), rs.getInt("edition"));
-
-                    books.add(book);
-
-                }
-
-                return books;
-
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
             }
+            Integer edition = rs.getInt("edition");
+            if (rs.wasNull()) {
+                edition = null;
+            }
+            Book book = new Book(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear, rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    length,
+                    new ArrayList<>(),
+                    rs.getString("isbn"),
+                    rs.getString("author"),
+                    rs.getString("publisher"),
+                    edition);
+
+            books.add(book);
 
         }
+        ConnectionManager.getInstance().closeConnection();
 
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : books){
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
+        }
+        return books;
     }
 
     public List<Element> getBooksByAuthor(String author) throws SQLException {
@@ -174,10 +189,9 @@ public class BookManager extends ElementManager {
     public Element getBookByIsbn(String isbn) throws SQLException {
 
         String query = "SELECT * FROM elements e JOIN books b ON e.id = b.id WHERE b.isbn = ?";
-        try{
+        try {
             return executeQueryWithSingleValue(query, isbn).getFirst();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
 
@@ -191,22 +205,11 @@ public class BookManager extends ElementManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return elements;
-
-        }
-
         stmt.setObject(1, value);
 
         ResultSet rs = stmt.executeQuery();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
-
         while (rs.next()) {
-
-            List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
             Integer releaseYear = rs.getInt("release_year");
             if (rs.wasNull()) {
                 releaseYear = null;
@@ -219,12 +222,29 @@ public class BookManager extends ElementManager {
             if (rs.wasNull()) {
                 edition = null;
             }
-            Book book = new Book(rs.getInt("id"), rs.getString("title"), releaseYear, rs.getString("description"), rs.getInt("quantity"), rs.getInt("quantity_available"), length, genres, rs.getString("isbn"), rs.getString("author"), rs.getString("publisher"), edition);
+            Book book = new Book(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear, rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    length,
+                    new ArrayList<>(),
+                    rs.getString("isbn"),
+                    rs.getString("author"),
+                    rs.getString("publisher"),
+                    edition);
 
             elements.add(book);
 
         }
+        ConnectionManager.getInstance().closeConnection();
 
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : elements){
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
+        }
         return elements;
 
 

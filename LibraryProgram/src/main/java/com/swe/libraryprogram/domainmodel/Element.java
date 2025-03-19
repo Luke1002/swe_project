@@ -1,7 +1,7 @@
 package com.swe.libraryprogram.domainmodel;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 public class Element {
@@ -104,6 +104,10 @@ public class Element {
 
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    public String getGenresAsString() {
+        return genres.stream().map(Genre::getName).collect(Collectors.joining(", "));
     }
 
 

@@ -1,5 +1,6 @@
 package com.swe.libraryprogram.dao;
 
+import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.PeriodicPublication;
 import com.swe.libraryprogram.domainmodel.Element;
@@ -56,14 +57,14 @@ public class PeriodicPublicationManager extends ElementManager {
             stmt.setString(11, periodicPublication.getIssn());
 
             ResultSet rs = stmt.executeQuery();
+            Integer result = null;
             if (rs.next()) {
-                return rs.getInt(1);
+                result = rs.getInt(1);
             } else {
-
                 System.err.println("Errore: il periodico non è stata inserito.");
-                return null;
-
             }
+            ConnectionManager.getInstance().closeConnection();
+            return result;
 
         } catch (SQLException e) {
             throw new RuntimeException("Errore nell'accesso al database", e);
@@ -107,17 +108,13 @@ public class PeriodicPublicationManager extends ElementManager {
         stmt.setString(11, periodicPublication.getIssn());
 
         int rowsUpdated = stmt.executeUpdate();
-
+        ConnectionManager.getInstance().closeConnection();
         if (rowsUpdated > 0) {
             return true;
-
         } else {
-
             System.err.println("Errore: il periodico non è stata aggiornato.");
             return false;
-
         }
-
     }
 
     public Element getPeriodicPublication(Integer id) throws SQLException {
@@ -136,55 +133,48 @@ public class PeriodicPublicationManager extends ElementManager {
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        ResultSet rs = stmt.executeQuery();
 
-                System.err.println("Connessione al database non valida.");
-                return periodics;
+        while (rs.next()) {
 
+            Integer releaseYear = rs.getInt("release_year");
+            if (rs.wasNull()) {
+                releaseYear = null;
+            }
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
             }
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            PeriodicPublication periodic = new PeriodicPublication(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear,
+                    rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    length,
+                    new ArrayList<>(),
+                    rs.getString("publisher"),
+                    rs.getString("frequency"),
+                    rs.getInt("release_month"),
+                    rs.getInt("release_day"),
+                    rs.getString("issn")
+            );
 
-                GenreManager genreManager = new GenreManager();
+            periodics.add(periodic);
+        }
 
-                while (rs.next()) {
+        ConnectionManager.getInstance().closeConnection();
 
-                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Integer releaseYear = rs.getInt("release_year");
-                    if (rs.wasNull()) {
-                        releaseYear = null;
-                    }
-                    Integer length = rs.getInt("length");
-                    if (rs.wasNull()) {
-                        length = null;
-                    }
-
-                    PeriodicPublication periodic = new PeriodicPublication(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            releaseYear,
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            length,
-                            genres,
-                            rs.getString("publisher"),
-                            rs.getString("frequency"),
-                            rs.getInt("release_month"),
-                            rs.getInt("release_day"),
-                            rs.getString("issn")
-                    );
-
-                    periodics.add(periodic);
-
-                }
-
-                return periodics;
-
-            }
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : periodics){
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
+        }
+        return periodics;
 
     }
 
@@ -225,8 +215,7 @@ public class PeriodicPublicationManager extends ElementManager {
         String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE issn = ?";
         try {
             return executeQueryWithSingleValue(query, issn).getFirst();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -237,57 +226,48 @@ public class PeriodicPublicationManager extends ElementManager {
         List<Element> elements = new ArrayList<>();
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        stmt.setObject(1, value);
 
-                System.err.println("Connessione al database non valida.");
-                return elements;
-
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Integer releaseYear = rs.getInt("release_year");
+            if (rs.wasNull()) {
+                releaseYear = null;
+            }
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
             }
 
-            stmt.setObject(1, value);
+            PeriodicPublication periodic = new PeriodicPublication(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear,
+                    rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    length,
+                    new ArrayList<>(),
+                    rs.getString("publisher"),
+                    rs.getString("frequency"),
+                    rs.getInt("release_month"),
+                    rs.getInt("release_day"),
+                    rs.getString("issn")
+            );
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            elements.add(periodic);
 
-                GenreManager genreManager = new GenreManager();
+        }
+        ConnectionManager.getInstance().closeConnection();
 
-                while (rs.next()) {
-
-                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Integer releaseYear = rs.getInt("release_year");
-                    if (rs.wasNull()) {
-                        releaseYear = null;
-                    }
-                    Integer length = rs.getInt("length");
-                    if (rs.wasNull()) {
-                        length = null;
-                    }
-
-                    PeriodicPublication periodic = new PeriodicPublication(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            releaseYear,
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            length,
-                            genres,
-                            rs.getString("publisher"),
-                            rs.getString("frequency"),
-                            rs.getInt("release_month"),
-                            rs.getInt("release_day"),
-                            rs.getString("issn")
-                    );
-
-                    elements.add(periodic);
-
-                }
-
-                return elements;
-
-            }
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : elements){
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
+        }
+        return elements;
 
     }
 

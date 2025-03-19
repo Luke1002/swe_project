@@ -8,14 +8,14 @@ public class PeriodicPublication extends Element{
 
 
     private String publisher;
-    private Integer frequency;
+    private String frequency;
     private Integer releaseMonth;
     private Integer releaseDay;
     private String issn;
 
 
 
-    public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, Integer frequency, Integer releaseMonth, Integer releaseDay, String issn) {
+    public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, String frequency, Integer releaseMonth, Integer releaseDay, String issn) {
 
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -27,7 +27,7 @@ public class PeriodicPublication extends Element{
 
     }
 
-    public PeriodicPublication(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, Integer frequency, Integer releaseMonth, Integer releaseDay, String issn) {
+    public PeriodicPublication(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, String frequency, Integer releaseMonth, Integer releaseDay, String issn) {
 
         super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -48,11 +48,11 @@ public class PeriodicPublication extends Element{
         this.publisher = publisher;
     }
 
-    public Integer getFrequency() {
+    public String getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(Integer frequency) {
+    public void setFrequency(String frequency) {
         this.frequency = frequency;
     }
 

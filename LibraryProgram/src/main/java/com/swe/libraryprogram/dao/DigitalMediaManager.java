@@ -1,5 +1,6 @@
 package com.swe.libraryprogram.dao;
 
+import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.domainmodel.Book;
 import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import com.swe.libraryprogram.domainmodel.Element;
@@ -22,7 +23,6 @@ public class DigitalMediaManager extends ElementManager {
 
 
     public Integer addDigitalMedia(DigitalMedia media) throws SQLException {
-
 
 
         String query = "WITH inserted_element AS (" +
@@ -53,13 +53,15 @@ public class DigitalMediaManager extends ElementManager {
         stmt.setString(9, media.getAgeRating());
 
         ResultSet rs = stmt.executeQuery();
+        Integer result = null;
         if (rs.next()) {
-            return rs.getInt(1);
+            result = rs.getInt(1);
         } else {
             System.err.println("Errore: il digital media non è stato inserito.");
-            return null;
         }
 
+        ConnectionManager.getInstance().closeConnection();
+        return result;
 
     }
 
@@ -90,7 +92,7 @@ public class DigitalMediaManager extends ElementManager {
         stmt.setString(9, media.getAgeRating());
 
         int rowsUpdated = stmt.executeUpdate();
-
+        ConnectionManager.getInstance().closeConnection();
         if (rowsUpdated > 0) {
             return true;
 
@@ -120,50 +122,44 @@ public class DigitalMediaManager extends ElementManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return digitalMedias;
-
-        }
-
         ResultSet rs = stmt.executeQuery();
 
-            GenreManager genreManager = new GenreManager();
+        while (rs.next()) {
 
-            while (rs.next()) {
-
-                List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-
-                Integer releaseYear = rs.getInt("release_year");
-                if (rs.wasNull()) {
-                    releaseYear = null;
-                }
-                Integer length = rs.getInt("length");
-                if (rs.wasNull()) {
-                    length = null;
-                }
-
-                DigitalMedia media = new DigitalMedia(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        releaseYear,
-                        rs.getString("description"),
-                        rs.getInt("quantity"),
-                        rs.getInt("quantity_available"),
-                        length,
-                        genres,
-                        rs.getString("producer"),
-                        rs.getString("age_rating"),
-                        rs.getString("director")
-                );
-
-                digitalMedias.add(media);
-
+            Integer releaseYear = rs.getInt("release_year");
+            if (rs.wasNull()) {
+                releaseYear = null;
+            }
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
             }
 
-            return digitalMedias;
+            DigitalMedia media = new DigitalMedia(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear,
+                    rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    length,
+                    new ArrayList<>(),
+                    rs.getString("producer"),
+                    rs.getString("age_rating"),
+                    rs.getString("director")
+            );
+
+            digitalMedias.add(media);
+
+        }
+        ConnectionManager.getInstance().closeConnection();
+
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : digitalMedias){
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
+        }
+        return digitalMedias;
 
     }
 
@@ -196,60 +192,49 @@ public class DigitalMediaManager extends ElementManager {
 
         List<Element> elements = new ArrayList<>();
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setObject(1, value);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        ResultSet rs = stmt.executeQuery();
 
-                System.err.println("Connessione al database non valida.");
-                return elements;
+        while (rs.next()) {
 
+
+            Integer releaseYear = rs.getInt("release_year");
+            if (rs.wasNull()) {
+                releaseYear = null;
+            }
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
             }
 
-            stmt.setObject(1, value);
+            DigitalMedia media = new DigitalMedia(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear,
+                    rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    length,
+                    new ArrayList<>(),
+                    rs.getString("producer"),
+                    rs.getString("age_rating"),
+                    rs.getString("director")
+            );
 
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-
-                    Integer releaseYear = rs.getInt("release_year");
-                    if (rs.wasNull()) {
-                        releaseYear = null;
-                    }
-                    Integer length = rs.getInt("length");
-                    if (rs.wasNull()) {
-                        length = null;
-                    }
-
-                    DigitalMedia media = new DigitalMedia(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            releaseYear,
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            length,
-                            genres,
-                            rs.getString("producer"),
-                            rs.getString("age_rating"),
-                            rs.getString("director")
-                    );
-
-                    elements.add(media);
-
-                }
-
-                return elements;
-
-            }
+            elements.add(media);
 
         }
+        ConnectionManager.getInstance().closeConnection();
 
+        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        for (Element element : elements){
+            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            element.setGenres(genres);
+        }
+        return elements;
     }
 
     @Override
