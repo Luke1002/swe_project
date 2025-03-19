@@ -1,5 +1,6 @@
 package com.swe.libraryprogram.dao;
 
+import com.swe.libraryprogram.domainmodel.Book;
 import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
@@ -16,76 +17,87 @@ import java.util.Map;
 
 public class DigitalMediaManager extends ElementManager {
 
-    public DigitalMediaManager() {}
+    public DigitalMediaManager() {
+    }
 
 
     public Integer addDigitalMedia(DigitalMedia media) throws SQLException {
 
-        Integer elementId = addElement(media);
 
-        if (elementId == null) {
 
-            System.out.println("Errore: l'inserimento delle informazioni di base del media è fallito.");
+        String query = "WITH inserted_element AS (" +
+                "    INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length)" +
+                "    VALUES (?, ?, ?, ?, ?, ?)    RETURNING id)" +
+                "INSERT INTO digitalmedias (id, producer, director, agerating) " +
+                "SELECT id, ?, ?, ? FROM inserted_element " + "RETURNING id";
+
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setString(1, media.getTitle());
+        if (media.getReleaseYear() != null) {
+            stmt.setInt(2, media.getReleaseYear());
+        } else {
+            stmt.setNull(2, java.sql.Types.INTEGER);
+        }
+        stmt.setString(3, media.getDescription());
+        stmt.setInt(4, media.getQuantity());
+        stmt.setInt(5, media.getQuantityAvailable());
+        if (media.getLength() != null) {
+            stmt.setInt(6, media.getLength());
+        } else {
+            stmt.setNull(6, java.sql.Types.INTEGER);
+        }
+        stmt.setString(7, media.getProducer());
+        stmt.setString(8, media.getDirector());
+        stmt.setString(9, media.getAgeRating());
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        } else {
+            System.err.println("Errore: il digital media non è stato inserito.");
             return null;
-
         }
 
-        String insertMediaQuery = "INSERT INTO digitalmedias (id, producer, director, agerating) VALUES (?, ?, ?, ?)";
-
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement mediaStmt = connection.prepareStatement(insertMediaQuery)) {
-
-            mediaStmt.setInt(1, elementId);
-            mediaStmt.setString(2, media.getProducer());
-            mediaStmt.setString(3, media.getDirector());
-            mediaStmt.setString(4, media.getAgeRating());
-
-            int rowsInserted = mediaStmt.executeUpdate();
-
-            if (rowsInserted > 0) {
-                return elementId;
-
-            } else {
-
-                System.err.println("Errore: il media non è stato inserito.");
-                return null;
-
-            }
-
-        }
 
     }
 
     public Boolean updateDigitalMedia(DigitalMedia media) throws SQLException {
 
-        if (!updateElement(media)) {
+        String updateMediaQuery = "WITH element_id AS(UPDATE elements SET title = ?, releaseyear = ?, description = ?," +
+                " quantity = ?, quantityavailable = ?, length = ? WHERE id = ? RETURNING id) UPDATE digitalmedias SET producer = ?, director = ?, agerating = ? WHERE id = (SELECT id FROM element_id)";
 
-            System.out.println("Errore: l'aggiornamento delle informazioni base del media è fallito.");
-            return false;
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(updateMediaQuery);
 
+        stmt.setString(1, media.getTitle());
+        if (media.getReleaseYear() != null) {
+            stmt.setInt(2, media.getReleaseYear());
+        } else {
+            stmt.setNull(2, java.sql.Types.INTEGER);
         }
+        stmt.setString(3, media.getDescription());
+        stmt.setInt(4, media.getQuantity());
+        stmt.setInt(5, media.getQuantityAvailable());
+        if (media.getLength() != null) {
+            stmt.setInt(6, media.getLength());
+        } else {
+            stmt.setNull(6, java.sql.Types.INTEGER);
+        }
+        stmt.setString(7, media.getProducer());
+        stmt.setString(8, media.getDirector());
+        stmt.setString(9, media.getAgeRating());
 
-        String updateMediaQuery = "UPDATE digitalmedias SET producer = ?, director = ?, agerating = ? WHERE id = ?";
+        int rowsUpdated = stmt.executeUpdate();
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement mediaStmt = connection.prepareStatement(updateMediaQuery)) {
+        if (rowsUpdated > 0) {
+            return true;
 
-            mediaStmt.setString(1, media.getProducer());
-            mediaStmt.setString(2, media.getDirector());
-            mediaStmt.setString(3, media.getAgeRating());
-            mediaStmt.setInt(4, media.getId());
+        } else {
 
-            int rowsUpdated = mediaStmt.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                return true;
-
-            } else {
-
-                System.err.println("Errore: il media non è stato aggiornato.");
-                return false;
-
-            }
+            System.err.println("Errore: il digital media non è stato aggiornato.");
+            return false;
 
         }
 
@@ -93,7 +105,7 @@ public class DigitalMediaManager extends ElementManager {
 
     public Element getDigitalMedia(Integer id) throws SQLException {
 
-        String getMediaQuery = "SELECT * FROM digitalmedias WHERE id = ?";
+        String getMediaQuery = "SELECT * FROM elements e JOIN digitalmedias d ON e.id = d.id WHERE e.id = ?";
 
         List<Element> elements = executeQueryWithSingleValue(getMediaQuery, id);
         return elements.getFirst();
@@ -105,48 +117,53 @@ public class DigitalMediaManager extends ElementManager {
         List<DigitalMedia> digitalMedias = new ArrayList<>();
 
         String query = "SELECT * FROM elements e JOIN digitalmedias dm ON e.id = dm.id";
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return digitalMedias;
-
-            }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    DigitalMedia media = new DigitalMedia(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres,
-                            rs.getString("producer"),
-                            rs.getString("age_rating"),
-                            rs.getString("director")
-                    );
-
-                    digitalMedias.add(media);
-
-                }
-
-                return digitalMedias;
-
-            }
+            System.err.println("Connessione al database non valida.");
+            return digitalMedias;
 
         }
+
+        ResultSet rs = stmt.executeQuery();
+
+            GenreManager genreManager = new GenreManager();
+
+            while (rs.next()) {
+
+                List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+
+                Integer releaseYear = rs.getInt("release_year");
+                if (rs.wasNull()) {
+                    releaseYear = null;
+                }
+                Integer length = rs.getInt("length");
+                if (rs.wasNull()) {
+                    length = null;
+                }
+
+                DigitalMedia media = new DigitalMedia(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        releaseYear,
+                        rs.getString("description"),
+                        rs.getInt("quantity"),
+                        rs.getInt("quantity_available"),
+                        length,
+                        genres,
+                        rs.getString("producer"),
+                        rs.getString("age_rating"),
+                        rs.getString("director")
+                );
+
+                digitalMedias.add(media);
+
+            }
+
+            return digitalMedias;
 
     }
 
@@ -199,17 +216,27 @@ public class DigitalMediaManager extends ElementManager {
 
                     List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
 
+
+                    Integer releaseYear = rs.getInt("release_year");
+                    if (rs.wasNull()) {
+                        releaseYear = null;
+                    }
+                    Integer length = rs.getInt("length");
+                    if (rs.wasNull()) {
+                        length = null;
+                    }
+
                     DigitalMedia media = new DigitalMedia(
                             rs.getInt("id"),
                             rs.getString("title"),
-                            rs.getInt("releaseyear"),
+                            releaseYear,
                             rs.getString("description"),
                             rs.getInt("quantity"),
-                            rs.getInt("quantityavailable"),
-                            rs.getInt("length"),
+                            rs.getInt("quantity_available"),
+                            length,
                             genres,
                             rs.getString("producer"),
-                            rs.getString("agerating"),
+                            rs.getString("age_rating"),
                             rs.getString("director")
                     );
 

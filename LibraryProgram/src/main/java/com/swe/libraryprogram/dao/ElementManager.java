@@ -16,54 +16,7 @@ import java.util.stream.Collectors;
 
 public class ElementManager {
 
-    public ElementManager() {}
-
-
-    public Integer addElement(Element element) throws SQLException {
-
-        String query = "INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length) VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return null;
-
-            }
-
-            stmt.setString(1, element.getTitle());
-            stmt.setInt(2, element.getReleaseYear());
-            stmt.setString(3, element.getDescription());
-            stmt.setInt(4, element.getQuantity());
-            stmt.setInt(5, element.getQuantityAvailable());
-            stmt.setInt(6, element.getLength());
-
-            //Inserimento e ritorno del numero di righe inserite
-            int rowsInserted = stmt.executeUpdate();
-
-            if (rowsInserted > 0) {
-
-                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-
-                    if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1);  // Restituisce l'ID generato
-
-                    }
-
-                }
-
-            } else {
-
-                System.err.println("Errore: elemento non inserito");
-
-            }
-
-            return null;
-
-        }
-
+    public ElementManager() {
     }
 
     public Boolean removeElement(Integer id) throws SQLException {
@@ -100,44 +53,6 @@ public class ElementManager {
 
     }
 
-    public Boolean updateElement(Element element) throws SQLException {
-
-        String query = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
-
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
-
-            stmt.setString(1, element.getTitle());
-            stmt.setInt(2, element.getReleaseYear());
-            stmt.setString(3, element.getDescription());
-            stmt.setInt(4, element.getQuantity());
-            stmt.setInt(5, element.getQuantityAvailable());
-            stmt.setInt(6, element.getLength());
-            stmt.setInt(7, element.getId());
-
-            int rowsUpdated = stmt.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                return true;
-
-            } else {
-
-                System.err.println("Errore: informazioni base non aggiornate.");
-                return false;
-
-            }
-
-        }
-
-    }
-
     public Element getElement(Integer id) throws SQLException {
 
         String query = "SELECT * FROM elements WHERE id = ?";
@@ -153,48 +68,52 @@ public class ElementManager {
 
         String query = "SELECT * FROM elements";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection()) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return elements;
+            System.err.println("Connessione al database non valida.");
+            return elements;
 
+        }
+        PreparedStatement stmt = connection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();
+
+        GenreManager genreManager = new GenreManager();
+
+        while (rs.next()) {
+
+            List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
+
+            Integer releaseYear = rs.getInt("release_year");
+            if (rs.wasNull()) {
+                releaseYear = null;
+            }
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
             }
 
-            try (PreparedStatement stmt = connection.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
+            Element element = new Element(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    releaseYear,
+                    rs.getString("description"),
+                    rs.getInt("quantity"),
+                    rs.getInt("quantity_available"),
+                    length,
+                    genres
+            );
 
-                GenreManager genreManager = new GenreManager();
-
-                while (rs.next()) {
-
-                    List<Genre> genres = genreManager.getGenresForElement(rs.getInt("id"));
-
-                    Element element = new Element(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            rs.getInt("release_year"),
-                            rs.getString("description"),
-                            rs.getInt("quantity"),
-                            rs.getInt("quantity_available"),
-                            rs.getInt("length"),
-                            genres
-                    );
-
-                    elements.add(element);
-
-                }
-
-                return elements;
-
-            }
+            elements.add(element);
 
         }
 
+        return elements;
+
     }
 
-    public List<Element> getElementsByGenre (String genreName) throws SQLException {
+    public List<Element> getElementsByGenre(String genreName) throws SQLException {
 
         String query = "SELECT e.* FROM elements e " +
                 "JOIN elementgenres eg ON e.id = eg.elementid " +
@@ -205,7 +124,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getElementsByTitle (String title) throws SQLException {
+    public List<Element> getElementsByTitle(String title) throws SQLException {
 
         String query = "SELECT * FROM elements WHERE title = ?";
 
@@ -213,7 +132,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getElementsByReleaseYear (Integer releaseYear) throws SQLException {
+    public List<Element> getElementsByReleaseYear(Integer releaseYear) throws SQLException {
 
         String query = "SELECT * FROM elements WHERE releaseyear = ?";
 
@@ -221,7 +140,7 @@ public class ElementManager {
 
     }
 
-    public List<Element> getElementsByLength (Integer length) throws SQLException {
+    public List<Element> getElementsByLength(Integer length) throws SQLException {
 
         String query = "SELECT * FROM elements WHERE length = ?";
 
@@ -415,7 +334,7 @@ public class ElementManager {
 
     }
 
-    protected  void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
+    protected void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
         // Metodo vuoto per essere sovrascritto nelle classi figlie
     }
 
