@@ -19,85 +19,131 @@ public class BookManager extends ElementManager {
 
     public Integer addBook(Book book) throws SQLException {
 
-        String query = "WITH inserted_element AS (" + "    INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length)" + "    VALUES (?, ?, ?, ?, ?, ?)" + "    RETURNING id)" + "INSERT INTO books (id, isbn, author, publisher, edition) " + "SELECT id, ?, ?, ?, ? FROM inserted_element " + "RETURNING id;";
-
+        String insertElementQuery = "INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
         Connection connection = ConnectionManager.getInstance().getConnection();
-        PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmtElement = connection.prepareStatement(insertElementQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        stmt.setString(1, book.getTitle());
+        stmtElement.setString(1, book.getTitle());
         if (book.getReleaseYear() != null) {
-            stmt.setInt(2, book.getReleaseYear());
+            stmtElement.setInt(2, book.getReleaseYear());
         } else {
-            stmt.setNull(2, java.sql.Types.INTEGER);
+            stmtElement.setNull(2, java.sql.Types.INTEGER);
         }
-        stmt.setString(3, book.getDescription());
-        stmt.setInt(4, book.getQuantity());
-        stmt.setInt(5, book.getQuantityAvailable());
+        stmtElement.setString(3, book.getDescription());
+        stmtElement.setInt(4, book.getQuantity());
+        stmtElement.setInt(5, book.getQuantityAvailable());
         if (book.getLength() != null) {
-            stmt.setInt(6, book.getLength());
+            stmtElement.setInt(6, book.getLength());
         } else {
-            stmt.setNull(6, java.sql.Types.INTEGER);
-        }
-        stmt.setString(7, book.getIsbn());
-        stmt.setString(8, book.getAuthor());
-        stmt.setString(9, book.getPublisher());
-        if (book.getLength() != null) {
-            stmt.setInt(10, book.getEdition());
-        } else {
-            stmt.setNull(10, java.sql.Types.INTEGER);
+            stmtElement.setNull(6, java.sql.Types.INTEGER);
         }
 
-        ResultSet rs = stmt.executeQuery();
+        // Execute the insert statement for 'elements'
+        int rowsAffected = stmtElement.executeUpdate();
+        Integer insertedElementId = null;
 
+        // If the insertion was successful, retrieve the generated key for 'elements'
+        if (rowsAffected > 0) {
+            ResultSet generatedKeys = stmtElement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                insertedElementId = generatedKeys.getInt(1);  // Get the 'id' of the inserted element
+            }
+        }
+
+        if (insertedElementId == null) {
+            System.err.println("Error: Failed to insert into 'elements' table.");
+            stmtElement.close();
+            return null;  // Exit early if the element insertion failed
+        }
+
+        // Step 2: Insert into 'books' table using the generated element ID
+        String insertBookQuery = "INSERT INTO books (id, isbn, author, publisher, edition) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        PreparedStatement stmtBook = connection.prepareStatement(insertBookQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        stmtBook.setInt(1, insertedElementId);
+        stmtBook.setString(2, book.getIsbn());
+        stmtBook.setString(3, book.getAuthor());
+        stmtBook.setString(4, book.getPublisher());
+        if (book.getLength() != null) {
+            stmtBook.setInt(5, book.getEdition());
+        } else {
+            stmtBook.setNull(5, java.sql.Types.INTEGER);
+        }
+
+        // Execute the insert statement for 'books'
+        int rowsAffectedBook = stmtBook.executeUpdate();
         Integer result = null;
-        if (rs.next()) {
-            result = rs.getInt(1);
-        } else {
-            System.err.println("Errore: il libro non è stato inserito.");
+
+        // If the insertion into books was successful, get the generated key for 'books'
+        if (rowsAffectedBook > 0) {
+            ResultSet generatedKeysBook = stmtBook.getGeneratedKeys();
+            if (generatedKeysBook.next()) {
+                result = generatedKeysBook.getInt(1);  // Get the generated ID for the 'books' table
+            }
         }
 
-        stmt.close();
+        if (result == null) {
+            System.err.println("Error: Failed to insert into 'books' table.");
+        }
+
+        stmtElement.close();
+        stmtBook.close();
+
         return result;
     }
 
     public Boolean updateBook(Book book) throws SQLException {
 
-        String updateBookQuery = "WITH element_id AS(UPDATE elements SET title = ?, releaseyear = ?, description = ?," +
-                " quantity = ?, quantityavailable = ?, length = ? WHERE id = ? RETURNING id) UPDATE books SET isbn = ?," +
-                " author = ?, publisher = ?, edition = ? WHERE id = (SELECT id FROM element_id)";
+        String updateElementQuery = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
+        String updateBookQuery = "UPDATE books SET isbn = ?, author = ?, publisher = ?, edition = ? WHERE id = ?";
+
         Connection connection = ConnectionManager.getInstance().getConnection();
-        PreparedStatement stmt = connection.prepareStatement(updateBookQuery);
+        PreparedStatement stmt1 = connection.prepareStatement(updateElementQuery);
+        PreparedStatement stmt2 = connection.prepareStatement(updateBookQuery);
 
-        stmt.setString(1, book.getTitle());
+        stmt1.setString(1, book.getTitle());
         if (book.getReleaseYear() != null) {
-            stmt.setInt(2, book.getReleaseYear());
+            stmt1.setInt(2, book.getReleaseYear());
         } else {
-            stmt.setNull(2, java.sql.Types.INTEGER);
+            stmt1.setNull(2, java.sql.Types.INTEGER);
         }
-        stmt.setString(3, book.getDescription());
-        stmt.setInt(4, book.getQuantity());
-        stmt.setInt(5, book.getQuantityAvailable());
+        stmt1.setString(3, book.getDescription());
+        stmt1.setInt(4, book.getQuantity());
+        stmt1.setInt(5, book.getQuantityAvailable());
         if (book.getLength() != null) {
-            stmt.setInt(6, book.getLength());
+            stmt1.setInt(6, book.getLength());
         } else {
-            stmt.setNull(6, java.sql.Types.INTEGER);
+            stmt1.setNull(6, java.sql.Types.INTEGER);
         }
-        stmt.setString(7, book.getIsbn());
-        stmt.setString(8, book.getAuthor());
-        stmt.setString(9, book.getPublisher());
-        if (book.getLength() != null) {
-            stmt.setInt(10, book.getEdition());
-        } else {
-            stmt.setNull(10, java.sql.Types.INTEGER);
-        }
+        stmt1.setInt(7, book.getId());
+        int rowsUpdated= stmt1.executeUpdate();
+        stmt1.close();
 
-        int rowsUpdated = stmt.executeUpdate();
-        stmt.close();
         if (rowsUpdated > 0) {
-            return true;
+
+
+            stmt2.setString(1, book.getIsbn());
+            stmt2.setString(2, book.getAuthor());
+            stmt2.setString(3, book.getPublisher());
+            if (book.getLength() != null) {
+                stmt2.setInt(4, book.getEdition());
+            } else {
+                stmt2.setNull(4, java.sql.Types.INTEGER);
+            }
+            stmt2.setInt(5, book.getId());
+            stmt2.executeUpdate();
+            stmt2.close();
+
+            if (rowsUpdated > 0) {
+                return true;
+            } else {
+                return false;
+            }
 
         } else {
-            System.err.println("Errore: il libro non è stato aggiornato.");
             return false;
         }
 
@@ -210,7 +256,7 @@ public class BookManager extends ElementManager {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            Integer releaseYear = rs.getInt("release_year");
+            Integer releaseYear = rs.getInt("releaseyear");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -227,7 +273,7 @@ public class BookManager extends ElementManager {
                     rs.getString("title"),
                     releaseYear, rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     length,
                     new ArrayList<>(),
                     rs.getString("isbn"),
