@@ -1,6 +1,7 @@
 package com.swe.libraryprogram.controller;
 
 import com.swe.libraryprogram.dao.*;
+import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +22,15 @@ public class MainController {
     ModifiedElementsManager modifiedElementsManager = new ModifiedElementsManager();
     PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
     UserManager userManager = new UserManager();
+    Integer selectedElementId = null;
+
+    public Integer getSelectedElementId() {
+        return selectedElementId;
+    }
+
+    public void setSelectedElementId(Integer elementId) {
+        this.selectedElementId = elementId;
+    }
 
 
     private static MainController singleton;
