@@ -14,6 +14,7 @@ public class LibraryAdminController extends UserController{
     private final BookManager bookManager = new BookManager();
     private final DigitalMediaManager digitalMediaManager = new DigitalMediaManager();
     private final PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
+    private final GenreManager genreManager = new GenreManager();
     private final BorrowsManager borrowManager = new BorrowsManager();
     private final ModifiedElementsManager modifiedElements = new ModifiedElementsManager();
     private User usr;
@@ -23,32 +24,32 @@ public class LibraryAdminController extends UserController{
     public Boolean addElement (Element element) {
         ConnectionManager cM = ConnectionManager.getInstance();
         try{
-            cM.getConnection().setAutoCommit(false);
-            if(element instanceof Book) {
-                bookManager.addBook((Book) element);
-                cM.getConnection().commit();
-            }
-            else if(element instanceof DigitalMedia) {
-                digitalMediaManager.addDigitalMedia((DigitalMedia) element);
-                cM.getConnection().commit();
-            }
-            else if(element instanceof PeriodicPublication) {
-                periodicPublicationManager.addPeriodicPublication((PeriodicPublication) element);
-                cM.getConnection().commit();
+            if(element.getClass() != Element.class){
+                Integer elementId = null;
+                if(element instanceof Book) {
+                    Book book = (Book)element;
+
+
+                    elementId = bookManager.addBook((Book) element);
+                }
+                else if(element instanceof DigitalMedia) {
+                    elementId = digitalMediaManager.addDigitalMedia((DigitalMedia) element);
+                }
+                else if(element instanceof PeriodicPublication) {
+                    elementId = periodicPublicationManager.addPeriodicPublication((PeriodicPublication) element);
+                }
+                if(elementId == null){
+                    return false;
+                }
+                for(Genre genre : element.getGenres()){
+                    genreManager.associateGenreWithElement(elementId, genre.getCode());
+                }
+                return true;
             }
             else{
-                cM.getConnection().setAutoCommit(true);
                 return false;
             }
-            cM.getConnection().setAutoCommit(true);
-            return true;
         } catch (SQLException e) {
-            try{
-                cM.getConnection().rollback();
-                cM.getConnection().setAutoCommit(true);
-            }catch (SQLException exception){
-                exception.printStackTrace();
-            }
             return false;
         }
     }
@@ -83,12 +84,7 @@ public class LibraryAdminController extends UserController{
             cM.getConnection().setAutoCommit(true);
             return true;
         } catch (SQLException e) {
-            try{
-                cM.getConnection().rollback();
-                cM.getConnection().setAutoCommit(true);
-            }catch (SQLException exception){
-                exception.printStackTrace();
-            }
+            e.printStackTrace();
             return false;
         }
     }
