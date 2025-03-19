@@ -78,7 +78,6 @@ public class LibraryAdminController extends UserController{
                 cM.getConnection().setAutoCommit(true);
                 return false;
             }
-            elementManager.updateElement(element);
             modifiedElements.addEdit(element.getId(), usr.getEmail());
             cM.getConnection().commit();
             cM.getConnection().setAutoCommit(true);
