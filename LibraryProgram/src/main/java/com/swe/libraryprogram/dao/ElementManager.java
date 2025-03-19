@@ -4,7 +4,6 @@ import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 
-import java.util.LinkedList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,6 +12,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.swe.libraryprogram.dao.ConnectionManager.connection;
 
 
 public class ElementManager {
@@ -51,6 +52,28 @@ public class ElementManager {
             }
 
         }
+
+    }
+
+    public Integer getElementTypeById(Integer id) throws SQLException {
+        String query = "SELECT " +
+                "       CASE" +
+                "           WHEN EXISTS (SELECT 1 FROM books b WHERE b.id = e.id) THEN 1" +
+                "           WHEN EXISTS (SELECT 1 FROM digitalmedias d WHERE d.id = e.id) THEN 2" +
+                "           WHEN EXISTS (SELECT 1 FROM periodicpublications p WHERE p.id = e.id) THEN 3" +
+                "           ELSE 0" +
+                "           END AS type" +
+                "FROM elements e WHERE e.id = ?;";
+        Connection conn = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+        Integer type = null;
+        if (rs.next()) {
+            type = rs.getInt("type");
+        }
+        stmt.close();
+        return type;
 
     }
 
@@ -370,6 +393,24 @@ public class ElementManager {
 
     protected void addCustomFilters(StringBuilder query, List<Object> parameters, Map<String, Object> customFilters) {
         // Metodo vuoto per essere sovrascritto nelle classi figlie
+    }
+
+    public Element getCompleteElementById(Integer id){
+        try {
+            Integer type = MainController.getInstance().getElementManager().getElementTypeById(id);
+            if (type == 1) {
+                return MainController.getInstance().getBookManager().getBook(id);
+            } else if (type == 2) {
+                return MainController.getInstance().getDigitalMediaManager().getDigitalMedia(id);
+            } else if (type == 3) {
+                return MainController.getInstance().getPeriodicPublicationManager().getElement(id);
+            } else {
+                return null;
+            }
+        }
+        catch (SQLException e) {
+            return null;
+        }
     }
 
 
