@@ -1,16 +1,17 @@
 package com.swe.libraryprogram.view;
 
 
+import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.dao.ConnectionManager;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import com.swe.libraryprogram.dao.ElementManager;
 import com.swe.libraryprogram.domainmodel.Element;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
@@ -22,7 +23,8 @@ import java.util.stream.Collectors;
 
 public class HomeController extends BaseViewController {
 
-
+    @FXML
+    private ScrollPane scrollPane;
     @FXML
     private TableView<Element> elementsTable;
     @FXML
@@ -33,6 +35,8 @@ public class HomeController extends BaseViewController {
     private TableColumn<Element, Integer> quantityAvailableColumn;
     @FXML
     private TableColumn<Element, String> genresColumn;
+    @FXML
+    private TableColumn<Element, Integer> lengthColumn;
     @FXML
     private TextField titleFilter;
     @FXML
@@ -48,26 +52,14 @@ public class HomeController extends BaseViewController {
 
     @FXML
     protected void initialize() {
+        super.initialize();
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
         quantityAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("quantityAvailable"));
-        genresColumn.setCellValueFactory(new PropertyValueFactory<>("genres"));
-
-        loadElementData("", "", "");
+        genresColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGenresAsString()));
+        lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
+        loadElementData();
     }
-
-  /*  @FXML
-    public void initialize() {
-
-        // Collega le colonne ai campi della classe Book
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
-        yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
-
-        // Carica tutti i libri all'avvio
-
-
-    }*/
 
     @FXML
     private void onSearchButtonClick() {
@@ -87,21 +79,22 @@ public class HomeController extends BaseViewController {
     }
 
     @FXML
-    private void loadElementData(String title, String genre, String year) {
+    private void loadElementData() {
 
         //ObservableList<Element> elementList = FXCollections.observableArrayList();
         List<Element> elementsList;
         // Usa ElementManager per recuperare i dati dal database
         try {
-
-            elementsList = elementManager.getAllElements();
+            elementsList = MainController.getInstance().getElementManager().getAllElements();
         } catch (SQLException e) {
-            //TODO handle exception better
+            showAlert("Errore", "Connessione al database non riuscita");
             elementsList = new ArrayList<>();
         }
 
-        elements.addAll(elementsList);
+        elements.setAll(elementsList);
         elementsTable.setItems(elements);
+
+        System.out.println("Elementi caricati: " + elements.size());
 
     }
 

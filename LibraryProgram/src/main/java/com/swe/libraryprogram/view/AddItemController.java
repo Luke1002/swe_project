@@ -1,7 +1,7 @@
 package com.swe.libraryprogram.view;
 
 import com.swe.libraryprogram.controller.LibraryAdminController;
-import com.swe.libraryprogram.dao.GenreManager;
+import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.domainmodel.*;
 
 import javafx.beans.value.ChangeListener;
@@ -13,18 +13,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.scene.control.Alert.AlertType;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.function.UnaryOperator;
+import java.util.List;
 import java.util.stream.IntStream;
 
 
-public class AddItemController extends CheckViewController {
+public class AddItemController extends ElementCheckViewController {
 
     @FXML
     private TextField titleField, descriptionField, yearField, quantityField, lengthField, genresField, publisherField;
@@ -65,68 +63,9 @@ public class AddItemController extends CheckViewController {
 
     private Scene previousScene;
 
-    private Element element;
-
     private LibraryAdminController libraryAdminController;
 
     private final Integer[] days = IntStream.rangeClosed(1, 31).boxed().toArray(Integer[]::new);
-
-    UnaryOperator<TextFormatter.Change> onlyNumbersFilter = change -> {
-        String newText = change.getControlNewText();
-
-        if (newText.matches("\\d*") && !newText.startsWith("0")) {
-            if (!newText.isEmpty() && (Long.valueOf(Integer.MAX_VALUE) < Long.parseLong(newText))) {
-                return null;
-            }
-            return change;
-        } else {
-            return null;
-        }
-    };
-
-    UnaryOperator<TextFormatter.Change> isbnFilter = change -> {
-        String newText = change.getControlNewText();
-
-        if (newText.matches("\\d*") && newText.length() <= 13) {
-            return change;
-        } else {
-            return null;
-        }
-    };
-
-
-    UnaryOperator<TextFormatter.Change> yearFilter = change -> {
-        String newText = change.getControlNewText();
-
-        if (newText.matches("\\d*") && newText.length() <= 4) {
-            showDays();
-            return change;
-        } else {
-            return null;
-        }
-    };
-
-    UnaryOperator<TextFormatter.Change> ageFilter = change -> {
-        String newText = change.getControlNewText();
-
-        if (newText.matches("\\d*") && !newText.startsWith("0")) {
-            if(!newText.isEmpty() && Integer.parseInt(newText) < 120) {
-                return change;
-            }
-            return null;
-        }
-        return null;
-    };
-
-    UnaryOperator<TextFormatter.Change> totalLengthFilter = change -> {
-        String newText = change.getControlNewText();
-
-        if (newText.length() <= 64) {
-            return change;
-        } else {
-            return null;
-        }
-    };
 
     @FXML
     protected void initialize() {
@@ -170,34 +109,36 @@ public class AddItemController extends CheckViewController {
         });
     }
 
-    private void showFields() {
+    @Override
+    protected void showFields() {
         curr_element_type = choiceBox.getValue();
         if (curr_element_type.equals("Libro")) {
             editorText.setText("Casa editrice: ");
             authorText.setText("Autore: ");
-            authorBox.setVisible(true);
-            bookBox.setVisible(true);
-            digitalMediaBox.setVisible(false);
-            periodicPublicationBox.setVisible(false);
+            authorBox.setDisable(false);
+            bookBox.setDisable(false);
+            digitalMediaBox.setDisable(true);
+            periodicPublicationBox.setDisable(true);
         } else if (curr_element_type.equals("Digital Media")) {
             editorText.setText("Casa produttrice: ");
             authorText.setText("Direttore: ");
-            authorBox.setVisible(true);
-            bookBox.setVisible(false);
-            digitalMediaBox.setVisible(true);
-            periodicPublicationBox.setVisible(false);
+            authorBox.setDisable(false);
+            bookBox.setDisable(true);
+            digitalMediaBox.setDisable(false);
+            periodicPublicationBox.setDisable(true);
 
         } else if (curr_element_type.equals("Periodico")) {
             editorText.setText("Casa editrice: ");
-            authorBox.setVisible(false);
-            bookBox.setVisible(false);
-            digitalMediaBox.setVisible(false);
-            periodicPublicationBox.setVisible(true);
+            authorBox.setDisable(true);
+            bookBox.setDisable(true);
+            digitalMediaBox.setDisable(true);
+            periodicPublicationBox.setDisable(false);
 
         }
     }
 
-    private void showDays() {
+    @Override
+    protected void showDays() {
         int curr_month = monthBox.getValue();
         int curr_year;
         if (yearField.getText().isEmpty()) {
@@ -224,121 +165,171 @@ public class AddItemController extends CheckViewController {
 
     public void goBack() {
 
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.setScene(previousScene);
-
     }
 
     public void handleAddButton() {
-        checkGenres();
-        if (curr_element_type.equals("Libro")) {
-            element = new Book(titleField.getText(),
-                    Integer.valueOf(yearField.getText()),
-                    "",
-                    Integer.valueOf(quantityField.getText()),
-                    Integer.valueOf(quantityField.getText()),
-                    Integer.valueOf(lengthField.getText()),
-                    new LinkedList<Genre>(),
-                    isbnField.getText(),
-                    authorField.getText(),
-                    publisherField.getText(),
-                    Integer.valueOf(editionField.getText()));
-        } else if (curr_element_type.equals("Digital Media")) {
-            element = new DigitalMedia(titleField.getText(),
-                    Integer.valueOf(yearField.getText()),
-                    "",
-                    Integer.valueOf(quantityField.getText()),
-                    Integer.valueOf(quantityField.getText()),
-                    Integer.valueOf(lengthField.getText()),
-                    new LinkedList<Genre>(),
-                    publisherField.getText(),
-                    0,
-                    authorField.getText());
+        if (checkRequiredValues()) {
+            List<Genre> genreList = checkGenres();
+            Element element = null;
+            Integer year = yearField.getText().isEmpty() ? null : Integer.valueOf(yearField.getText());
+            Integer quantity = quantityField.getText().isEmpty() ? 1 : Integer.valueOf(quantityField.getText());
+            Integer length = lengthField.getText().isEmpty() ? null : Integer.valueOf(lengthField.getText());
+            if (curr_element_type.equals("Libro")) {
+                Integer edition = editionField.getText().isEmpty() ? 1 : Integer.valueOf(editionField.getText());
+                element = new Book(titleField.getText(),
+                        year,
+                        "",
+                        quantity,
+                        quantity,
+                        length,
+                        genreList,
+                        isbnField.getText(),
+                        authorField.getText(),
+                        publisherField.getText(),
+                        edition);
+            } else if (curr_element_type.equals("Digital Media")) {
+                element = new DigitalMedia(titleField.getText(),
+                        year,
+                        "",
+                        quantity,
+                        quantity,
+                        length,
+                        genreList,
+                        publisherField.getText(),
+                        ageField.getText(),
+                        authorField.getText());
 
-        } else if (curr_element_type.equals("Periodico")) {
-            element = new PeriodicPublication(titleField.getText(),
-                    Integer.valueOf(yearField.getText()),
-                    "",
-                    Integer.valueOf(quantityField.getText()),
-                    Integer.valueOf(quantityField.getText()),
-                    Integer.valueOf(lengthField.getText()),
-                    new LinkedList<Genre>(),
-                    publisherField.getText(),
-                    Integer.valueOf(frequencyField.getText()),
-                    monthBox.getValue(),
-                    dayBox.getValue(),
-                    issnField.getText());
-        }
+            } else if (curr_element_type.equals("Periodico")) {
+                element = new PeriodicPublication(titleField.getText(),
+                        year,
+                        "",
+                        quantity,
+                        quantity,
+                        length,
+                        genreList,
+                        publisherField.getText(),
+                        frequencyField.getText(),
+                        monthBox.getValue(),
+                        dayBox.getValue(),
+                        issnField.getText());
+            }
+            if (MainController.getInstance().getUserController() instanceof LibraryAdminController) {
+                if (((LibraryAdminController) MainController.getInstance().getUserController()).addElement(element)) {
 
-        if (libraryAdminController.addElement(element)) {
+                    showAlert("Aggiunta elemento", "Elemento aggiunto con successo");
+                    goBack();
 
-            showAlert("Aggiunta elemento", "Elemento aggiunto con successo", AlertType.INFORMATION);
+                } else {
 
-        } else {
+                    showAlert("Aggiunta elemento", "Errore: elemento non aggiunto");
 
-            showAlert("Aggiunta elemento", "Errore: elemento non aggiunto", AlertType.ERROR);
-
-        }
-
-    }
-
-    private Boolean checkGenres() {
-        String[] genres = genresField.getText().split(",");
-        GenreManager genreManager = new GenreManager();
-        LinkedList<Genre> genresList;
-        try{
-            genresList = genreManager.getAllGenres();
-        } catch (SQLException e) {
-            showAlert("Database Connection Error", "Non è possibile collegarsi al database", AlertType.NONE);
-            return false;
-        }
-        String startingMessage = "I seguenti generi non sono presenti nel database: ";
-        String message = new String(startingMessage);
-        for (String genre : genres) {
-            genre = genre.toLowerCase().trim();
-            if (!genresList.contains(genre)){
-                message = message + (genre + " ");
+                }
+            } else {
+                showAlert("Errore", "User should not be here. Going back to Home");
+                mainViewController.loadBottomPane("home");
             }
         }
-        if(!startingMessage.equals(message)) {
-            showAlert("Generi mancanti", message, AlertType.NONE);
+
+
+    }
+
+    private boolean checkRequiredValues() {
+        if (titleField.getText().isEmpty()) {
+            showAlert("Errore", "Titolo è un campo obbligatorio.");
             return false;
+        } else if (curr_element_type.equals("Libro")) {
+            if (isbnField.getText().length() < 13) {
+                showAlert("Errore", "Codice ISBN non valido.");
+                return false;
+            } else {
+                try {
+                    if ((MainController.getInstance().getBookManager().getBookByIsbn(isbnField.getText())) != null) {
+                        showAlert("Errore", "Elemento con stesso ISBN già presente.");
+                        return false;
+                    }
+                } catch (SQLException e) {
+                    showAlert("Errore", "Errore nella connessione al database.");
+                    return false;
+                }
+            }
+        } else if (curr_element_type.equals("Periodico")) {
+            if (issnField.getText().length() < 13) {
+                showAlert("Errore", "Codice ISSN non valido.");
+                return false;
+            } else {
+                try {
+                    if ((MainController.getInstance().getPeriodicPublicationManager().getPeriodicPublicationsByIssn(issnField.getText())) != null) {
+                        showAlert("Errore", "Elemento con stesso ISSN già presente.");
+                        return false;
+                    }
+                } catch (SQLException e) {
+                    showAlert("Errore", "Errore nella connessione al database.");
+                    return false;
+                }
+            }
         }
-        else {
-            return true;
+        return true;
+    }
+
+    private List<Genre> checkGenres() {
+        if(genresField.getText().isEmpty()) {
+            return new ArrayList<>();
+        }
+        String[] gatheredGenres = genresField.getText().split(",");
+        List<String> genreNames = new ArrayList<>();
+
+        for (String genreName : gatheredGenres) {
+            String formattedName = genreName.toLowerCase().trim();
+            if (!genreNames.contains(formattedName)) {
+                genreNames.add(formattedName);
+            }
+        }
+        List<Genre> allGenres;
+
+        try {
+            allGenres = MainController.getInstance().getGenreManager().getAllGenres();
+        } catch (SQLException e) {
+            showAlert("Database Connection Error", "Non è possibile collegarsi al database");
+            return null;
+        }
+
+        String message = "I seguenti generi non sono presenti nel database: ";
+
+        List<String> missingGenres = new ArrayList<>(genreNames);  // Inizializza con tutti i generi
+        for (Genre genre : allGenres) {
+            missingGenres.removeIf(genreName -> genreName.equals(genre.getName()));
+        }
+        if (!missingGenres.isEmpty()) {
+            message += String.join(", ", missingGenres);
+            showAlert("Generi mancanti", message);
+            return null;
+        } else {
+            List<Genre> genreList = new ArrayList<>();
+            for (String genreName : genreNames) {
+                for (Genre genre : allGenres) {
+                    if (genreName.equals(genre.getName().toLowerCase())) {
+                        genreList.add(genre);
+                    }
+                }
+            }
+            return genreList;
         }
     }
+        private void setFieldsRestrictions () {
 
-    private void showAlert(String title, String message, AlertType type) {
+            quantityField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
+            editionField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
+            lengthField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
+            isbnField.setTextFormatter(new TextFormatter<>(isbnFilter));
+            issnField.setTextFormatter(new TextFormatter<>(isbnFilter));
+            yearField.setTextFormatter(new TextFormatter<>(yearFilter));
+            titleField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+            authorField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+            producerField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+            frequencyField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+            ageField.setTextFormatter(new TextFormatter<>(ageFilter));
 
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        }
+
 
     }
-
-    public void setUser(User user) {
-        this.user = user;
-
-    }
-
-    private void setFieldsRestrictions() {
-
-        quantityField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
-        editionField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
-        lengthField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
-        isbnField.setTextFormatter(new TextFormatter<>(isbnFilter));
-        issnField.setTextFormatter(new TextFormatter<>(isbnFilter));
-        yearField.setTextFormatter(new TextFormatter<>(yearFilter));
-        titleField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        authorField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        producerField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        frequencyField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        ageField.setTextFormatter(new TextFormatter<>(ageFilter));
-
-    }
-
-
-}

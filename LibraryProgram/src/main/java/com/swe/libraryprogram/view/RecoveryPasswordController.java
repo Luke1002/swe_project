@@ -44,26 +44,26 @@ public class RecoveryPasswordController extends BaseViewController {
         String confirmPass = confirmNewPassword.getText().trim();
 
         if (emailInput.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Tutti i campi devono essere riempiti!");
+            showAlert( "Error", "Tutti i campi devono essere riempiti!");
             return;
         }
 
         if (!newPass.equals(confirmPass)) {
-            showAlert(Alert.AlertType.ERROR, "Mismatch", "Le password inserite sono diverse!");
+            showAlert( "Mismatch", "Le password inserite sono diverse!");
             return;
         }
 
         //TODO richiama metodo per controllare se esiste mail
         if (!isEmailRegistered(emailInput)) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Email non presente!");
+            showAlert( "Error", "Email non presente!");
             return;
         }
 
         if (updatePassword(emailInput, newPass)) {
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Password cambiata correttamente!");
+            showAlert( "Success", "Password cambiata correttamente!");
             reloadScene();
         } else {
-            showAlert(Alert.AlertType.ERROR, "Error", "Password non aggiornata! Riprovare");
+            showAlert( "Error", "Password non aggiornata! Riprovare");
         }
     }
 
@@ -89,14 +89,6 @@ public class RecoveryPasswordController extends BaseViewController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
 }

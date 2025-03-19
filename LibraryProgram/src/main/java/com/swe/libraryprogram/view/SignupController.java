@@ -1,12 +1,12 @@
 package com.swe.libraryprogram.view;
 
+import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.controller.UserController;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import com.swe.libraryprogram.dao.UserManager;
 import com.swe.libraryprogram.dao.ConnectionManager;
-import javafx.scene.control.Alert;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,16 +14,17 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import java.io.IOException;
-
+import java.sql.SQLException;
+import java.util.function.UnaryOperator;
 
 
 public class SignupController extends BaseViewController {
 
     @FXML
-    private TextField emailField;
+    private TextField emailField, confirmEmailField;
 
     @FXML
-    private PasswordField passwordField;
+    private PasswordField passwordField, confirmPasswordField;
 
     @FXML
     private TextField nameField;
@@ -34,70 +35,136 @@ public class SignupController extends BaseViewController {
     @FXML
     private TextField phoneField;
 
+    @FXML
+    private Button signUpButton, backButton;
+
+    private UnaryOperator<TextFormatter.Change> passwordFilter() {
+        return change -> {
+            // Limitazione di lunghezza massima
+            if (change.getControlNewText().length() > 20) {
+                return null;
+            }
+            String regex = "^[a-zA-Z0-9!#$%&=?@]*$";
+
+            if (!change.getControlNewText().matches(regex)) {
+                return null;
+            }
+            return change;
+        };
+    }
+
+    private UnaryOperator<TextFormatter.Change> emailFilter() {
+        return change -> {
+            String newText = change.getControlNewText();
+            if (newText.length() > 64) {
+                return null;
+            }
+            String initialRegex = "^[a-zA-Z0-9._-]*$";
+            String totalRegex = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+            if((!newText.contains("@") && newText.matches(initialRegex)) || (newText.contains("@") && newText.matches(totalRegex))) {
+                return change;
+            }
+            else{
+                return null;
+            }
+        };
+    }
+
+    private UnaryOperator<TextFormatter.Change> phoneNumberFilter() {
+        return change -> {
+            String newText = change.getControlNewText();
+
+            if (newText.length() > 15) {
+                return null;
+            }
+            String regex = "^[+]?[0-9]{0,1}[0-9]{1,4}[ ]?[0-9]{3}[ ]?[0-9]{6,7}$";
+
+            if (newText.matches(regex)) {
+                return change;
+            }
+            return null;
+        };
+    }
+
+    private UnaryOperator<TextFormatter.Change> lengthFilter() {
+        return change -> {
+            String newText = change.getControlNewText();
+
+            if (newText.length() > 64) {
+                return null;
+            }
+            return change;
+        };
+    }
+
+    @FXML
+    protected void initialize() {
+        super.initialize();
+        signUpButton.setOnAction(event -> onSignupButtonClick());
+        backButton.setOnAction(event -> onBackButtonClick());
+        emailField.setTextFormatter(new TextFormatter<>(emailFilter()));
+        confirmEmailField.setTextFormatter(new TextFormatter<>(emailFilter()));
+        passwordField.setTextFormatter(new TextFormatter<>(passwordFilter()));
+        confirmPasswordField.setTextFormatter(new TextFormatter<>(passwordFilter()));
+        nameField.setTextFormatter(new TextFormatter<>(lengthFilter()));
+        surnameField.setTextFormatter(new TextFormatter<>(lengthFilter()));
+        phoneField.setTextFormatter(new TextFormatter<>(phoneNumberFilter()));
+    }
 
     @FXML
     private void onSignupButtonClick(){
+        if(true || checkFields()){
+            String email = emailField.getText();
+            String password = passwordField.getText();
+            String name = nameField.getText();
+            String surname = surnameField.getText();
+            String phone = phoneField.getText();
 
-        String email = emailField.getText();
-        String password = passwordField.getText();
-        String name = nameField.getText();
-        String surname = surnameField.getText();
-        String phone = phoneField.getText();
-
-        if(email.isEmpty() || password.isEmpty() || name.isEmpty() || surname.isEmpty()){
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("Tutti i campi devono essere compilati");
-            alert.showAndWait();
-            return;
-
+            if(MainController.getInstance().getUserController().signup(email, password, name, surname, phone)){
+                showAlert("Success", "Registrazione completata con successo");
+                try {
+                    if(MainController.getInstance().setUserAndController(email, password)){
+                        mainViewController.loadTopPane("menubar");
+                        mainViewController.loadBottomPane("home");
+                    }
+                    else {
+                        throw new SQLException();
+                    }
+                }catch (SQLException e){
+                    showAlert("Error", "Impossibile effettuare il login");
+                    mainViewController.loadBottomPane("login");
+                }
+            }
+            else{
+                showAlert("Error", "Registrazione fallita");
+            }
         }
+    }
 
-        UserController usrController = new UserController();
-
-        if(usrController.signup(email, password, name, surname, phone)){
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText("Success");
-            alert.setContentText("Registrazione avvenuta con successo");
-            alert.showAndWait();
-
+    private Boolean checkFields() {
+        if(emailField.getText().isEmpty() || passwordField.getText().isEmpty() || nameField.getText().isEmpty() || surnameField.getText().isEmpty()){
+            showAlert("Error", "Tutti i campi obbligatori devono essere compilati");
+            return false;
         }
-        else{
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("Registrazione fallita");
-            alert.showAndWait();
-
+        if(!emailField.getText().contains("@")){
+            showAlert("Error", "Email non valida");
+            return false;
         }
-
+        if(!emailField.getText().equals(confirmEmailField.getText())){
+            showAlert("Error", "I due campi e-mail non corrispondono");
+            return false;
+        }
+        if(!passwordField.getText().equals(confirmPasswordField.getText())){
+            showAlert("Error", "I due campi password non corrispondono");
+            return false;
+        }
+        return true;
     }
 
     //tasto per tornare alla pagina di login
     @FXML
-    private void onBackButtonClick(ActionEvent event) {
-
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login-view.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Login");
-            stage.show();
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
-
+    private void onBackButtonClick() {
+        mainViewController.loadBottomPane("login");
     }
 
 

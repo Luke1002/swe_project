@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="26.0" maxWidth="-Infinity" minHeight="26.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="640.0" style="-fx-border-width: 0 0 2px 0; -fx-border-color: #000000; -fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="com.swe.libraryprogram.view.MenuBarViewController" maxHeight="28.0"  minHeight="28.0" minWidth="640" prefHeight="28.0" style="-fx-border-width: 0 0 2px 0; -fx-border-color: #000000; -fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
        <MenuBar prefHeight="22.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-9.0" AnchorPane.topAnchor="0.0">
            <menus>
@@ -14,7 +14,7 @@
                </Menu>
                <Menu mnemonicParsing="false" text="Modifiche">
                    <items>
-                  <MenuItem mnemonicParsing="false" text="Aggiungi elemento" />
+                  <MenuItem fx:id="addItemMenuItem" mnemonicParsing="false" text="Aggiungi elemento" />
                        <MenuItem mnemonicParsing="false" text="Delete" />
                    </items>
                </Menu>

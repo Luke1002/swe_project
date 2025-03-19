@@ -2,10 +2,7 @@ package com.swe.libraryprogram;
 
 import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.dao.ConnectionManager;
-import com.swe.libraryprogram.dao.UserManager;
-import com.swe.libraryprogram.view.AddItemController;
-import com.swe.libraryprogram.view.ErrorController;
-import com.swe.libraryprogram.view.LoginController;
+import com.swe.libraryprogram.view.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,8 +15,20 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         try{
-            MainController.setMainStage(stage);
             MainController mainController = MainController.getInstance();
+            MainViewController mainViewController;
+            stage.setMinWidth(800);
+            stage.setMinHeight(600);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("main-view.fxml"));
+            Scene mainScene = new Scene(loader.load(), stage.getMinWidth(), stage.getMinHeight());
+            mainViewController = loader.getController();
+            mainViewController.loadTopPane();
+            mainViewController.loadBottomPane("home");
+            //mainViewController.loadBottomPane("login");
+            stage.setScene(mainScene);
+            stage.setResizable(true);
+            stage.setTitle("Library Management System");
+            stage.show();
         }catch (Exception e){
             e.printStackTrace();
         }

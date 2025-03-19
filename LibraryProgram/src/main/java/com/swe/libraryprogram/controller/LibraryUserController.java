@@ -21,21 +21,17 @@ public class LibraryUserController extends UserController {
     public Boolean borrowElement (Integer element_id) {
         ConnectionManager cM = ConnectionManager.getInstance();
         try{
-            cM.getConnection().setAutoCommit(false);
             Element element = elementManager.getElement(element_id);
             if (element!=null && element.getQuantityAvailable()>0) {
                 element.setQuantityAvailable(element.getQuantityAvailable()-1);
                 elementManager.updateElement(element);
                 borrowManager.addBorrow(element_id, usr.getEmail());
-                cM.getConnection().commit();
-                cM.getConnection().setAutoCommit(true);
                 return true;
             }
             return false;
         }catch (SQLException e){
             try{
                 cM.getConnection().rollback();
-                cM.getConnection().setAutoCommit(true);
             }catch (SQLException exception){
                 exception.printStackTrace();
             }
@@ -46,21 +42,17 @@ public class LibraryUserController extends UserController {
     public Boolean returnElement (Integer element_id) {
         ConnectionManager cM = ConnectionManager.getInstance();
         try{
-            cM.getConnection().setAutoCommit(false);
             Element element = elementManager.getElement(element_id);
             if (element!=null && element.getQuantityAvailable()<element.getQuantity()) {
                 element.setQuantityAvailable(element.getQuantityAvailable()+1);
                 elementManager.updateElement(element);
                 borrowManager.removeBorrow(element_id, usr.getEmail());
-                cM.getConnection().commit();
-                cM.getConnection().setAutoCommit(true);
                 return true;
             }
             return false;
         } catch (SQLException e) {
             try{
                 cM.getConnection().rollback();
-                cM.getConnection().setAutoCommit(true);
             }catch (SQLException exception){
                 exception.printStackTrace();
             }

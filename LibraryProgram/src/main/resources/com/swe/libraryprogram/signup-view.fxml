@@ -1,145 +1,169 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.SignupController">
    <children>
-      <VBox layoutX="27.0" layoutY="27.0" prefHeight="346.0" prefWidth="546.0" style="-fx-border-color: #000000; -fx-border-radius: 15;">
+      <VBox layoutX="27.0" layoutY="27.0" prefHeight="346.0" prefWidth="546.0" style="-fx-border-color: #000000;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="SignUp:">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Informazioni">
                <VBox.margin>
-                  <Insets left="20.0" top="10.0" />
+                  <Insets left="10.0" top="10.0" />
                </VBox.margin>
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <HBox prefHeight="148.0" prefWidth="545.0">
+            <HBox prefHeight="148.0" prefWidth="545.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox fillWidth="false" prefHeight="212.0" prefWidth="290.0" HBox.hgrow="NEVER">
+                  <VBox fillWidth="false" prefHeight="212.0" prefWidth="290.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name*">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail *">
                            <VBox.margin>
-                              <Insets left="10.0" top="5.0" />
+                              <Insets top="5.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField prefHeight="26.0" prefWidth="220.0">
+                        <TextField fx:id="emailField" prefHeight="26.0" prefWidth="200.0">
                            <VBox.margin>
-                              <Insets left="10.0" />
+                              <Insets />
                            </VBox.margin>
                         </TextField>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail*">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Conferma E-mail *">
                            <VBox.margin>
-                              <Insets left="10.0" top="5.0" />
+                              <Insets top="5.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField prefHeight="26.0" prefWidth="218.0">
+                        <TextField fx:id="confirmEmailField" prefHeight="26.0" prefWidth="200.0">
                            <VBox.margin>
-                              <Insets left="10.0" />
+                              <Insets />
                            </VBox.margin>
                         </TextField>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password*">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password *">
                            <VBox.margin>
-                              <Insets left="10.0" top="5.0" />
+                              <Insets top="5.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField prefHeight="26.0" prefWidth="218.0">
+                        <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="200.0">
                            <VBox.margin>
-                              <Insets left="10.0" />
+                              <Insets />
                            </VBox.margin>
-                        </TextField>
+                        </PasswordField>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Conferma password *">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Text>
+                        <PasswordField fx:id="confirmPasswordField" prefHeight="26.0" prefWidth="200.0" />
                      </children>
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox prefHeight="243.0" prefWidth="296.0">
+                  <VBox fillWidth="false" prefHeight="243.0" prefWidth="296.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Surname*">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nome *">
                            <VBox.margin>
                               <Insets top="5.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="110.0">
+                        <TextField fx:id="nameField" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="200.0">
                            <VBox.margin>
-                              <Insets right="5.0" />
+                              <Insets />
                            </VBox.margin>
                         </TextField>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm E-mail*">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cognome *">
                            <VBox.margin>
                               <Insets top="5.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField>
+                        <TextField fx:id="surnameField" prefHeight="26.0" prefWidth="200.0">
                            <VBox.margin>
-                              <Insets right="5.0" />
+                              <Insets />
                            </VBox.margin>
                         </TextField>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm password*">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Telefono">
                            <VBox.margin>
                               <Insets top="5.0" />
-                           </VBox.margin>
-                        </Text>
-                        <TextField>
+                           </VBox.margin></Text>
+                        <TextField fx:id="phoneField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="200.0">
                            <VBox.margin>
-                              <Insets right="5.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Telefono" />
-                        <TextField minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="110.0">
-                           <VBox.margin>
-                              <Insets right="5.0" />
+                              <Insets />
                            </VBox.margin>
                         </TextField>
                      </children>
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
                   </VBox>
                </children>
             </HBox>
-            <HBox prefHeight="166.0" prefWidth="545.0">
+            <HBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="545.0">
                <children>
-                  <VBox prefHeight="86.0" prefWidth="275.0">
+                  <VBox alignment="BOTTOM_LEFT" prefHeight="135.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The password must:">
-                           <VBox.margin>
-                              <Insets left="5.0" top="5.0" />
-                           </VBox.margin>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•contain between 8 and 20 characters">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="La password deve:">
                            <VBox.margin>
                               <Insets left="10.0" top="5.0" />
                            </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•contain at least one lowercase letter">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• essere lunga tra gli 8 e i 20 caratteri">
                            <VBox.margin>
                               <Insets left="10.0" top="5.0" />
                            </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•contain at least one uppercase letter">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• contenere almeno una lettera minuscola">
                            <VBox.margin>
                               <Insets left="10.0" top="5.0" />
                            </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•contain at least one number">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• contenere almeno una lettera maiuscola">
                            <VBox.margin>
                               <Insets left="10.0" top="5.0" />
                            </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•contain at least one special symbol">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• contenere almeno un numero">
                            <VBox.margin>
                               <Insets left="10.0" top="5.0" />
                            </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• contenere almeno un carattere speciale">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" top="5.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                         </Text>
                      </children>
                   </VBox>
-                  <VBox alignment="BOTTOM_RIGHT" prefHeight="86.0" prefWidth="272.0">
+                  <VBox alignment="BOTTOM_RIGHT" prefHeight="86.0" prefWidth="120.0" HBox.hgrow="SOMETIMES">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="107.0" text="SignUp">
+                        <Button fx:id="backButton" layoutX="40.0" layoutY="104.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="90.0" text="Back to Login">
                            <VBox.margin>
-                              <Insets bottom="30.0" right="50.0" />
+                              <Insets bottom="15.0" right="10.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="signUpButton" mnemonicParsing="false" prefHeight="28.0" prefWidth="90.0" text="SignUp">
+                           <VBox.margin>
+                              <Insets bottom="10.0" right="10.0" />
                            </VBox.margin>
                         </Button>
                      </children>
@@ -149,4 +173,4 @@
          </children>
       </VBox>
    </children>
-</Pane>
+</AnchorPane>
