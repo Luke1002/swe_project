@@ -40,8 +40,6 @@ public class MainController {
 
 
     private static MainController singleton;
-    private Scene mainScene = null;
-    private Scene previousScene = null;
 
     private MainController() {
     }
