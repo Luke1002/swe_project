@@ -13,6 +13,7 @@ public class PeriodicPublication extends Element{
     private Integer releaseDay;
 
 
+
     public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, String frequency, Integer releaseMonth, Integer releaseDay) {
 
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);

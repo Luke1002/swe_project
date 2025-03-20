@@ -87,9 +87,10 @@ public class DigitalMediaManager extends ElementManager {
         } else {
             stmt.setNull(6, java.sql.Types.INTEGER);
         }
-        stmt.setString(7, media.getProducer());
-        stmt.setString(8, media.getDirector());
-        stmt.setString(9, media.getAgeRating());
+        stmt.setInt(7, media.getId());
+        stmt.setString(8, media.getProducer());
+        stmt.setString(9, media.getDirector());
+        stmt.setString(10, media.getAgeRating());
 
         int rowsUpdated = stmt.executeUpdate();
         stmt.close();
@@ -201,7 +202,7 @@ public class DigitalMediaManager extends ElementManager {
         while (rs.next()) {
 
 
-            Integer releaseYear = rs.getInt("release_year");
+            Integer releaseYear = rs.getInt("releaseyear");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -216,11 +217,11 @@ public class DigitalMediaManager extends ElementManager {
                     releaseYear,
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     length,
                     new ArrayList<>(),
                     rs.getString("producer"),
-                    rs.getString("age_rating"),
+                    rs.getString("agerating"),
                     rs.getString("director")
             );
 
