@@ -235,26 +235,6 @@
 | Delivery date               |                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 
-### Use Case: Sfoglia catalogo
-
-| Use Case                    | Sfoglia catalogo                                                                                 |
-|-----------------------------|--------------------------------------------------------------------------------------------------|
-| History                     | by Tommaso Puzzo on 2024/10/05 "First creation" v1.0<br>v1.1 modified by Marco Siani on 18/03/25 |
-| Source                      |                                                                                                  |
-| Level*                      | User goal                                                                                        |
-| Description*                | Utente accede al catalogo degli elementi                                                         |
-| Scope                       |                                                                                                  |
-| Actors                      | Cliente, Manager                                                                                 |
-| Pre-conditions*             | Disporre di un account<br>Essere connessi al database<br>Aver effettuato il login                |
-| Post-conditions*            | Il catalogo viene caricato correttamente e l'utente può visualizzarlo                            |
-| Normal flow*                | 1. Utente clicca su "catalogo"                                                                   |
-| Variations                  | 1. Manager può vedere anche gli elementi non disponibili e chi li ha presi in prestito/prenotati |
-| Alternative flows           | 1A. Se non c'è connessione al database, un messaggio di errore                                   |
-| References                  |                                                                                                  |
-| Non-functional requirements |                                                                                                  |
-| Issues                      |                                                                                                  |
-| Priority                    |                                                                                                  |
-| Delivery date               |                                                                                                  |
 
 
 ### Use Case: Report elemento as missing/ruined (rimborso oppure 2 warning)
