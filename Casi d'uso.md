@@ -237,28 +237,6 @@
 
 
 
-### Use Case: Report elemento as missing/ruined (rimborso oppure 2 warning)
-
-| Use Case                    | Segnala smarrimento/danneggiamento di un elemento                                                                                                                                                                                                                                                     |
-|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| History                     | by Luca Lascialfari on 2024/10/07 "First creation" v1.0                                                                                                                                                                                                                                               |
-| Source                      |                                                                                                                                                                                                                                                                                                       |
-| Level*                      | User goal                                                                                                                                                                                                                                                                                             |
-| Description*                | Cliente segnala un problema con uno degli elementi da lui presi in prestito                                                                                                                                                                                                                           |
-| Scope                       |                                                                                                                                                                                                                                                                                                       |
-| Actors                      | Cliente                                                                                                                                                                                                                                                                                               |
-| Pre-conditions*             | Disporre di un account<br>Essere connessi al database<br>Avere un prestito attivo                                                                                                                                                                                                                     |
-| Post-conditions*            | Utente segnala il problema correttamente o viene segnalato errore                                                                                                                                                                                                                                     |
-| Normal flow*                | 1. Cliente sceglie dalla lista degli elementi presi in prestito quello sul quale vuole fare una segnalazione<br>2. Cliente sceglie il tipo di segnalazione da fare<br>3. Cliente clicca su "Segnala"<br>4. La segnalazione viene registrata correttamente                                             |
-| Variations                  | 2. Il tipo di segnalazione può essere "smarrimento" oppure "danneggiamento"                                                                                                                                                                                                                           |
-| Alternative flows           | 4A. Se non è stato scelto l'elemento, compare la scritta "Selezionare elemento"<br>4B. Se non è stato scelto il tipo di segnalazione, compare la scritta "Selezionare tipologia di segnalazione"<br>4C. Se non c'è connessione al database, compare scritta "Impossibile connettersi con il database" |
-| References                  |                                                                                                                                                                                                                                                                                                       |
-| Non-functional requirements |                                                                                                                                                                                                                                                                                                       |
-| Issues                      |                                                                                                                                                                                                                                                                                                       |
-| Priority                    |                                                                                                                                                                                                                                                                                                       |
-| Delivery date               |                                                                                                                                                                                                                                                                                                       |
-
-
 ### Use Case: Gestione segnalazione
 
 | Use Case                    | Gestione segnalazione                                                                                                                          |
@@ -302,8 +280,6 @@
 | Delivery date               |                                                                                                                                                                                     |
 
 
-Quando un cliente supera il tempo di restituzione di un libro, riceve un avviso e ha tempo una settimana per consegnare il libro durante i quale non può prenotare altri libri.
-Sew supera tale limite ottiene un warning e il limite si resetta.
 
 
 - Libri (ISBN, anno di uscita, generi di libro, Casa editrice)
