@@ -21,9 +21,9 @@ public class UserController {
             return false;
         }
         try{
-            if(userManager.getUser(email) != null){
-                return false;
-            }
+                if (userManager.getUser(email) != null) {
+                    return false;
+                }
             else{
 
                 return userManager.addUser(new User(email, password, name, surname, phone));

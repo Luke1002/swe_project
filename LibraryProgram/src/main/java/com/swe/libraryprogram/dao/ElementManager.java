@@ -78,8 +78,8 @@ public class ElementManager {
 
         String query = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -93,11 +93,16 @@ public class ElementManager {
             stmt.setString(3, element.getDescription());
             stmt.setInt(4, element.getQuantity());
             stmt.setInt(5, element.getQuantityAvailable());
-            stmt.setInt(6, element.getLength());
+            if(element.getLength() == null) {
+                stmt.setNull(6, java.sql.Types.INTEGER);
+            }
+            else{
+                stmt.setInt(6, element.getLength());
+            }
             stmt.setInt(7, element.getId());
 
             int rowsUpdated = stmt.executeUpdate();
-
+            stmt.close();
             if (rowsUpdated > 0) {
                 return true;
 
@@ -107,8 +112,6 @@ public class ElementManager {
                 return false;
 
             }
-
-        }
 
     }
 
@@ -362,14 +365,23 @@ public class ElementManager {
 
         while (rs.next()) {
 
+            Integer releaseYearDB = rs.getInt("releaseyear");
+            if (rs.wasNull()) {
+                releaseYearDB = null;
+            }
+            Integer length = rs.getInt("length");
+            if (rs.wasNull()) {
+                length = null;
+            }
+
             Element element = new Element(
                     rs.getInt("id"),
                     rs.getString("title"),
-                    rs.getInt("releaseyear"),
+                    releaseYearDB,
                     rs.getString("description"),
                     rs.getInt("quantity"),
                     rs.getInt("quantityavailable"),
-                    rs.getInt("length"),
+                    length,
                     new ArrayList<>()
             );
 
