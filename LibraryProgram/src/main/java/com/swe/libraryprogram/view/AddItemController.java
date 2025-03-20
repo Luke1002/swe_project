@@ -245,6 +245,7 @@ public class AddItemController extends ElementCheckViewController {
             } else {
                 quantityAvailable = quantityField.getText().isEmpty() ? (quantity - (currElement.getQuantity() - MainController.getInstance().getElementManager().getCompleteElementById(currElementId).getQuantityAvailable())) : Integer.valueOf(quantityField.getText());
                 currElement.setTitle(titleField.getText());
+                currElement.setGenres(genreList);
                 currElement.setDescription(descriptionArea.getText());
                 currElement.setReleaseYear(year);
                 currElement.setLength(length);
