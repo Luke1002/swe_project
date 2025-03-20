@@ -37,7 +37,9 @@ public class LibraryAdminController extends UserController {
                     return false;
                 }
                 for (Genre genre : element.getGenres()) {
-                    MainController.getInstance().getGenreManager().associateGenreWithElement(elementId, genre.getCode());
+                    if(!MainController.getInstance().getGenreManager().associateGenreWithElement(elementId, genre.getCode())){
+                        System.err.println("Impossibile aggiungere " + genre.getName() +" alla lista dei generi associati");
+                    }
                 }
                 return true;
             } else {
@@ -81,11 +83,9 @@ public class LibraryAdminController extends UserController {
                 }
             }
             for (Genre genre : genresToAdd) {
-                try {
-                    MainController.getInstance().getGenreManager().associateGenreWithElement(element.getId(), genre.getCode());
-                } catch (SQLException e) {
-                    System.err.println("Impossibile aggiungere " + genre.getName() +" alla lista dei generi associati");
-                }
+                    if(!MainController.getInstance().getGenreManager().associateGenreWithElement(element.getId(), genre.getCode())){
+                        System.err.println("Impossibile aggiungere " + genre.getName() +" alla lista dei generi associati");
+                    }
             }
             return true;
         } catch (

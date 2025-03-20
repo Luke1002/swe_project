@@ -156,13 +156,13 @@ public class GenreManager {
         String query = "INSERT INTO elementgenres (elementid, genrecode) VALUES (?, ?)";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, elementId);
-            stmt.setInt(2, genreCode);
+        stmt.setInt(1, elementId);
+        stmt.setInt(2, genreCode);
 
-            int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
+        int rowsInserted = stmt.executeUpdate();
+        return rowsInserted > 0;
 
 
     }
@@ -177,31 +177,31 @@ public class GenreManager {
                 "WHERE eg.elementid = ?";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return genres;
-
-            }
-
-            stmt.setInt(1, elementId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                while (rs.next()) {
-
-                    genres.add(new Genre(
-                            rs.getString("name"),
-                            rs.getInt("code")
-                    ));
-
-                }
-
-            }
-
+            System.err.println("Connessione al database non valida.");
             return genres;
+
+        }
+
+        stmt.setInt(1, elementId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                genres.add(new Genre(
+                        rs.getString("name"),
+                        rs.getInt("code")
+                ));
+
+            }
+
+        }
+
+        return genres;
 
     }
 
@@ -210,20 +210,20 @@ public class GenreManager {
         String query = "DELETE FROM elementgenres WHERE elementid = ? AND genrecode = ?";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return false;
+            System.err.println("Connessione al database non valida.");
+            return false;
 
-            }
+        }
 
-            stmt.setInt(1, elementId);
-            stmt.setInt(2, genreCode);
+        stmt.setInt(1, elementId);
+        stmt.setInt(2, genreCode);
 
-            int rowsDeleted = stmt.executeUpdate();
-            return rowsDeleted > 0;
+        int rowsDeleted = stmt.executeUpdate();
+        return rowsDeleted > 0;
 
     }
 
