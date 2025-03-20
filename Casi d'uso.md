@@ -235,27 +235,6 @@
 | Delivery date               |                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 
-### Use Case: Ricerca nel database
-
-| Use Case                    | Ricerca nel database                                                                                       |
-|-----------------------------|------------------------------------------------------------------------------------------------------------|
-| History                     | by Tommaso Puzzo on 2024/10/05 "First creation" v1.0<br>v1.1 modified by Marco Siani on 18/03/25           |
-| Source                      |                                                                                                            |
-| Level*                      | User goal                                                                                                  |
-| Description*                | Utente ricerca uno o più elementi nel database                                                             |
-| Scope                       |                                                                                                            |
-| Actors                      | Cliente, Manager                                                                                           |
-| Pre-conditions*             | Disporre di un account<br>Essere connessi al database<br>Aver acceduto a sfoglia catalogo                  |
-| Post-conditions*            | Utente ha eseguito con successo una ricerca nel catalogo                                                   |
-| Normal flow*                | 1. Utente compila le opzioni di ricerca opportune e visualizza gli elementi con le caratteristiche cercate |
-| Variations                  | 1. Utente potrebbe non vedere risultati a causa dei filtri inseriti                                        |
-| Alternative flows           | 1A. Possono essere presenti uno o più elementi selezionabili                                               |
-| References                  |                                                                                                            |
-| Non-functional requirements |                                                                                                            |
-| Issues                      | I flows alternativi vanno gestiti in base ai filtri e alle opzioni di ricerca che si vogliono aggiungere   |
-| Priority                    |                                                                                                            |
-| Delivery date               |                                                                                                            |
-
 ### Use Case: Sfoglia catalogo
 
 | Use Case                    | Sfoglia catalogo                                                                                 |
