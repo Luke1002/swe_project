@@ -3,14 +3,12 @@ package com.swe.libraryprogram.dao;
 import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.domainmodel.Book;
 import com.swe.libraryprogram.domainmodel.Element;
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.*;
 import java.util.ArrayList;
-import java.sql.DriverManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,7 +21,7 @@ public class BookManagerTest {
     @InjectMocks
     private BookManager bookManager;
 
-    @Mock
+
     private static Connection connection;
 
     private static int generatedId;
@@ -47,8 +45,7 @@ public class BookManagerTest {
             stmtInsert.executeUpdate(insertElementQuery, Statement.RETURN_GENERATED_KEYS);
             ResultSet generatedKeys = stmtInsert.getGeneratedKeys();
             if (generatedKeys.next()) {
-                generatedId = generatedKeys.getInt(1); // Get the generated ID from elements
-                // Ora inseriamo un libro nella tabella books con l'ID generato
+                generatedId = generatedKeys.getInt(1);
                 String insertBookQuery = "INSERT INTO books (id, isbn, author, publisher, edition) " +
                         "VALUES (" + generatedId + ", 'isbnTest', 'Test Author', 'Test Publisher', 1)";
                 stmtInsert.executeUpdate(insertBookQuery);
@@ -70,8 +67,8 @@ public class BookManagerTest {
 
     }
 
-    @AfterEach
-    void tearDown() throws SQLException {
+    @AfterAll
+    static void tearDown() throws SQLException {
         // Esegui il rollback per pulire i dati dopo ogni test
         connection.rollback();
         connection.close();

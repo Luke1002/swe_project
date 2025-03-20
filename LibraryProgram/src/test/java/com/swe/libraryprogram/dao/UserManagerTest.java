@@ -2,7 +2,11 @@ package com.swe.libraryprogram.dao;
 
 
 import com.swe.libraryprogram.controller.MainController;
+import com.swe.libraryprogram.domainmodel.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
@@ -25,7 +30,6 @@ public class UserManagerTest {
     @InjectMocks
     private UserManager userManager;
 
-    @Mock
     private static Connection connection;
 
     @BeforeAll
@@ -35,19 +39,19 @@ public class UserManagerTest {
 
         connection.setAutoCommit(false);
 
-        String insertUserQuery = "INSERT INTO users (email, password, name," +
-                " surname, phone, isadmin " +
-                "VALUES ('testUser', 'testPassword', 'testName', 'testSurname', 'testPhone', false)";
+        //String insertUserQuery = "INSERT INTO users (email, password, name," +
+                //" surname, phone, isadmin " +
+                //"VALUES ('testUser', 'testPassword', 'testName', 'testSurname', 'testPhone', false)";
 
-        String insertAdminQuery = "INSERT INTO users (email, password, name," +
-                " surname, phone, isadmin " +
-                "VALUES ('testAdmin', 'testPassword', 'testName', 'testSurname', 'testPhone', true)";
+        //String insertAdminQuery = "INSERT INTO users (email, password, name," +
+                //" surname, phone, isadmin " +
+                //"VALUES ('testAdmin', 'testPassword', 'testName', 'testSurname', 'testPhone', true)";
 
-        try (Statement stmtInsert = connection.createStatement()) {
-            stmtInsert.executeUpdate(insertUserQuery);
-            stmtInsert.executeUpdate(insertAdminQuery);
+        //try (Statement stmtInsert = connection.createStatement()) {
+            //stmtInsert.executeUpdate(insertUserQuery);
+            //stmtInsert.executeUpdate(insertAdminQuery);
 
-        }
+        //}
         Mockito.clearAllCaches();
 
         mockStatic(ConnectionManager.class);
@@ -60,6 +64,19 @@ public class UserManagerTest {
         MainController mockMainController = mock(MainController.class);
         when(MainController.getInstance()).thenReturn(mockMainController);
 
+    }
+
+    @AfterAll
+    static void tearDown() throws SQLException {
+        connection.rollback();
+        connection.close();
+    }
+
+
+    @Test
+    void addUserTest() throws SQLException {
+        assertTrue(userManager.addUser(new User("testInsertedUser", "testInsertedPassword",
+                "testInsertedName", "testInsertedSurname", "testInsertedPhone", false)));
     }
 
 

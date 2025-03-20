@@ -21,7 +21,6 @@ public class DigitalMediaManagerTest {
     @InjectMocks
     private DigitalMediaManager digitalMediaManager;
 
-    @Mock
     private static Connection connection;
 
     private static int generatedId;
@@ -67,8 +66,8 @@ public class DigitalMediaManagerTest {
 
     }
 
-    @AfterEach
-    void tearDown() throws SQLException {
+    @AfterAll
+    static void tearDown() throws SQLException {
         connection.rollback();
         connection.close();
     }
