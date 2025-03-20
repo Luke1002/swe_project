@@ -15,8 +15,8 @@ import java.io.IOException;
 public class MainViewController {
 
     private Scene currentScene;
-    private Scene previousScene;
-
+    private String lastView = null;
+    private String currView = null;
     @FXML
     private BorderPane root;
 
@@ -48,9 +48,17 @@ public class MainViewController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             AnchorPane view = loader.load();
             ((BaseViewController)loader.getController()).setMainViewController(this);
+            if(!currView.equals(fxmlView)) {
+                lastView = currView;
+                currView = fxmlView;
+                ((BaseViewController)loader.getController()).setLastView(lastView);
+            }
             root.setCenter(view);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public String getLastView() {
+        return lastView;
     }
 }

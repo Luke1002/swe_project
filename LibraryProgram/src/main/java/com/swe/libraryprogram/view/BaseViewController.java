@@ -14,6 +14,7 @@ import java.io.IOException;
 public class BaseViewController {
 
     MainViewController mainViewController;
+    String lastView = null;
 
     @FXML
     protected void initialize(){
@@ -31,5 +32,13 @@ public class BaseViewController {
         ButtonType okButton = new ButtonType("Ok");
         alert.getButtonTypes().add(okButton);
         alert.showAndWait();
+    }
+
+    public void setLastView(String lastView){
+        this.lastView = lastView;
+    }
+
+    public void goBack(){
+        mainViewController.loadBottomPane(lastView);
     }
 }
