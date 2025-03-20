@@ -147,9 +147,9 @@
 
 ### Use Case: Sfoglia catalogo*
 
-| Use Case                    | Visione degli elementi presenti nel catalogo                                                                                              |
+| Use Case                    | Sfoglia catalogo                                                                                                                          |
 |-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| History                     | by Luca Lascialfari on 2024/09/29 "First creation" v1.0<br>v1.1 modified by Marco Siani on 18/03/25                                       |
+| History                     | by Luca Lascialfari on 2024/09/29 "First creation" v1.0<br>v1.1 modified by Marco Siani on 20/03/25                                       |
 | Source                      |                                                                                                                                           |
 | Level*                      | Function                                                                                                                                  |
 | Description*                | Utente visualizza una tabella contenente gli elementi presenti nel catalogo                                                               |
