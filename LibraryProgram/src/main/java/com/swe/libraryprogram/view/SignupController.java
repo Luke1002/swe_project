@@ -103,7 +103,7 @@ public class SignupController extends BaseViewController {
 
     @FXML
     private void onSignupButtonClick(){
-        if(true || checkFields()){
+        if(checkFields()){
             String email = emailField.getText();
             String password = passwordField.getText();
             String name = nameField.getText();
