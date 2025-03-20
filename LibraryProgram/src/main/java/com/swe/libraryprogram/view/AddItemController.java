@@ -4,14 +4,9 @@ import com.swe.libraryprogram.controller.LibraryAdminController;
 import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.domainmodel.*;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.sql.SQLException;
@@ -19,13 +14,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 
 public class AddItemController extends ElementCheckViewController {
 
     @FXML
-    private TextField titleField, descriptionField, yearField, quantityField, lengthField, genresField, publisherField;
+    private TextField titleField, yearField, quantityField, quantityAvailableField, lengthField, genresField, publisherField;
 
     @FXML
     private TextField isbnField, editionField, authorField;
@@ -43,7 +39,7 @@ public class AddItemController extends ElementCheckViewController {
     private VBox bookBox, digitalMediaBox, periodicPublicationBox;
 
     @FXML
-    private HBox authorBox;
+    private HBox authorBox, typeChoice;
 
     @FXML
     private Label editorText, authorText;
@@ -52,74 +48,102 @@ public class AddItemController extends ElementCheckViewController {
     private Button addButton, cancelButton;
 
     @FXML
+    private TextArea descriptionArea;
+
+    @FXML
     private ChoiceBox<String> choiceBox;
 
     @FXML
     private ChoiceBox<Integer> dayBox, monthBox;
 
-    private User user = new User("String email", "String password", "String name", "String surname", "String phone");
-
-    private String curr_element_type;
-
-    private Scene previousScene;
-
-    private LibraryAdminController libraryAdminController;
-
+    private String currElementType;
+    private Element currElement;
+    private Integer currElementId;
     private final Integer[] days = IntStream.rangeClosed(1, 31).boxed().toArray(Integer[]::new);
+
+    UnaryOperator<TextFormatter.Change> quantityAvailableFilter = change -> {
+        String newText = change.getControlNewText();
+
+        if (newText.matches("\\d*") && !newText.startsWith("0")) {
+            if(!newText.isEmpty()){
+                try  {
+                    Integer value = Integer.parseInt(newText);
+                    try {
+                        if (value > Integer.valueOf(quantityAvailableField.getText())) {
+                            change.setText(quantityAvailableField.getText());
+                            change.setRange(0, change.getControlText().length());
+                        }
+                    } catch (NumberFormatException e) {
+                        return null;
+                    }
+                    return change;
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return change;
+        } else {
+            return null;
+        }
+    };
 
     @FXML
     protected void initialize() {
         super.initialize();
         setFieldsRestrictions();
-
-        libraryAdminController = new LibraryAdminController();
-
-        addButton.setOnAction(event -> handleAddButton());
+        addButton.setOnAction(event -> handleSaveButton());
         cancelButton.setOnAction(event -> goBack());
-        choiceBox.getItems().setAll("Libro", "Digital Media", "Periodico");
+        choiceBox.getItems().setAll("Libro", "Film", "Periodico");
         choiceBox.setOnAction(event -> showFields());
-        choiceBox.setValue(choiceBox.getItems().getFirst());
         monthBox.getItems().setAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         monthBox.setOnAction(event -> showDays());
-        monthBox.setValue(monthBox.getItems().getFirst());
-        yearField.setText(String.valueOf(LocalDate.now().getYear()));
-        dynamicPadding(generalBox, 0.10f);
-        dynamicPadding(additionalFieldsBox, 0.10f);
-    }
-
-    private void dynamicPadding(Region viewRegion, float paddingValue) {
-        viewRegion.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double width = newValue.doubleValue();
-                // Set padding as a percentage of the width (e.g., 10% padding)
-                double padding = width * paddingValue;  // 10% padding
-                viewRegion.setPadding(new Insets(padding, padding, padding, padding));
+        currElementId = MainController.getInstance().getSelectedElementId();
+        if (currElementId == null) {
+            choiceBox.setValue(choiceBox.getItems().getFirst());
+            monthBox.setValue(monthBox.getItems().getFirst());
+            yearField.setText(String.valueOf(LocalDate.now().getYear()));
+        } else {
+            currElement = MainController.getInstance().getElementManager().getCompleteElementById(currElementId);
+            titleField.setText(currElement.getTitle());
+            descriptionArea.setText(currElement.getDescription());
+            yearField.setText(currElement.getReleaseYear().toString());
+            lengthField.setText(currElement.getLength().toString());
+            quantityField.setText(currElement.getQuantity().toString());
+            quantityAvailableField.setText(currElement.getQuantityAvailable().toString());
+            genresField.setText(currElement.getGenres().toString());
+            if (currElement instanceof Book) {
+                choiceBox.setValue(choiceBox.getItems().getFirst());
+                authorField.setText(((Book) currElement).getAuthor());
+                editionField.setText(((Book) currElement).getEdition().toString());
+                publisherField.setText(((Book) currElement).getPublisher());
+                isbnField.setText(((Book) currElement).getIsbn());
+            } else if (currElement instanceof DigitalMedia) {
+                choiceBox.setValue(choiceBox.getItems().get(1));
+                producerField.setText(((DigitalMedia) currElement).getProducer());
+                ageField.setText(((DigitalMedia) currElement).getAgeRating());
+                authorField.setText(((DigitalMedia) currElement).getDirector());
+            } else if (currElement instanceof PeriodicPublication) {
+                choiceBox.setValue(choiceBox.getItems().get(2));
+                publisherField.setText(((PeriodicPublication) currElement).getPublisher());
+                frequencyField.setText(((PeriodicPublication) currElement).getFrequency());
+                monthBox.setValue(monthBox.getItems().get(((PeriodicPublication) currElement).getReleaseMonth() - 1));
+                dayBox.setValue(dayBox.getItems().get(((PeriodicPublication) currElement).getReleaseDay() - 1));
             }
-        });
-
-        viewRegion.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double height = newValue.doubleValue();
-                // You could also calculate padding based on height if needed
-                double padding = height * paddingValue;  // 10% padding
-                viewRegion.setPadding(new Insets(padding, padding, padding, padding));
-            }
-        });
+            typeChoice.setDisable(true);
+        }
     }
 
     @Override
     protected void showFields() {
-        curr_element_type = choiceBox.getValue();
-        if (curr_element_type.equals("Libro")) {
+        currElementType = choiceBox.getValue();
+        if (currElementType.equals("Libro")) {
             editorText.setText("Casa editrice: ");
             authorText.setText("Autore: ");
             authorBox.setDisable(false);
             bookBox.setDisable(false);
             digitalMediaBox.setDisable(true);
             periodicPublicationBox.setDisable(true);
-        } else if (curr_element_type.equals("Digital Media")) {
+        } else if (currElementType.equals("Film")) {
             editorText.setText("Casa produttrice: ");
             authorText.setText("Direttore: ");
             authorBox.setDisable(false);
@@ -127,7 +151,7 @@ public class AddItemController extends ElementCheckViewController {
             digitalMediaBox.setDisable(false);
             periodicPublicationBox.setDisable(true);
 
-        } else if (curr_element_type.equals("Periodico")) {
+        } else if (currElementType.equals("Periodico")) {
             editorText.setText("Casa editrice: ");
             authorBox.setDisable(true);
             bookBox.setDisable(true);
@@ -158,61 +182,71 @@ public class AddItemController extends ElementCheckViewController {
         }
     }
 
-    public void setPreviousScene(Scene scene) {
-        this.previousScene = scene;
-
-    }
-
-    public void goBack() {
-
-    }
-
-    public void handleAddButton() {
+    public void handleSaveButton() {
         if (checkRequiredValues()) {
             List<Genre> genreList = checkGenres();
             Element element = null;
             Integer year = yearField.getText().isEmpty() ? null : Integer.valueOf(yearField.getText());
             Integer quantity = quantityField.getText().isEmpty() ? 1 : Integer.valueOf(quantityField.getText());
+            Integer quantityAvailable = quantityField.getText().isEmpty() ? quantity : Integer.valueOf(quantityField.getText());
             Integer length = lengthField.getText().isEmpty() ? null : Integer.valueOf(lengthField.getText());
-            if (curr_element_type.equals("Libro")) {
-                Integer edition = editionField.getText().isEmpty() ? 1 : Integer.valueOf(editionField.getText());
-                element = new Book(titleField.getText(),
-                        year,
-                        "",
-                        quantity,
-                        quantity,
-                        length,
-                        genreList,
-                        isbnField.getText(),
-                        authorField.getText(),
-                        publisherField.getText(),
-                        edition);
-            } else if (curr_element_type.equals("Digital Media")) {
-                element = new DigitalMedia(titleField.getText(),
-                        year,
-                        "",
-                        quantity,
-                        quantity,
-                        length,
-                        genreList,
-                        publisherField.getText(),
-                        ageField.getText(),
-                        authorField.getText());
+            if (currElement == null) {
+                if (currElementType.equals("Libro")) {
+                    Integer edition = editionField.getText().isEmpty() ? 1 : Integer.valueOf(editionField.getText());
+                    element = new Book(titleField.getText(),
+                            year,
+                            "",
+                            quantity,
+                            quantityAvailable,
+                            length,
+                            genreList,
+                            isbnField.getText(),
+                            authorField.getText(),
+                            publisherField.getText(),
+                            edition);
+                } else if (currElementType.equals("Film")) {
+                    element = new DigitalMedia(titleField.getText(),
+                            year,
+                            "",
+                            quantity,
+                            quantityAvailable,
+                            length,
+                            genreList,
+                            publisherField.getText(),
+                            ageField.getText(),
+                            authorField.getText());
 
-            } else if (curr_element_type.equals("Periodico")) {
-                element = new PeriodicPublication(titleField.getText(),
-                        year,
-                        "",
-                        quantity,
-                        quantity,
-                        length,
-                        genreList,
-                        publisherField.getText(),
-                        frequencyField.getText(),
-                        monthBox.getValue(),
-                        dayBox.getValue());
+                } else if (currElementType.equals("Periodico")) {
+                    element = new PeriodicPublication(titleField.getText(),
+                            year,
+                            "",
+                            quantity,
+                            quantityAvailable,
+                            length,
+                            genreList,
+                            publisherField.getText(),
+                            frequencyField.getText(),
+                            monthBox.getValue(),
+                            dayBox.getValue());
+                }
+            } else {
+                quantityAvailable = quantityField.getText().isEmpty() ? (quantity - (currElement.getQuantity() - MainController.getInstance().getElementManager().getCompleteElementById(currElementId).getQuantityAvailable())) : Integer.valueOf(quantityField.getText());
+                currElement.setTitle(titleField.getText());
+                currElement.setDescription(descriptionArea.getText());
+                currElement.setReleaseYear(year);
+                currElement.setLength(length);
+                currElement.setQuantity(quantity);
+                currElement.setQuantityAvailable(quantityAvailable);
+                if (currElement instanceof Book) {
+
+                } else if (currElement instanceof DigitalMedia) {
+
+                } else if (currElement instanceof PeriodicPublication) {
+
+                }
             }
-            if (MainController.getInstance().getUserController() instanceof LibraryAdminController) {
+
+            if (MainController.getInstance().getUserController() instanceof LibraryAdminController && currElement == null) {
                 if (((LibraryAdminController) MainController.getInstance().getUserController()).addElement(element)) {
 
                     showAlert("Aggiunta elemento", "Elemento aggiunto con successo");
@@ -221,6 +255,17 @@ public class AddItemController extends ElementCheckViewController {
                 } else {
 
                     showAlert("Aggiunta elemento", "Errore: elemento non aggiunto");
+
+                }
+            } else if (MainController.getInstance().getUserController() instanceof LibraryAdminController && currElement != null) {
+                if (((LibraryAdminController) MainController.getInstance().getUserController()).updateElement(currElement)) {
+
+                    showAlert("Modifica elemento", "Elemento modificato con successo");
+                    goBack();
+
+                } else {
+
+                    showAlert("Modifica elemento", "Errore: elemento non modificato");
 
                 }
             } else {
@@ -236,7 +281,8 @@ public class AddItemController extends ElementCheckViewController {
         if (titleField.getText().isEmpty()) {
             showAlert("Errore", "Titolo è un campo obbligatorio.");
             return false;
-        } else if (curr_element_type.equals("Libro")) {
+        }
+        if (currElementType.equals("Libro")) {
             if (isbnField.getText().length() < 13) {
                 showAlert("Errore", "Codice ISBN non valido.");
                 return false;
@@ -252,11 +298,18 @@ public class AddItemController extends ElementCheckViewController {
                 }
             }
         }
+        Integer quantity = quantityField.getText().isEmpty() ? 1 : Integer.valueOf(quantityField.getText());
+        Integer quantityAvailable = quantityField.getText().isEmpty() ? quantity : Integer.valueOf(quantityField.getText());
+        if (currElement != null &&
+                ((quantity - quantityAvailable) != (currElement.getQuantity() - currElement.getQuantityAvailable()))) {
+            showAlert("Errore", "Differenza tra quantità totale e quantità disponibile minore della precedente.");
+            return false;
+        }
         return true;
     }
 
     private List<Genre> checkGenres() {
-        if(genresField.getText().isEmpty()) {
+        if (genresField.getText().isEmpty()) {
             return new ArrayList<>();
         }
         String[] gatheredGenres = genresField.getText().split(",");
@@ -299,20 +352,22 @@ public class AddItemController extends ElementCheckViewController {
             return genreList;
         }
     }
-        private void setFieldsRestrictions () {
 
-            quantityField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
-            editionField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
-            lengthField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
-            isbnField.setTextFormatter(new TextFormatter<>(isbnFilter));
-            yearField.setTextFormatter(new TextFormatter<>(yearFilter));
-            titleField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-            authorField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-            producerField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-            frequencyField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-            ageField.setTextFormatter(new TextFormatter<>(ageFilter));
+    private void setFieldsRestrictions() {
 
-        }
-
+        quantityField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
+        quantityAvailableField.setTextFormatter(new TextFormatter<>(quantityAvailableFilter));
+        editionField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
+        lengthField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
+        isbnField.setTextFormatter(new TextFormatter<>(isbnFilter));
+        yearField.setTextFormatter(new TextFormatter<>(yearFilter));
+        titleField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+        authorField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+        producerField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+        frequencyField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
+        ageField.setTextFormatter(new TextFormatter<>(ageFilter));
 
     }
+
+
+}
