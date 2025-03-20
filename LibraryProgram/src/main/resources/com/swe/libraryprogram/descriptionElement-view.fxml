@@ -1,92 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="456.0" prefWidth="548.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.DescriptionElementController">
+<AnchorPane prefHeight="456.0" prefWidth="548.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.DescriptionElementController">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #000000;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <VBox fx:id="mainVBox" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #000000;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>
             <HBox>
                <children>
-                  <Label prefHeight="30.0" text="Label" HBox.hgrow="ALWAYS">
+                  <Label fx:id="titleLabel" prefHeight="30.0" text="Titolo" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS" />
-                  <Label prefHeight="30.0" prefWidth="47.0" text="Label">
+                  <Label fx:id="typeLabel" prefHeight="30.0" text="Tipologia">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
                </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <VBox HBox.hgrow="SOMETIMES">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Autore:">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Casa Editrice: ">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </VBox>
-                  <VBox HBox.hgrow="SOMETIMES">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN: 0000000000000">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edizione: ">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </VBox>
-               </children>
                <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
+                  <Insets left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </HBox>
             <HBox>
                <children>
                   <VBox HBox.hgrow="SOMETIMES">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Casa Produttrice">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
+                        <Label fx:id="yearlabel" text="Anno">
                            <font>
                               <Font size="16.0" />
                            </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Età consigliata: ">
+                        </Label>
+                        <Label fx:id="quantityLabel" text="Disponibili">
                            <font>
                               <Font size="16.0" />
                            </font>
-                        </Text>
+                        </Label>
                      </children>
                      <HBox.margin>
                         <Insets />
@@ -94,61 +48,12 @@
                   </VBox>
                   <VBox HBox.hgrow="SOMETIMES">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Direttore: ">
+                        <Label fx:id="lengthLabel" text="Lunghezza">
                            <font>
                               <Font size="16.0" />
                            </font>
-                        </Text>
+                        </Label>
                      </children>
-                  </VBox>
-               </children>
-               <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox>
-               <children>
-                  <VBox HBox.hgrow="SOMETIMES">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Casa Editrice: ">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Frequenza: ">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ISSN: ">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </VBox>
-                  <VBox HBox.hgrow="SOMETIMES">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mese: ">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Giorno: ">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Text>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
                   </VBox>
                </children>
                <VBox.margin>
@@ -169,11 +74,11 @@
                                     <Insets />
                                  </VBox.margin>
                               </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="sostituisci con i generi">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </Text>
+                              <Label fx:id="genresLabel" text="generi">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </VBox>
                      </children>
@@ -186,7 +91,7 @@
                         <Insets />
                      </VBox.margin>
                   </Text>
-                  <TextFlow prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #bbbbbb;">
+                  <TextFlow fx:id="descriptionFlow" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #bbbbbb;">
                      <padding>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </padding>
@@ -210,6 +115,11 @@
                   </Button>
                   <HBox alignment="BOTTOM_RIGHT" HBox.hgrow="ALWAYS">
                      <children>
+                        <Button fx:id="returnButton" minWidth="70.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Restituisci">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Button>
                         <Button fx:id="borrowButton" minWidth="110.0" mnemonicParsing="false" prefWidth="110.0" text="Prendi in prestito">
                            <HBox.margin>
                               <Insets right="10.0" />

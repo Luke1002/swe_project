@@ -1,19 +1,9 @@
 package com.swe.libraryprogram.view;
 
 import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.controller.UserController;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.swe.libraryprogram.dao.UserManager;
-import com.swe.libraryprogram.dao.ConnectionManager;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.event.ActionEvent;
-import java.io.IOException;
+
 import java.sql.SQLException;
 import java.util.function.UnaryOperator;
 
@@ -123,7 +113,7 @@ public class SignupController extends BaseViewController {
             if(MainController.getInstance().getUserController().signup(email, password, name, surname, phone)){
                 showAlert("Success", "Registrazione completata con successo");
                 try {
-                    if(MainController.getInstance().setUserAndController(email, password)){
+                    if(MainController.getInstance().setState(email, password)){
                         mainViewController.loadTopPane("menubar");
                         mainViewController.loadBottomPane("home");
                     }

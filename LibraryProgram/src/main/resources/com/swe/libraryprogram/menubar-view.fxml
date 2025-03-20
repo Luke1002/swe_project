@@ -9,22 +9,18 @@
            <menus>
                <Menu mnemonicParsing="false" text="Navigazione">
                    <items>
-                       <MenuItem mnemonicParsing="false" text="Home" />
-                   </items>
-               </Menu>
-               <Menu mnemonicParsing="false" text="Modifiche">
-                   <items>
-                  <MenuItem fx:id="addItemMenuItem" mnemonicParsing="false" text="Aggiungi elemento" />
-                       <MenuItem mnemonicParsing="false" text="Delete" />
+                       <MenuItem fx:id="homeMenuItem" mnemonicParsing="false" text="Home" />
+                       <MenuItem fx:id="addItemMenuItem" mnemonicParsing="false" text="Aggiungi elemento" />
+                       <MenuItem fx:id="borrowedItemsMenuItem" mnemonicParsing="false" text="Prestiti" />
+                       <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
                    </items>
                </Menu>
                <Menu mnemonicParsing="false" text="Aiuto">
                    <items>
-                       <MenuItem mnemonicParsing="false" text="About" />
+                       <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About" />
                    </items>
                </Menu>
            </menus>
        </MenuBar>
-       <Label fx:id="menubarLabel" alignment="CENTER" text="Benvenuto, UserName!" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

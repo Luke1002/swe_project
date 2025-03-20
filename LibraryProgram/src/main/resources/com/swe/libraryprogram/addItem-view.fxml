@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="303.0" prefWidth="414.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.AddItemController">
+<AnchorPane prefHeight="425.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.AddItemController">
    <children>
       <VBox prefHeight="200.0" style="-fx-border-color: #000000;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" VBox.vgrow="ALWAYS">
          <children>
@@ -61,7 +61,7 @@
                                     <TextField fx:id="genresField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
                                  </children>
                               </HBox>
-                              <HBox fx:id="authorBox" alignment="CENTER_RIGHT" disable="true" prefHeight="42.0" prefWidth="270.0">
+                              <HBox fx:id="authorBox" alignment="CENTER_RIGHT" disable="true" minHeight="42.0" minWidth="270.0">
                                  <children>
                                     <Label fx:id="authorText" text="Autore: " />
                                     <TextField fx:id="authorField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
@@ -111,12 +111,6 @@
                               </VBox>
                               <VBox id="#periodicBox" fx:id="periodicPublicationBox" alignment="TOP_CENTER" disable="true" prefHeight="182.0" prefWidth="260.0">
                                  <children>
-                                    <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
-                                       <children>
-                                          <Label text="ISSN*: " />
-                                          <TextField fx:id="issnField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="26.0" prefWidth="150.0" />
-                                       </children>
-                                    </HBox>
                                     <HBox alignment="CENTER_RIGHT" minHeight="42.0" minWidth="270.0">
                                        <children>
                                           <Label text="Cadenza: " />

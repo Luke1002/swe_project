@@ -26,4 +26,8 @@ public class UserController {
             return false;
         }
     }
+
+    public void logout(){
+        MainController.getInstance().resetState();
+    }
 }

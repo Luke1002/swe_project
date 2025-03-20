@@ -6,20 +6,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 
 public class MenuBarViewController extends BaseViewController{
-    @FXML
-    Label menubarLabel;
 
     @FXML
-    MenuItem addItemMenuItem;
+    MenuItem homeMenuItem, addItemMenuItem, borrowedItemsMenuItem, logoutMenuItem, aboutMenuItem;
 
     @FXML
     protected void initialize() {
         super.initialize();
+        homeMenuItem.setOnAction(event -> goToHome());
         addItemMenuItem.setOnAction(event -> goToAddItem());
+        borrowedItemsMenuItem.setOnAction(event -> goToBorrowedItems());
+        logoutMenuItem.setOnAction(event -> handleLogoutMenuItem());
+        aboutMenuItem.setOnAction(event -> showAlert("Informazioni","Library Manager version 1.0"));
         if (MainController.getInstance().getUser() != null){
-            menubarLabel.setText("Benvenuto, "+MainController.getInstance().getUser().getName() + " " + MainController.getInstance().getUser().getSurname() + "!");
-            if(MainController.getInstance().getUser().isAdmin()){
-
+            if(!MainController.getInstance().getUser().isAdmin()){
+                addItemMenuItem.setVisible(false);
             }
             else{
                 addItemMenuItem.setVisible(false);
@@ -28,8 +29,20 @@ public class MenuBarViewController extends BaseViewController{
 
     }
 
+    private void handleLogoutMenuItem() {
+        MainController.getInstance().getUserController().logout();
+        mainViewController.loadBottomPane("login");
+    }
+
     private void goToAddItem() {
-        menubarLabel.setText("Aggiungi elemento");
         mainViewController.loadBottomPane("addItem");
+    }
+
+    private void goToHome(){
+        mainViewController.loadBottomPane("home");
+    }
+
+    private void goToBorrowedItems() {
+        mainViewController.loadBottomPane("borrowedItems");
     }
 }

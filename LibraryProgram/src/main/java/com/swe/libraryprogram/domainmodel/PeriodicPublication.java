@@ -11,11 +11,9 @@ public class PeriodicPublication extends Element{
     private String frequency;
     private Integer releaseMonth;
     private Integer releaseDay;
-    private String issn;
 
 
-
-    public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, String frequency, Integer releaseMonth, Integer releaseDay, String issn) {
+    public PeriodicPublication(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, String frequency, Integer releaseMonth, Integer releaseDay) {
 
         super(id, title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -23,11 +21,10 @@ public class PeriodicPublication extends Element{
         this.frequency = frequency;
         this.releaseMonth = releaseMonth;
         this.releaseDay = releaseDay;
-        this.issn = issn;
 
     }
 
-    public PeriodicPublication(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, String frequency, Integer releaseMonth, Integer releaseDay, String issn) {
+    public PeriodicPublication(String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String publisher, String frequency, Integer releaseMonth, Integer releaseDay) {
 
         super(title, releaseYear, description, quantity, quantityAvailable, length, genres);
 
@@ -35,7 +32,6 @@ public class PeriodicPublication extends Element{
         this.frequency = frequency;
         this.releaseMonth = releaseMonth;
         this.releaseDay = releaseDay;
-        this.issn = issn;
 
     }
 
@@ -72,14 +68,6 @@ public class PeriodicPublication extends Element{
         this.releaseDay = releaseDay;
     }
 
-    public String getIssn() {
-        return issn;
-    }
-
-    public void setIssn(String issn) {
-        this.issn = issn;
-    }
-
 
     @Override
     public String toString() {
@@ -88,7 +76,6 @@ public class PeriodicPublication extends Element{
                 ", frequency=" + frequency +
                 ", releaseMonth=" + releaseMonth +
                 ", releaseDay=" + releaseDay +
-                ", issn=" + issn +
                 '}';
     }
 

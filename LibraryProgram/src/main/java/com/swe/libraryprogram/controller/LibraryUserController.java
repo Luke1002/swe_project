@@ -60,6 +60,4 @@ public class LibraryUserController extends UserController {
         }
     }
 
-    // public void reportLostElement (Integer element_id) {}
-
 }

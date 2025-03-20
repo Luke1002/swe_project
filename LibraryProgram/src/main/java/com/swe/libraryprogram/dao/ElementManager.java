@@ -53,14 +53,14 @@ public class ElementManager {
 
     }
 
-    public Integer getElementTypeById(Integer id) throws SQLException {
+    private Integer getElementTypeById(Integer id) throws SQLException {
         String query = "SELECT " +
                 "       CASE" +
                 "           WHEN EXISTS (SELECT 1 FROM books b WHERE b.id = e.id) THEN 1" +
                 "           WHEN EXISTS (SELECT 1 FROM digitalmedias d WHERE d.id = e.id) THEN 2" +
                 "           WHEN EXISTS (SELECT 1 FROM periodicpublications p WHERE p.id = e.id) THEN 3" +
                 "           ELSE 0" +
-                "           END AS type" +
+                "           END AS type " +
                 "FROM elements e WHERE e.id = ?;";
         Connection conn = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -401,7 +401,7 @@ public class ElementManager {
             } else if (type == 2) {
                 return MainController.getInstance().getDigitalMediaManager().getDigitalMedia(id);
             } else if (type == 3) {
-                return MainController.getInstance().getPeriodicPublicationManager().getElement(id);
+                return MainController.getInstance().getPeriodicPublicationManager().getPeriodicPublication(id);
             } else {
                 return null;
             }

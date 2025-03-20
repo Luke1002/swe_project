@@ -16,8 +16,6 @@ public class LibraryAdminController extends UserController{
     private final PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
     private final GenreManager genreManager = new GenreManager();
     private final BorrowsManager borrowManager = new BorrowsManager();
-    private final ModifiedElementsManager modifiedElements = new ModifiedElementsManager();
-    private User usr;
 
 
 
@@ -65,9 +63,7 @@ public class LibraryAdminController extends UserController{
     }
 
     public Boolean updateElement (Element element) {
-        ConnectionManager cM = ConnectionManager.getInstance();
         try {
-            cM.getConnection().setAutoCommit(false);
             if (element instanceof Book) {
                 bookManager.updateBook((Book) element);
             } else if (element instanceof DigitalMedia) {
@@ -75,19 +71,13 @@ public class LibraryAdminController extends UserController{
             } else if (element instanceof PeriodicPublication) {
                 periodicPublicationManager.updatePeriodicPublication((PeriodicPublication) element);
             } else {
-                cM.getConnection().setAutoCommit(true);
                 return false;
             }
-            modifiedElements.addEdit(element.getId(), usr.getEmail());
-            cM.getConnection().commit();
-            cM.getConnection().setAutoCommit(true);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
-
-    public void getLibraryStatistics () {}
 
 }

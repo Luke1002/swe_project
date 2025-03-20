@@ -170,7 +170,7 @@ public class BookManager extends ElementManager {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            Integer releaseYear = rs.getInt("release_year");
+            Integer releaseYear = rs.getInt("releaseyear");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -187,7 +187,7 @@ public class BookManager extends ElementManager {
                     rs.getString("title"),
                     releaseYear, rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     length,
                     new ArrayList<>(),
                     rs.getString("isbn"),

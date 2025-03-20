@@ -22,8 +22,8 @@ public class PeriodicPublicationManager extends ElementManager {
             String query = "WITH inserted_element AS (" +
                     "    INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length)" +
                     "    VALUES (?, ?, ?, ?, ?, ?)" + "    RETURNING id)" +
-                    "INSERT INTO periodicpublications (id, publisher, frequency, releasemonth, releaseday, issn) " +
-                    "SELECT id, ?, ?, ?, ?, ? FROM inserted_element RETURNING id;";
+                    "INSERT INTO periodicpublications (id, publisher, frequency, releasemonth, releaseday) " +
+                    "SELECT id, ?, ?, ?, ? FROM inserted_element RETURNING id;";
 
             Connection connection = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -54,7 +54,6 @@ public class PeriodicPublicationManager extends ElementManager {
             } else {
                 stmt.setNull(10, java.sql.Types.INTEGER);
             }
-            stmt.setString(11, periodicPublication.getIssn());
 
             ResultSet rs = stmt.executeQuery();
             Integer result = null;
@@ -74,7 +73,7 @@ public class PeriodicPublicationManager extends ElementManager {
     public Boolean updatePeriodicPublication(PeriodicPublication periodicPublication) throws SQLException {
 
         String updatePeriodicQuery = "WITH element_id AS(UPDATE elements SET title = ?, releaseyear = ?, description = ?," +
-                " quantity = ?, quantityavailable = ?, length = ? WHERE id = ? RETURNING id) UPDATE periodicpublications SET publisher = ?, frequency = ?, releasemonth = ?, releaseday = ?, issn = ? WHERE id = (SELECT id FROM element_id)";
+                " quantity = ?, quantityavailable = ?, length = ? WHERE id = ? RETURNING id) UPDATE periodicpublications SET publisher = ?, frequency = ?, releasemonth = ?, releaseday = ? WHERE id = (SELECT id FROM element_id)";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(updatePeriodicQuery);
@@ -105,7 +104,6 @@ public class PeriodicPublicationManager extends ElementManager {
         } else {
             stmt.setNull(10, java.sql.Types.INTEGER);
         }
-        stmt.setString(11, periodicPublication.getIssn());
 
         int rowsUpdated = stmt.executeUpdate();
         stmt.close();
@@ -160,8 +158,7 @@ public class PeriodicPublicationManager extends ElementManager {
                     rs.getString("publisher"),
                     rs.getString("frequency"),
                     rs.getInt("release_month"),
-                    rs.getInt("release_day"),
-                    rs.getString("issn")
+                    rs.getInt("release_day")
             );
 
             periodics.add(periodic);
@@ -210,16 +207,6 @@ public class PeriodicPublicationManager extends ElementManager {
 
     }
 
-    public Element getPeriodicPublicationsByIssn(String issn) throws SQLException {
-
-        String query = "SELECT * FROM elements e JOIN periodicpublications p ON e.id = p.id WHERE issn = ?";
-        try {
-            return executeQueryWithSingleValue(query, issn).getFirst();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     @Override
     protected List<Element> executeQueryWithSingleValue(String query, Object value) throws SQLException {
 
@@ -232,7 +219,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            Integer releaseYear = rs.getInt("release_year");
+            Integer releaseYear = rs.getInt("releaseyear");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -247,15 +234,14 @@ public class PeriodicPublicationManager extends ElementManager {
                     releaseYear,
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     length,
                     new ArrayList<>(),
                     rs.getString("publisher"),
                     rs.getString("frequency"),
-                    rs.getInt("release_month"),
-                    rs.getInt("release_day"),
-                    rs.getString("issn")
-            );
+                    rs.getInt("releasemonth"),
+                    rs.getInt("releaseday")
+                    );
 
             elements.add(periodic);
 
@@ -306,13 +292,6 @@ public class PeriodicPublicationManager extends ElementManager {
 
             query.append(" AND releaseday = ?");
             parameters.add(customFilters.get("releaseDay"));
-
-        }
-
-        if (customFilters.containsKey("issn")) {
-
-            query.append(" AND issn = ?");
-            parameters.add(customFilters.get("issn"));
 
         }
 

@@ -31,7 +31,7 @@ public class AddItemController extends ElementCheckViewController {
     private TextField isbnField, editionField, authorField;
 
     @FXML
-    private TextField issnField, frequencyField;
+    private TextField frequencyField;
 
     @FXML
     private TextField producerField, ageField;
@@ -210,8 +210,7 @@ public class AddItemController extends ElementCheckViewController {
                         publisherField.getText(),
                         frequencyField.getText(),
                         monthBox.getValue(),
-                        dayBox.getValue(),
-                        issnField.getText());
+                        dayBox.getValue());
             }
             if (MainController.getInstance().getUserController() instanceof LibraryAdminController) {
                 if (((LibraryAdminController) MainController.getInstance().getUserController()).addElement(element)) {
@@ -245,21 +244,6 @@ public class AddItemController extends ElementCheckViewController {
                 try {
                     if ((MainController.getInstance().getBookManager().getBookByIsbn(isbnField.getText())) != null) {
                         showAlert("Errore", "Elemento con stesso ISBN già presente.");
-                        return false;
-                    }
-                } catch (SQLException e) {
-                    showAlert("Errore", "Errore nella connessione al database.");
-                    return false;
-                }
-            }
-        } else if (curr_element_type.equals("Periodico")) {
-            if (issnField.getText().length() < 13) {
-                showAlert("Errore", "Codice ISSN non valido.");
-                return false;
-            } else {
-                try {
-                    if ((MainController.getInstance().getPeriodicPublicationManager().getPeriodicPublicationsByIssn(issnField.getText())) != null) {
-                        showAlert("Errore", "Elemento con stesso ISSN già presente.");
                         return false;
                     }
                 } catch (SQLException e) {
@@ -321,7 +305,6 @@ public class AddItemController extends ElementCheckViewController {
             editionField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
             lengthField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
             isbnField.setTextFormatter(new TextFormatter<>(isbnFilter));
-            issnField.setTextFormatter(new TextFormatter<>(isbnFilter));
             yearField.setTextFormatter(new TextFormatter<>(yearFilter));
             titleField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
             authorField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
