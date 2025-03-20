@@ -281,7 +281,12 @@
 
 
 
-
-- Libri (ISBN, anno di uscita, generi di libro, Casa editrice)
-- DVD/Blu-Ray (Durata, Anno di uscita, Casa di produzione, genere di film)
-- Riviste (Giorno di uscita, numero della rivista, genere di rivista)
+### STRUTTURA DEL DATABASE
+users(PK(email), password, name, surname, phone, isadmin)
+books(PK(id,isbn), author, publisher, edition)
+digitalmedias(PK(id), producer, agerating, director)
+periodicpublication(PK(id), publisher, frequency, releasemonth, releaseday)
+borrows(PK(elementid,userid)) FK(elementid) ref elements(id) FK(userid) ref users(email)
+elementgenres(PK(elementid,genrecode)) FK(elementid) ref elements(id) FK(genrecode) ref genres(code)
+genres(PK(code), name)
+elements(PK(id), title, releaseyear, description, quantity, quantityavailable, lenght)
