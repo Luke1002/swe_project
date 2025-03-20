@@ -36,16 +36,7 @@ public class DescriptionElementController extends BaseViewController {
     private Label frequencyLabel, releaseMonthLabel, releaseDayLabel;
 
     @FXML
-    private Button borrowButton;
-
-    @FXML
-    private Button editButton;
-
-    @FXML
-    private Button removeButton;
-
-    @FXML
-    private Button returnButton;
+    private Button borrowButton, editButton, removeButton, returnButton, closeButton;
 
     @FXML
     private VBox mainVBox;
@@ -125,18 +116,8 @@ public class DescriptionElementController extends BaseViewController {
         returnButton.setOnAction(event -> handleReturnAction());
         editButton.setOnAction(event -> handleEditAction());
         removeButton.setOnAction(event -> handleRemoveAction());
+        closeButton.setOnAction(event -> handleCloseAction());
         updateView();
-    }
-
-    private void handleReturnAction() {
-        if (((LibraryUserController) MainController.getInstance().getUserController()).returnElement(element.getId())) {
-            showAlert("Prestito dell'elemento", "Elemento restituito!");
-            updateView();
-
-        } else {
-            showAlert("Prestito dell'elemento", "Errore durante il prestito dell'elemento");
-
-        }
     }
 
     private void updateView() {
@@ -163,31 +144,41 @@ public class DescriptionElementController extends BaseViewController {
         }
     }
 
+    private void handleReturnAction() {
+        if (((LibraryUserController) MainController.getInstance().getUserController()).returnElement(element.getId())) {
+            showAlert("Prestito dell'elemento", "Elemento restituito!");
+            updateView();
+        } else {
+            showAlert("Prestito dell'elemento", "Errore durante il prestito dell'elemento");
+        }
+    }
+
     private void handleBorrowAction() {
 
         if (((LibraryUserController) MainController.getInstance().getUserController()).borrowElement(element.getId())) {
             showAlert("Prestito dell'elemento", "Elemento preso!");
             updateView();
-
         } else {
             showAlert("Prestito dell'elemento", "Errore durante il prestito dell'elemento");
-
         }
     }
 
     private void handleEditAction() {
+        mainViewController.loadBottomPane("addItem");
 
-        //TODO: implementare la modifica dell'elemento, va chiamata un'altra vista
+    }
 
+    private void handleCloseAction() {
+        MainController.getInstance().setSelectedElementId(null);
+        goBack();
     }
 
     private void handleRemoveAction() {
 
         try {
-
             if (MainController.getInstance().getElementManager().removeElement(element.getId())) {
-
                 showAlert("Rimozione dell'elemento", "Elemento rimosso con successo");
+                MainController.getInstance().setSelectedElementId(null);
                 mainViewController.loadBottomPane("home");
             }
 
