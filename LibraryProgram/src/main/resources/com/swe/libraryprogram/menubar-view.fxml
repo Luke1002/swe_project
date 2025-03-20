@@ -11,6 +11,7 @@
                    <items>
                        <MenuItem fx:id="homeMenuItem" mnemonicParsing="false" text="Home" />
                        <MenuItem fx:id="addItemMenuItem" mnemonicParsing="false" text="Aggiungi elemento" />
+                       <MenuItem fx:id="addGenresMenuItem" mnemonicParsing="false" text="Aggiungi generi" />
                        <MenuItem fx:id="borrowedItemsMenuItem" mnemonicParsing="false" text="Prestiti" />
                        <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
                    </items>

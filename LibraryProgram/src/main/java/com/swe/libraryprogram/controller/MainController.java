@@ -24,19 +24,6 @@ public class MainController {
     Integer selectedElementId = null;
     User session_user = null;
     UserController userController = new UserController();
-    List<Element> borrowedElements = new ArrayList<Element>();
-
-    public List<Element> getBorrowedElements() {
-        return borrowedElements;
-    }
-
-    public Integer getSelectedElementId() {
-        return selectedElementId;
-    }
-
-    public void setSelectedElementId(Integer elementId) {
-        this.selectedElementId = elementId;
-    }
 
 
     private static MainController singleton;
@@ -60,7 +47,6 @@ public class MainController {
                     userController = new LibraryAdminController();
             } else {
                     userController = new LibraryUserController();
-                    borrowedElements = borrowsManager.getBorrowedElementsForUser(session_user.getEmail());
             }
             return true;
         }else{
@@ -107,6 +93,13 @@ public class MainController {
     public void resetUserState() {
         session_user = null;
         userController = new UserController();
-        borrowedElements = new ArrayList<>();
+    }
+
+    public Integer getSelectedElementId() {
+        return selectedElementId;
+    }
+
+    public void setSelectedElementId(Integer elementId) {
+        this.selectedElementId = elementId;
     }
 }

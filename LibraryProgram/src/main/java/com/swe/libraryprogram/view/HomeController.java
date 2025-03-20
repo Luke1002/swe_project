@@ -2,13 +2,10 @@ package com.swe.libraryprogram.view;
 
 
 import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.dao.ConnectionManager;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.swe.libraryprogram.dao.ElementManager;
 import com.swe.libraryprogram.domainmodel.Element;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,42 +15,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
-public class HomeController extends BaseViewController {
-
-    @FXML
-    private ScrollPane scrollPane;
+public class HomeController extends ElementCheckViewController {
     @FXML
     private TableView<Element> elementsTable;
     @FXML
-    private TableColumn<Element, String> titleColumn;
+    private TableColumn<Element, String> titleColumn, genresColumn;
     @FXML
-    private TableColumn<Element, Integer> releaseYearColumn;
+    private TableColumn<Element, Integer> releaseYearColumn, quantityAvailableColumn, lengthColumn;
     @FXML
-    private TableColumn<Element, Integer> quantityAvailableColumn;
-    @FXML
-    private TableColumn<Element, String> genresColumn;
-    @FXML
-    private TableColumn<Element, Integer> lengthColumn;
-    @FXML
-    private TextField titleFilter;
-    @FXML
-    private TextField genreFilter;
-    @FXML
-    private TextField yearFilter;
-    @FXML
-    private Button searchButton;
+    private TextField titleFilterField, genresFilterField, yearFilterField, lengthFilterField;
 
-    private ObservableList<Element> elements = FXCollections.observableArrayList();
-    private ElementManager elementManager = new ElementManager();
+    @FXML
+    private CheckBox isAvailableFilter;
+
+    FilteredList<Element> filteredElements;
 
 
     @FXML
     protected void initialize() {
         super.initialize();
-        searchButton.setOnAction(event -> onSearchButtonClick());
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
         quantityAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("quantityAvailable"));
@@ -69,44 +51,63 @@ public class HomeController extends BaseViewController {
             });
             return row;
         });
-        loadElementData();
+        loadElementsData();
+
+        titleFilterField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters(titleFilterField));
+        titleFilterField.setTextFormatter(new TextFormatter<>(totalLength64Filter));
+        genresFilterField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters(titleFilterField));
+        genresFilterField.setTextFormatter(new TextFormatter<>(totalLength256Filter));
+        yearFilterField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters(titleFilterField));
+        yearFilterField.setTextFormatter(new TextFormatter<>(yearFilter));
+        isAvailableFilter.selectedProperty().addListener((observable, oldValue, newValue) -> applyFilters(titleFilterField));
+        lengthFilterField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters(titleFilterField));
+        lengthFilterField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
     }
 
-    @FXML
-    private void onSearchButtonClick() {
-
-        String title = titleFilter.getText().trim();
-        String year = yearFilter.getText().trim();
-        //String genre = genreFilter.getText().trim();
-
-        //leggo una lista di generi inserita dall'utente e separata da virgole
-        List<String> genres = Arrays.stream(genreFilter.getText().trim().split(","))
-                .map(String::trim)
-                .collect(Collectors.toList());
-        //TODO fare getFilteredElements nel manager
-        //List<Element> filteredElements = elementManager.getFilteredElements(title, genres, year);
-        //elementsTable.setItems(FXCollections.observableArrayList(filteredElements));
-
-    }
 
     @FXML
-    private void loadElementData() {
+    private void loadElementsData() {
+        ObservableList<Element> elementsList = FXCollections.observableArrayList();
 
-        //ObservableList<Element> elementList = FXCollections.observableArrayList();
-        List<Element> elementsList;
-        // Usa ElementManager per recuperare i dati dal database
+        List<Element> elements;
         try {
-            elementsList = MainController.getInstance().getElementManager().getAllElements();
+            elements = MainController.getInstance().getElementManager().getAllElements();
         } catch (SQLException e) {
             showAlert("Errore", "Connessione al database non riuscita");
-            elementsList = new ArrayList<>();
+            elements = new ArrayList<>();
         }
 
-        elements.setAll(elementsList);
-        elementsTable.setItems(elements);
+        elementsList.setAll(elements);
+        filteredElements = new FilteredList<>(elementsList, p -> true);
+        titleFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredElements.setPredicate(element -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true; // Mostra tutti gli elementi se il campo è vuoto
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return element.getTitle().toLowerCase().contains(lowerCaseFilter);
+            });
+        });
+        elementsTable.setItems(filteredElements);
 
         System.out.println("Elementi caricati: " + elements.size());
 
     }
 
+    private void applyFilters(TextField titleFilterField) {
+        filteredElements.setPredicate(element -> {
+            String titleFilter = titleFilterField.getText().trim().toLowerCase();
+            List<String> genresFilter = Arrays.stream(genresFilterField.getText().split(",")).map(String::trim).filter(s -> !s.isEmpty()).map(String::toLowerCase).toList();
+            Integer yearFilter = yearFilterField.getText().isEmpty() ? null : Integer.parseInt(yearFilterField.getText());
+            Integer lengthFilter = lengthFilterField.getText().isEmpty() ? null : Integer.parseInt(lengthFilterField.getText());
+            Boolean isAvailable = isAvailableFilter.isSelected();
+
+            Boolean titleFilterCompliant = titleFilter.isEmpty() || element.getTitle().toLowerCase().contains(titleFilter);
+            Boolean genreFilterCompliant = genresFilter.isEmpty() || genresFilter.stream().allMatch(genre -> element.getGenresAsString().toLowerCase().contains(genre));
+            Boolean yearFilterCompliant = (yearFilter == null || (element.getReleaseYear() ==  null || yearFilter < element.getReleaseYear()));
+            Boolean lengthFilterCompliant = (lengthFilter == null || (element.getLength() == null || lengthFilter < element.getLength()));
+            Boolean isAvailableCompliant = (!isAvailable || (element.getQuantityAvailable() != null && element.getQuantityAvailable() > 0));
+            return (titleFilterCompliant && genreFilterCompliant && yearFilterCompliant && lengthFilterCompliant && isAvailableCompliant);
+        });
+    }
 }

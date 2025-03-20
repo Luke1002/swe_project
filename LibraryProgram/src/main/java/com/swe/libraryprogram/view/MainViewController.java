@@ -14,14 +14,23 @@ import java.io.IOException;
 
 public class MainViewController {
 
-    private Scene currentScene;
-    private String lastView = null;
-    private String currView = null;
+    private Stage stage;
+    private String lastLastView = "login";
+    private String lastView = "login";
+    private String currView = "login";
     @FXML
     private BorderPane root;
 
     @FXML
     private void initialize() {
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public void loadTopPane(String fxmlView) {
@@ -49,9 +58,19 @@ public class MainViewController {
             AnchorPane view = loader.load();
             ((BaseViewController)loader.getController()).setMainViewController(this);
             if(!currView.equals(fxmlView)) {
-                lastView = currView;
-                currView = fxmlView;
+                if(!lastView.equals(fxmlView)) {
+                    lastLastView = lastView;
+                    lastView = currView;
+                    currView = fxmlView;
+
+                }
+                else{
+                    lastView = lastLastView;
+                    lastLastView = "login";
+                    currView = fxmlView;
+                }
                 ((BaseViewController)loader.getController()).setLastView(lastView);
+
             }
             root.setCenter(view);
         } catch (IOException e) {

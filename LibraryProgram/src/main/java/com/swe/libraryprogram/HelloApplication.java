@@ -22,10 +22,9 @@ public class HelloApplication extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("main-view.fxml"));
             Scene mainScene = new Scene(loader.load(), stage.getMinWidth(), stage.getMinHeight());
             mainViewController = loader.getController();
-            //mainViewController.loadBottomPane("home");
-            mainController.setUserState("admin", "admin");
-            mainViewController.loadTopPane("menubar");
-            mainViewController.loadBottomPane("home");
+            mainViewController.setStage(stage);
+            mainViewController.loadTopPane();
+            mainViewController.loadBottomPane("login");
             stage.setScene(mainScene);
             stage.setResizable(true);
             stage.setTitle("Library Management System");

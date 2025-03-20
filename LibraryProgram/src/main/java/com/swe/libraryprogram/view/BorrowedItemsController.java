@@ -1,6 +1,7 @@
 package com.swe.libraryprogram.view;
 
 import com.swe.libraryprogram.controller.LibraryUserController;
+import com.swe.libraryprogram.controller.MainController;
 import com.swe.libraryprogram.dao.BorrowsManager;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.User;
@@ -15,6 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -22,137 +25,52 @@ import java.util.stream.Collectors;
 public class BorrowedItemsController extends BaseViewController {
 
     @FXML
-    private Button returnButton, reportButton, backButton;
+    private Button closeButton;
 
     @FXML
-    private TableView<Element> tableView;
+    private TableView<Element> borrowedElementsTable;
 
     @FXML
     private TableColumn<Element, String> titleColumn;
 
-    @FXML
-    private TableColumn<Element, String> yearColumn;
-
-    @FXML
-    private TableColumn<Element, String> lenghtColumn;
-
-    @FXML
-    private TableColumn<Element, String> genreColumn;
-
-    private User user;
-
-    private Scene previousScene;
-
-    private ObservableList<Element> elements;
-
-    private BorrowsManager borrowsManager;
-
-    private LibraryUserController libraryUserController;
-
+    private ObservableList<Element> borrowedElements = FXCollections.observableArrayList();
 
     @FXML
     protected void initialize() {
-
-        borrowsManager = new BorrowsManager();
-
-        reportButton.setOnAction(event -> handleReport());
-        backButton.setOnAction(event -> goBack());
-        returnButton.setOnAction(event -> handleReturn());
+        super.initialize();
+        closeButton.setOnAction(event -> handleCloseButton());
 
         // Collega le colonne ai campi della classe Element
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        yearColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getReleaseYear().toString())
-        );
-        lenghtColumn.setCellValueFactory(new PropertyValueFactory<>("lenght"));
-
-        // Colonna per i generi
-        genreColumn.setCellValueFactory(cellData -> {
-            Element element = cellData.getValue();
-            String genres = element.getGenres().stream()
-                    .map(Genre::getName) // Ottiene i nomi dei generi
-                    .collect(Collectors.joining(", ")); // Unisce i nomi con una virgola
-            return new SimpleStringProperty(genres);
+        borrowedElementsTable.setRowFactory(tv -> {
+            TableRow<Element> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    MainController.getInstance().setSelectedElementId(row.getItem().getId());
+                    mainViewController.loadBottomPane("descriptionElement");
+                }
+            });
+            return row;
         });
+        loadBorrowedElementsData();
 
     }
 
-    private void handleReport() {
-        System.out.println("Generating report...");
-
-        //TODO: implementare (in modo simile a handleReturn)
-    }
-
-    private void handleReturn() {
-
-        Element selectedElement = tableView.getSelectionModel().getSelectedItem();
-
-        if (selectedElement != null) {
-
-            if (libraryUserController.returnElement(selectedElement.getId())) {
-
-                elements.remove(selectedElement);
-                tableView.refresh();
-
-                showAlert("Restituzione elemento", "Elemento restituito con successo.", Alert.AlertType.INFORMATION);
-
-            } else {
-                showAlert("Restituzione elemento", "Errore durante la restituzione dell'elemento.", Alert.AlertType.ERROR);
-
-            }
-
-        } else {
-            showAlert("Restituzione elemento", "Devi selezionare un elemento prima di restituirlo.", Alert.AlertType.WARNING);
-
-        }
-
-    }
-
-    public void setUser(User user) {
-
-        this.user = user;
-        libraryUserController = new LibraryUserController();
-
-        getBorrowedElements();
-
-    }
-
-    public void goBack() {
-
-        Stage stage = (Stage) returnButton.getScene().getWindow();
-        stage.setScene(previousScene);
-
-    }
-
-    public void setPreviousScene(Scene scene) {
-        this.previousScene = scene;
-
-    }
-
-    public void getBorrowedElements() {
-
+    private void loadBorrowedElementsData() {
+        List<Element> borrowedElementsList;
         try {
-
-            elements = FXCollections.observableArrayList(borrowsManager.getBorrowedElementsForUser(user.getEmail()));
-            tableView.setItems(elements);
-            tableView.refresh();
-
+            borrowedElementsList = MainController.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainController.getInstance().getUser().getEmail());
         } catch (SQLException e) {
-
-            e.printStackTrace();
-
+            showAlert("Errore", "Connessione al database non riuscita");
+            borrowedElementsList = new ArrayList<>();
         }
 
+        borrowedElements.setAll(borrowedElementsList);
+        borrowedElementsTable.setItems(borrowedElements);
     }
 
-    private void showAlert(String title, String message, Alert.AlertType type) {
-
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-
+    private void handleCloseButton() {
+        mainViewController.loadBottomPane("home");
     }
 
 

@@ -365,10 +365,10 @@ public class ElementManager {
             Element element = new Element(
                     rs.getInt("id"),
                     rs.getString("title"),
-                    rs.getInt("release_year"),
+                    rs.getInt("releaseyear"),
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     rs.getInt("length"),
                     new ArrayList<>()
             );

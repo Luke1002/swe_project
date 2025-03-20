@@ -21,7 +21,8 @@ public class PeriodicPublicationManager extends ElementManager {
         try {
             String query = "WITH inserted_element AS (" +
                     "    INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length)" +
-                    "    VALUES (?, ?, ?, ?, ?, ?)" + "    RETURNING id)" +
+                    "    VALUES (?, ?, ?, ?, ?, ?)" +
+                    "    RETURNING id)" +
                     "INSERT INTO periodicpublications (id, publisher, frequency, releasemonth, releaseday) " +
                     "SELECT id, ?, ?, ?, ? FROM inserted_element RETURNING id;";
 
@@ -44,12 +45,12 @@ public class PeriodicPublicationManager extends ElementManager {
             }
             stmt.setString(7, periodicPublication.getPublisher());
             stmt.setString(8, periodicPublication.getFrequency());
-            if (periodicPublication.getLength() != null) {
+            if (periodicPublication.getReleaseMonth() != null) {
                 stmt.setInt(9, periodicPublication.getReleaseMonth());
             } else {
                 stmt.setNull(9, java.sql.Types.INTEGER);
             }
-            if (periodicPublication.getLength() != null) {
+            if (periodicPublication.getReleaseDay() != null) {
                 stmt.setInt(10, periodicPublication.getReleaseDay());
             } else {
                 stmt.setNull(10, java.sql.Types.INTEGER);
@@ -60,11 +61,10 @@ public class PeriodicPublicationManager extends ElementManager {
             if (rs.next()) {
                 result = rs.getInt(1);
             } else {
-                System.err.println("Errore: il periodico non è stata inserito.");
+                System.err.println("Errore: il periodico non è stato inserito.");
             }
             stmt.close();
             return result;
-
         } catch (SQLException e) {
             throw new RuntimeException("Errore nell'accesso al database", e);
         }
@@ -138,7 +138,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         while (rs.next()) {
 
-            Integer releaseYear = rs.getInt("release_year");
+            Integer releaseYear = rs.getInt("releaseyear");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -146,20 +146,27 @@ public class PeriodicPublicationManager extends ElementManager {
             if (rs.wasNull()) {
                 length = null;
             }
-
+            Integer releaseMonth = rs.getInt("releasemonth");
+            if (rs.wasNull()) {
+                releaseMonth = null;
+            }
+            Integer releaseDay = rs.getInt("releaseday");
+            if (rs.wasNull()) {
+                releaseDay = null;
+            }
             PeriodicPublication periodic = new PeriodicPublication(
                     rs.getInt("id"),
                     rs.getString("title"),
                     releaseYear,
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     length,
                     new ArrayList<>(),
                     rs.getString("publisher"),
                     rs.getString("frequency"),
-                    rs.getInt("release_month"),
-                    rs.getInt("release_day")
+                    releaseMonth,
+                    releaseDay
             );
 
             periodics.add(periodic);
@@ -168,7 +175,7 @@ public class PeriodicPublicationManager extends ElementManager {
         stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
-        for (Element element : periodics){
+        for (Element element : periodics) {
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
@@ -220,7 +227,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            Integer releaseYear = rs.getInt("release_year");
+            Integer releaseYear = rs.getInt("releaseyear");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -228,20 +235,27 @@ public class PeriodicPublicationManager extends ElementManager {
             if (rs.wasNull()) {
                 length = null;
             }
-
+            Integer releaseMonth = rs.getInt("releasemonth");
+            if (rs.wasNull()) {
+                releaseMonth = null;
+            }
+            Integer releaseDay = rs.getInt("releaseday");
+            if (rs.wasNull()) {
+                releaseDay = null;
+            }
             PeriodicPublication periodic = new PeriodicPublication(
                     rs.getInt("id"),
                     rs.getString("title"),
                     releaseYear,
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantity_available"),
+                    rs.getInt("quantityavailable"),
                     length,
                     new ArrayList<>(),
                     rs.getString("publisher"),
                     rs.getString("frequency"),
-                    rs.getInt("release_month"),
-                    rs.getInt("release_day")
+                    releaseMonth,
+                    releaseDay
             );
 
             elements.add(periodic);
@@ -250,7 +264,7 @@ public class PeriodicPublicationManager extends ElementManager {
         stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
-        for (Element element : elements){
+        for (Element element : elements) {
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);
         }

@@ -8,7 +8,10 @@ public class ElementCheckViewController extends BaseViewController {
     UnaryOperator<TextFormatter.Change> onlyNumbersFilter = change -> {
         String newText = change.getControlNewText();
 
-        if (newText.matches("\\d*") && !newText.startsWith("0")) {
+        if (newText.matches("\\d*") && !newText.startsWith("0") ) {
+            if(newText.isEmpty()){
+                return change;
+            }
             try{
                 Integer.parseInt(newText);
                 return change;
@@ -43,22 +46,20 @@ public class ElementCheckViewController extends BaseViewController {
         }
     };
 
-    UnaryOperator<TextFormatter.Change> ageFilter = change -> {
-        String newText = change.getControlNewText();
-
-        if (newText.matches("\\d*") && !newText.startsWith("0")) {
-            if(!newText.isEmpty() && Integer.parseInt(newText) < 120) {
-                return change;
-            }
-            return null;
-        }
-        return null;
-    };
-
-    UnaryOperator<TextFormatter.Change> totalLengthFilter = change -> {
+    UnaryOperator<TextFormatter.Change> totalLength64Filter = change -> {
         String newText = change.getControlNewText();
 
         if (newText.length() <= 64) {
+            return change;
+        } else {
+            return null;
+        }
+    };
+
+    UnaryOperator<TextFormatter.Change> totalLength256Filter = change -> {
+        String newText = change.getControlNewText();
+
+        if (newText.length() <= 256) {
             return change;
         } else {
             return null;

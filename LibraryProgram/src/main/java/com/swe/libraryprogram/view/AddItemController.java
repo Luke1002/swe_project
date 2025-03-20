@@ -56,7 +56,7 @@ public class AddItemController extends ElementCheckViewController {
     @FXML
     private ChoiceBox<Integer> dayBox, monthBox;
 
-    private String currElementType;
+    private String elementType;
     private Element currElement;
     private Integer currElementId;
     private final Integer[] days = IntStream.rangeClosed(1, 31).boxed().toArray(Integer[]::new);
@@ -65,12 +65,12 @@ public class AddItemController extends ElementCheckViewController {
         String newText = change.getControlNewText();
 
         if (newText.matches("\\d*") && !newText.startsWith("0")) {
-            if(!newText.isEmpty()){
-                try  {
+            if (!newText.isEmpty()) {
+                try {
                     Integer value = Integer.parseInt(newText);
                     try {
                         if (value > Integer.valueOf(quantityAvailableField.getText())) {
-                            change.setText(quantityAvailableField.getText());
+                            change.setText(quantityField.getText());
                             change.setRange(0, change.getControlText().length());
                         }
                     } catch (NumberFormatException e) {
@@ -92,7 +92,7 @@ public class AddItemController extends ElementCheckViewController {
         super.initialize();
         setFieldsRestrictions();
         addButton.setOnAction(event -> handleSaveButton());
-        cancelButton.setOnAction(event -> goBack());
+        cancelButton.setOnAction(event -> handleCancelButton());
         choiceBox.getItems().setAll("Libro", "Film", "Periodico");
         choiceBox.setOnAction(event -> showFields());
         monthBox.getItems().setAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
@@ -100,21 +100,20 @@ public class AddItemController extends ElementCheckViewController {
         currElementId = MainController.getInstance().getSelectedElementId();
         if (currElementId == null) {
             choiceBox.setValue(choiceBox.getItems().getFirst());
-            monthBox.setValue(monthBox.getItems().getFirst());
             yearField.setText(String.valueOf(LocalDate.now().getYear()));
         } else {
             currElement = MainController.getInstance().getElementManager().getCompleteElementById(currElementId);
             titleField.setText(currElement.getTitle());
             descriptionArea.setText(currElement.getDescription());
-            yearField.setText(currElement.getReleaseYear().toString());
-            lengthField.setText(currElement.getLength().toString());
+            yearField.setText(currElement.getReleaseYear() == null ? "" : currElement.getReleaseYear().toString());
+            lengthField.setText(currElement.getLength() == null ? "" : currElement.getLength().toString());
             quantityField.setText(currElement.getQuantity().toString());
             quantityAvailableField.setText(currElement.getQuantityAvailable().toString());
-            genresField.setText(currElement.getGenres().toString());
+            genresField.setText(currElement.getGenresAsString());
             if (currElement instanceof Book) {
                 choiceBox.setValue(choiceBox.getItems().getFirst());
                 authorField.setText(((Book) currElement).getAuthor());
-                editionField.setText(((Book) currElement).getEdition().toString());
+                editionField.setText(((Book) currElement).getEdition() == null ? "" : ((Book) currElement).getEdition().toString());
                 publisherField.setText(((Book) currElement).getPublisher());
                 isbnField.setText(((Book) currElement).getIsbn());
             } else if (currElement instanceof DigitalMedia) {
@@ -126,24 +125,37 @@ public class AddItemController extends ElementCheckViewController {
                 choiceBox.setValue(choiceBox.getItems().get(2));
                 publisherField.setText(((PeriodicPublication) currElement).getPublisher());
                 frequencyField.setText(((PeriodicPublication) currElement).getFrequency());
-                monthBox.setValue(monthBox.getItems().get(((PeriodicPublication) currElement).getReleaseMonth() - 1));
-                dayBox.setValue(dayBox.getItems().get(((PeriodicPublication) currElement).getReleaseDay() - 1));
+                if (((PeriodicPublication) currElement).getReleaseMonth() != null) {
+                    monthBox.setValue(monthBox.getItems().get(((PeriodicPublication) currElement).getReleaseMonth() - 1));
+                }
+                if (((PeriodicPublication) currElement).getReleaseDay() != null) {
+                    dayBox.setValue(dayBox.getItems().get(((PeriodicPublication) currElement).getReleaseDay() - 1));
+                }
             }
             typeChoice.setDisable(true);
         }
     }
 
+    private void handleCancelButton() {
+        if (currElement != null){
+            goBack();
+        }
+        else {
+            mainViewController.loadBottomPane("home");
+        }
+    }
+
     @Override
     protected void showFields() {
-        currElementType = choiceBox.getValue();
-        if (currElementType.equals("Libro")) {
+        elementType = choiceBox.getValue();
+        if (elementType.equals("Libro")) {
             editorText.setText("Casa editrice: ");
             authorText.setText("Autore: ");
             authorBox.setDisable(false);
             bookBox.setDisable(false);
             digitalMediaBox.setDisable(true);
             periodicPublicationBox.setDisable(true);
-        } else if (currElementType.equals("Film")) {
+        } else if (elementType.equals("Film")) {
             editorText.setText("Casa produttrice: ");
             authorText.setText("Direttore: ");
             authorBox.setDisable(false);
@@ -151,7 +163,7 @@ public class AddItemController extends ElementCheckViewController {
             digitalMediaBox.setDisable(false);
             periodicPublicationBox.setDisable(true);
 
-        } else if (currElementType.equals("Periodico")) {
+        } else if (elementType.equals("Periodico")) {
             editorText.setText("Casa editrice: ");
             authorBox.setDisable(true);
             bookBox.setDisable(true);
@@ -163,22 +175,22 @@ public class AddItemController extends ElementCheckViewController {
 
     @Override
     protected void showDays() {
-        int curr_month = monthBox.getValue();
+        Integer curr_month = monthBox.getValue();
         int curr_year;
         if (yearField.getText().isEmpty()) {
             curr_year = 0;
         } else {
             curr_year = Integer.parseInt(yearField.getText());
         }
-        if (curr_month == 2) {
+        if (curr_month == null || Arrays.asList(new Integer[]{1, 3, 5, 7, 8, 10, 12}).contains(curr_month)) {
+            dayBox.getItems().setAll(days);
+        } else if (curr_month == 2) {
             dayBox.getItems().setAll(Arrays.copyOfRange(days, 0, 28));
             if (curr_year % 4 == 0 && curr_year % 100 != 0) {
                 dayBox.getItems().add(days[28]);
             }
-        } else if (curr_month == 4 || curr_month == 6 || curr_month == 9 || curr_month == 11) {
-            dayBox.getItems().setAll(Arrays.copyOfRange(days, 0, 29));
         } else {
-            dayBox.getItems().setAll(days);
+            dayBox.getItems().setAll(Arrays.copyOfRange(days, 0, 29));
         }
     }
 
@@ -190,12 +202,12 @@ public class AddItemController extends ElementCheckViewController {
             Integer quantity = quantityField.getText().isEmpty() ? 1 : Integer.valueOf(quantityField.getText());
             Integer quantityAvailable = quantityField.getText().isEmpty() ? quantity : Integer.valueOf(quantityField.getText());
             Integer length = lengthField.getText().isEmpty() ? null : Integer.valueOf(lengthField.getText());
+            Integer edition = editionField.getText().isEmpty() ? 1 : Integer.valueOf(editionField.getText());
             if (currElement == null) {
-                if (currElementType.equals("Libro")) {
-                    Integer edition = editionField.getText().isEmpty() ? 1 : Integer.valueOf(editionField.getText());
+                if (elementType.equals("Libro")) {
                     element = new Book(titleField.getText(),
                             year,
-                            "",
+                            descriptionArea.getText(),
                             quantity,
                             quantityAvailable,
                             length,
@@ -204,10 +216,10 @@ public class AddItemController extends ElementCheckViewController {
                             authorField.getText(),
                             publisherField.getText(),
                             edition);
-                } else if (currElementType.equals("Film")) {
+                } else if (elementType.equals("Film")) {
                     element = new DigitalMedia(titleField.getText(),
                             year,
-                            "",
+                            descriptionArea.getText(),
                             quantity,
                             quantityAvailable,
                             length,
@@ -216,10 +228,11 @@ public class AddItemController extends ElementCheckViewController {
                             ageField.getText(),
                             authorField.getText());
 
-                } else if (currElementType.equals("Periodico")) {
+                } else if (elementType.equals("Periodico")) {
+
                     element = new PeriodicPublication(titleField.getText(),
                             year,
-                            "",
+                            descriptionArea.getText(),
                             quantity,
                             quantityAvailable,
                             length,
@@ -238,11 +251,19 @@ public class AddItemController extends ElementCheckViewController {
                 currElement.setQuantity(quantity);
                 currElement.setQuantityAvailable(quantityAvailable);
                 if (currElement instanceof Book) {
-
+                    ((Book) currElement).setAuthor(authorField.getText());
+                    ((Book) currElement).setPublisher(publisherField.getText());
+                    ((Book) currElement).setEdition(edition);
+                    ((Book) currElement).setIsbn(isbnField.getText());
                 } else if (currElement instanceof DigitalMedia) {
-
+                    ((DigitalMedia) currElement).setAgeRating(ageField.getText());
+                    ((DigitalMedia) currElement).setDirector(authorField.getText());
+                    ((DigitalMedia) currElement).setProducer(publisherField.getText());
                 } else if (currElement instanceof PeriodicPublication) {
-
+                    ((PeriodicPublication) currElement).setPublisher(publisherField.getText());
+                    ((PeriodicPublication) currElement).setFrequency(frequencyField.getText());
+                    ((PeriodicPublication) currElement).setReleaseDay(dayBox.getValue());
+                    ((PeriodicPublication) currElement).setReleaseMonth(monthBox.getValue());
                 }
             }
 
@@ -282,7 +303,7 @@ public class AddItemController extends ElementCheckViewController {
             showAlert("Errore", "Titolo è un campo obbligatorio.");
             return false;
         }
-        if (currElementType.equals("Libro")) {
+        if (elementType.equals("Libro")) {
             if (isbnField.getText().length() < 13) {
                 showAlert("Errore", "Codice ISBN non valido.");
                 return false;
@@ -361,11 +382,12 @@ public class AddItemController extends ElementCheckViewController {
         lengthField.setTextFormatter(new TextFormatter<>(onlyNumbersFilter));
         isbnField.setTextFormatter(new TextFormatter<>(isbnFilter));
         yearField.setTextFormatter(new TextFormatter<>(yearFilter));
-        titleField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        authorField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        producerField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        frequencyField.setTextFormatter(new TextFormatter<>(totalLengthFilter));
-        ageField.setTextFormatter(new TextFormatter<>(ageFilter));
+        titleField.setTextFormatter(new TextFormatter<>(totalLength64Filter));
+        authorField.setTextFormatter(new TextFormatter<>(totalLength64Filter));
+        producerField.setTextFormatter(new TextFormatter<>(totalLength64Filter));
+        frequencyField.setTextFormatter(new TextFormatter<>(totalLength64Filter));
+        ageField.setTextFormatter(new TextFormatter<>(totalLength64Filter));
+        descriptionArea.setTextFormatter(new TextFormatter<>(totalLength256Filter));
 
     }
 

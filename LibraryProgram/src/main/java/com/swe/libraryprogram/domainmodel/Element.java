@@ -107,6 +107,9 @@ public class Element {
     }
 
     public String getGenresAsString() {
+        if (genres.isEmpty()){
+            return "";
+        }
         return genres.stream().map(Genre::getName).collect(Collectors.joining(", "));
     }
 

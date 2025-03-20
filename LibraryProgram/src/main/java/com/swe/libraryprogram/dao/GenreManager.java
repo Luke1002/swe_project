@@ -19,25 +19,14 @@ public class GenreManager {
 
     public Boolean addGenre(Genre genre) throws SQLException {
 
-        String query = "INSERT INTO genres (code, name) VALUES (?, ?)";
+        String query = "INSERT INTO genres (name) VALUES (?)";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, genre.getName());
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
-
-            stmt.setInt(1, genre.getCode());
-            stmt.setString(2, genre.getName());
-
-            int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
-
-        }
+        int rowsInserted = stmt.executeUpdate();
+        return rowsInserted > 0;
 
     }
 

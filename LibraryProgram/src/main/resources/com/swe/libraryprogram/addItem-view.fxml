@@ -158,7 +158,7 @@
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Descrizione: " />
-                        <TextArea fx:id="descriptionArea" prefHeight="38.0" prefWidth="514.0" />
+                        <TextArea fx:id="descriptionArea" prefHeight="38.0" prefWidth="514.0" wrapText="true" />
                      </children>
                   </VBox>
                </children>

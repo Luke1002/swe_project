@@ -8,11 +8,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DescriptionElementController extends BaseViewController {
@@ -21,10 +21,10 @@ public class DescriptionElementController extends BaseViewController {
     private Label welcomeLabel;
 
     @FXML
-    private Label titleLabel, typeLabel, quantityAvailable, yearLabel, lengthLabel, genresLabel;
+    private Label titleLabel, typeLabel, quantityLabel, yearLabel, lengthLabel, genresLabel;
 
     @FXML
-    private TextFlow descriptionFlow;
+    private Label descriptionLabel;
 
     @FXML
     private Label isbnLabel, authorLabel, publisherLabel, editionLabel;
@@ -43,8 +43,6 @@ public class DescriptionElementController extends BaseViewController {
 
     private Element element;
 
-    private Text descriptionText = new Text();
-
 
     @FXML
     protected void initialize() {
@@ -52,10 +50,15 @@ public class DescriptionElementController extends BaseViewController {
         Integer elementId = MainController.getInstance().getSelectedElementId();
         element = MainController.getInstance().getElementManager().getCompleteElementById(elementId);
         titleLabel.setText("Titolo: " + element.getTitle());
-        quantityAvailable.setText("Disponibilità: " + element.getQuantityAvailable().toString());
+        String yearStringvalue = element.getReleaseYear() == null ? "" : element.getReleaseYear().toString();
+        yearLabel.setText("Anno: " + yearStringvalue);
+        genresLabel.setText(element.getGenresAsString());
+        descriptionLabel.setText(element.getDescription());
+        quantityLabel.setText("Disponibilità: "+ element.getQuantityAvailable().toString() + "/" + element.getQuantity().toString());
+        String lengthStringvalue = element.getLength() == null ? "" : element.getLength().toString();
         if(element instanceof Book){
             typeLabel.setText("Libro");
-            lengthLabel.setText("Lunghezza: " + element.getLength().toString()+ " pagine");
+            lengthLabel.setText("Lunghezza: " + lengthStringvalue + " pagine");
             try {
                 HBox bookDetails = (new FXMLLoader(getClass().getResource("/com/swe/libraryprogram/book-details.fxml"))).load();
                 mainVBox.getChildren().add(2, bookDetails);
@@ -66,7 +69,8 @@ public class DescriptionElementController extends BaseViewController {
                 isbnLabel.setText("ISBN: " + ((Book) element).getIsbn());
                 authorLabel.setText("Autore: " + ((Book) element).getAuthor());
                 publisherLabel.setText("Casa Editrice: " + ((Book) element).getPublisher());
-                editionLabel.setText("Edizione: " + ((Book) element).getEdition());
+                String editionStringValue = ((Book) element).getEdition() == null? "" : ((Book) element).getEdition().toString();
+                editionLabel.setText("Edizione: " + editionStringValue);
             }
             catch(IOException e){
                 e.printStackTrace();
@@ -74,10 +78,7 @@ public class DescriptionElementController extends BaseViewController {
         }
         else if (element instanceof DigitalMedia){
             typeLabel.setText("Film");
-            lengthLabel.setText("Durata: " + element.getLength().toString()+ " minuti");
-            yearLabel.setText("Anno: " + element.getReleaseYear().toString());
-            descriptionText.setText(element.getDescription());
-            descriptionFlow.getChildren().setAll(descriptionText);
+            lengthLabel.setText("Durata: " + lengthStringvalue + " minuti");
             try {
                 HBox digitalMediaDetails = (new FXMLLoader(getClass().getResource("/com/swe/libraryprogram/digitalmedia-details.fxml"))).load();
                 mainVBox.getChildren().add(2, digitalMediaDetails);
@@ -95,7 +96,7 @@ public class DescriptionElementController extends BaseViewController {
         }
         else if(element instanceof PeriodicPublication){
             typeLabel.setText("Periodico");
-            lengthLabel.setText("Lunghezza: " + element.getLength().toString()+ " pagine");
+            lengthLabel.setText("Lunghezza: " + lengthStringvalue + " pagine");
             try {
                 HBox periodicPublicationDetails = (new FXMLLoader(getClass().getResource("/com/swe/libraryprogram/periodicpublication-details.fxml"))).load();
                 mainVBox.getChildren().add(2, periodicPublicationDetails);
@@ -105,8 +106,10 @@ public class DescriptionElementController extends BaseViewController {
                 releaseDayLabel = (Label) periodicPublicationDetails.lookup("#dayLabel");
                 publisherLabel.setText("Casa Produttrice: " + ((PeriodicPublication) element).getPublisher());
                 frequencyLabel.setText("Frequenza: " + ((PeriodicPublication) element).getFrequency());
-                releaseMonthLabel.setText("Mese: " + ((PeriodicPublication) element).getReleaseMonth().toString());
-                releaseDayLabel.setText("Giorno: " + ((PeriodicPublication) element).getReleaseDay().toString());
+                String monthStringValue = ((PeriodicPublication) element).getReleaseMonth() == null? "" : ((PeriodicPublication) element).getReleaseMonth().toString();
+                releaseMonthLabel.setText("Mese: " + monthStringValue);
+                String dayStringValue = ((PeriodicPublication) element).getReleaseDay() == null? "" : ((PeriodicPublication) element).getReleaseDay().toString();
+                releaseDayLabel.setText("Giorno: " + dayStringValue);
             }
             catch(IOException e){
                 e.printStackTrace();
@@ -132,7 +135,12 @@ public class DescriptionElementController extends BaseViewController {
             removeButton.setVisible(false);
             borrowButton.setDisable(false);
             returnButton.setDisable(true);
-            for (Element e : MainController.getInstance().getBorrowedElements()) {
+            List<Element> elements = new ArrayList<>();
+            try{
+                elements = MainController.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainController.getInstance().getUser().getEmail());
+            }
+            catch(SQLException e){}
+            for (Element e : elements) {
                 if(e.getId().equals(element.getId())) {
                     borrowButton.setDisable(true);
                     returnButton.setDisable(false);
