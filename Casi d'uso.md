@@ -281,6 +281,27 @@
 | Delivery date               |                                                                                                                                                |
 
 
+### Use Case: Elementi in prestito
+| Use Case                    | Elementi in prestito                                                                                                                                                                |
+|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| History                     | By Marco Siani on 20/03/25 "first creation" v1.0                                                                                                                                    |
+| Source                      |                                                                                                                                                                                     |
+| Level*                      | Function                                                                                                                                                                            |
+| Description*                | Visione degli elementi attualmente presi in prestito                                                                                                                                |
+| Scope                       |                                                                                                                                                                                     |
+| Actors                      | Cliente                                                                                                                                                                             |
+| Pre-conditions*             | Connessione al database<br>Avere un account<br>Aver effettuato il login                                                                                                             |
+| Post-conditions*            |                                                                                                                                                                                     |
+| Normal flow*                | 1. Si accede al proprio account<br>2. Una volta aperta l'interfaccia sarà possibile vedere che elementi abbiamo in prestito<br>3. Scegliere se restituire o visualizzare l'elemento |
+| Variations                  |                                                                                                                                                                                     |
+| Alternative flows           | 2A. L'utente potrebbe non aver preso in prestito nessun elemento e la pagina risulterà vuota                                                                                        |
+| References                  |                                                                                                                                                                                     |
+| Non-functional requirements |                                                                                                                                                                                     |
+| Issues                      |                                                                                                                                                                                     |
+| Priority                    |                                                                                                                                                                                     |
+| Delivery date               |                                                                                                                                                                                     |
+
+
 Quando un cliente supera il tempo di restituzione di un libro, riceve un avviso e ha tempo una settimana per consegnare il libro durante i quale non può prenotare altri libri.
 Sew supera tale limite ottiene un warning e il limite si resetta.
 
