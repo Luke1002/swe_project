@@ -155,15 +155,8 @@ public class GenreManager {
 
         String query = "INSERT INTO elementgenres (elementid, genrecode) VALUES (?, ?)";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
+        Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setInt(1, elementId);
             stmt.setInt(2, genreCode);
@@ -171,7 +164,6 @@ public class GenreManager {
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
 
-        }
 
     }
 
@@ -184,8 +176,8 @@ public class GenreManager {
                 "JOIN elementgenres eg ON g.code = eg.genrecode " +
                 "WHERE eg.elementid = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -211,16 +203,14 @@ public class GenreManager {
 
             return genres;
 
-        }
-
     }
 
     public Boolean removeGenreFromElement(Integer elementId, Integer genreCode) throws SQLException {
 
         String query = "DELETE FROM elementgenres WHERE elementid = ? AND genrecode = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
 
             if (!ConnectionManager.getInstance().isConnectionValid()) {
 
@@ -234,8 +224,6 @@ public class GenreManager {
 
             int rowsDeleted = stmt.executeUpdate();
             return rowsDeleted > 0;
-
-        }
 
     }
 

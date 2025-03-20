@@ -35,6 +35,7 @@ public class MenuBarViewController extends BaseViewController{
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.WINDOW_MODAL);
                 popupStage.initOwner(mainViewController.getStage());
+                popupStage.setResizable(false);
                 popupStage.setTitle("Aggiungi Generi");
 
                 Label instructionLabel = new Label("Inserisci nomi dei generi da inserire separati da \",\"");
