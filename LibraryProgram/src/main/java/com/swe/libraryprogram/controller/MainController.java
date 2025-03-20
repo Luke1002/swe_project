@@ -55,7 +55,7 @@ public class MainController {
 
 
 
-    public Boolean setState(String email, String password) throws SQLException {
+    public Boolean setUserState(String email, String password) throws SQLException {
         session_user = userController.login(email, password);
         if (session_user != null) {
             if (session_user.isAdmin()) {
@@ -106,10 +106,9 @@ public class MainController {
         return userManager;
     }
 
-    public void resetState() {
-        selectedElementId = null;
+    public void resetUserState() {
         session_user = null;
         userController = new UserController();
-        borrowedElements = new ArrayList<Element>();
+        borrowedElements = new ArrayList<>();
     }
 }

@@ -23,7 +23,7 @@ public class HelloApplication extends Application {
             Scene mainScene = new Scene(loader.load(), stage.getMinWidth(), stage.getMinHeight());
             mainViewController = loader.getController();
             //mainViewController.loadBottomPane("home");
-            mainController.setState("admin", "admin");
+            mainController.setUserState("admin", "admin");
             mainViewController.loadTopPane("menubar");
             mainViewController.loadBottomPane("home");
             stage.setScene(mainScene);

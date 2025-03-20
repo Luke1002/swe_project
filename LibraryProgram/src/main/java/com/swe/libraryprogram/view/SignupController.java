@@ -113,7 +113,7 @@ public class SignupController extends BaseViewController {
             if(MainController.getInstance().getUserController().signup(email, password, name, surname, phone)){
                 showAlert("Success", "Registrazione completata con successo");
                 try {
-                    if(MainController.getInstance().setState(email, password)){
+                    if(MainController.getInstance().setUserState(email, password)){
                         mainViewController.loadTopPane("menubar");
                         mainViewController.loadBottomPane("home");
                     }

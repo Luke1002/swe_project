@@ -32,7 +32,7 @@ public class LoginController extends BaseViewController {
 
         MainController mC = MainController.getInstance();
         try {
-            if (mC.setState(email, password)) {
+            if (mC.setUserState(email, password)) {
                 mainViewController.loadTopPane("menubar");
                 mainViewController.loadBottomPane("home");
             } else {
