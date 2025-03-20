@@ -23,33 +23,32 @@ public class ElementManager {
 
         String query = "DELETE FROM elements WHERE id = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
-
-            stmt.setInt(1, id);
-
-            int rowsDeleted = stmt.executeUpdate();
-
-            if (rowsDeleted > 0) {
-
-                System.out.println("Elemento con ID " + id + " rimosso correttamente.");
-                return true;
-
-            } else {
-
-                System.err.println("Nessun elemento trovato con ID " + id);
-                return false;
-
-            }
+            System.err.println("Connessione al database non valida.");
+            return false;
 
         }
+
+        stmt.setInt(1, id);
+
+        int rowsDeleted = stmt.executeUpdate();
+
+        if (rowsDeleted > 0) {
+
+            System.out.println("Elemento con ID " + id + " rimosso correttamente.");
+            return true;
+
+        } else {
+
+            System.err.println("Nessun elemento trovato con ID " + id);
+            return false;
+
+        }
+
 
     }
 
@@ -380,7 +379,7 @@ public class ElementManager {
         stmt.close();
 
         GenreManager genreManager = MainController.getInstance().getGenreManager();
-        for (Element element : elements){
+        for (Element element : elements) {
             List<Genre> genresList = genreManager.getGenresForElement(element.getId());
             element.setGenres(genresList);
         }
@@ -393,7 +392,7 @@ public class ElementManager {
         // Metodo vuoto per essere sovrascritto nelle classi figlie
     }
 
-    public Element getCompleteElementById(Integer id){
+    public Element getCompleteElementById(Integer id) {
         try {
             Integer type = MainController.getInstance().getElementManager().getElementTypeById(id);
             if (type == 1) {
@@ -405,8 +404,7 @@ public class ElementManager {
             } else {
                 return null;
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             return null;
         }
     }

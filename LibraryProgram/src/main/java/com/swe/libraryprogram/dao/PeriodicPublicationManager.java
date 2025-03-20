@@ -92,17 +92,18 @@ public class PeriodicPublicationManager extends ElementManager {
         } else {
             stmt.setNull(6, java.sql.Types.INTEGER);
         }
-        stmt.setString(7, periodicPublication.getPublisher());
-        stmt.setString(8, periodicPublication.getFrequency());
+        stmt.setInt(7, periodicPublication.getId());
+        stmt.setString(8, periodicPublication.getPublisher());
+        stmt.setString(9, periodicPublication.getFrequency());
         if (periodicPublication.getLength() != null) {
-            stmt.setInt(9, periodicPublication.getReleaseMonth());
-        } else {
-            stmt.setNull(9, java.sql.Types.INTEGER);
-        }
-        if (periodicPublication.getLength() != null) {
-            stmt.setInt(10, periodicPublication.getReleaseDay());
+            stmt.setInt(10, periodicPublication.getReleaseMonth());
         } else {
             stmt.setNull(10, java.sql.Types.INTEGER);
+        }
+        if (periodicPublication.getLength() != null) {
+            stmt.setInt(11, periodicPublication.getReleaseDay());
+        } else {
+            stmt.setNull(11, java.sql.Types.INTEGER);
         }
 
         int rowsUpdated = stmt.executeUpdate();
@@ -219,7 +220,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            Integer releaseYear = rs.getInt("releaseyear");
+            Integer releaseYear = rs.getInt("release_year");
             if (rs.wasNull()) {
                 releaseYear = null;
             }
@@ -234,14 +235,14 @@ public class PeriodicPublicationManager extends ElementManager {
                     releaseYear,
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getInt("quantityavailable"),
+                    rs.getInt("quantity_available"),
                     length,
                     new ArrayList<>(),
                     rs.getString("publisher"),
                     rs.getString("frequency"),
-                    rs.getInt("releasemonth"),
-                    rs.getInt("releaseday")
-                    );
+                    rs.getInt("release_month"),
+                    rs.getInt("release_day")
+            );
 
             elements.add(periodic);
 

@@ -1,8 +1,8 @@
 package com.swe.libraryprogram.dao;
 
 import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.domainmodel.Book;
-import com.swe.libraryprogram.domainmodel.Element;
+
+import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -16,11 +16,10 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class BookManagerTest {
+public class DigitalMediaManagerTest {
 
     @InjectMocks
-    private BookManager bookManager;
-
+    private DigitalMediaManager digitalMediaManager;
 
     private static Connection connection;
 
@@ -37,23 +36,23 @@ public class BookManagerTest {
         //connection = dataSource.getConnection();
         connection.setAutoCommit(false);
 
-
-        String insertElementQuery = "INSERT INTO elements (title, releaseyear, description, quantity, quantityavailable, length) " +
-                "VALUES ('Test Book', 2025, 'Test Description', 5, 5, 300)";
+        String insertElementQuery = "INSERT INTO elements (title, releaseyear, description, quantity," +
+                " quantityavailable, length) " +
+                "VALUES ('Test Media', 2025, 'Test Description', 5, 5, 300)";
 
         try (Statement stmtInsert = connection.createStatement()) {
             stmtInsert.executeUpdate(insertElementQuery, Statement.RETURN_GENERATED_KEYS);
             ResultSet generatedKeys = stmtInsert.getGeneratedKeys();
             if (generatedKeys.next()) {
                 generatedId = generatedKeys.getInt(1);
-                String insertBookQuery = "INSERT INTO books (id, isbn, author, publisher, edition) " +
-                        "VALUES (" + generatedId + ", 'isbnTest', 'Test Author', 'Test Publisher', 1)";
-                stmtInsert.executeUpdate(insertBookQuery);
+                String insertMediaQuery = "INSERT INTO digitalmedias (id,producer,agerating,director) " +
+                        "VALUES (" + generatedId + ", 'producerTest', 'ageratingTest'," +
+                        " 'directorTest')";
+                stmtInsert.executeUpdate(insertMediaQuery);
             }
         }
         Mockito.clearAllCaches();
 
-        // Mockare staticamente il metodo ConnectionManager.getInstance()
         mockStatic(ConnectionManager.class);
         mockStatic(MainController.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
@@ -69,42 +68,39 @@ public class BookManagerTest {
 
     @AfterAll
     static void tearDown() throws SQLException {
-        // Esegui il rollback per pulire i dati dopo ogni test
         connection.rollback();
         connection.close();
     }
 
     @Test
-    void addBookTest() throws SQLException {
+    void addDigitalMediaTest() throws SQLException {
 
-        Book book = new Book("titleTest",2000,"descriptionTest",1,1,1,new ArrayList<>(),"isbnTest","authorTest",
-                "publisherTest",1);
+        DigitalMedia media = new DigitalMedia("insertedMediaTest",2020,"insertedDescriptionTest",
+                5,5,300,new ArrayList<>(), "insertedProducerTest",
+                "insertedAgeRatingTest", "insertedDirectorTest");
 
-        Integer id = bookManager.addBook(book);
+        Integer id = digitalMediaManager.addDigitalMedia(media);
 
         assertNotNull(id);
 
     }
 
     @Test
-    void updateBookTest() throws SQLException {
+    void updateDigitalMediaTest() throws SQLException {
 
-        assertTrue(bookManager.updateBook(new Book(generatedId,"newTitleTest",
-                3000,"descriptionTest",1,1,
-                1,new ArrayList<>(),"isbnTest","authorTest",
-                "newPublisherTest",1)));
+        assertTrue(digitalMediaManager.updateDigitalMedia(new DigitalMedia(generatedId,
+                "updatedMediaTest",2000,"updatedDescriptionTest",1,1,1,new ArrayList<>(),
+                "updatedProducerTest","updatedAgeRatingTest","updatedDirectorTest")));
 
     }
 
     @Test
-    void getBookByIsbnTest() throws SQLException {
+    void getDigitalMediaTest() throws SQLException {
 
-        Element book1 = bookManager.getBookByIsbn("isbnTest");
-
-        assertEquals("isbnTest", ((Book) book1).getIsbn());
+        assertNotNull(digitalMediaManager.getDigitalMedia(generatedId));
 
     }
 
 
-}
 
+}
