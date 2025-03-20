@@ -9,10 +9,13 @@ public class ElementCheckViewController extends BaseViewController {
         String newText = change.getControlNewText();
 
         if (newText.matches("\\d*") && !newText.startsWith("0")) {
-            if (!newText.isEmpty() && (Long.valueOf(Integer.MAX_VALUE) < Long.parseLong(newText))) {
+            try{
+                Integer.parseInt(newText);
+                return change;
+            }
+            catch(NumberFormatException e){
                 return null;
             }
-            return change;
         } else {
             return null;
         }
