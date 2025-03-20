@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -125,29 +124,28 @@ public class GenreManager {
 
         String query = "SELECT * FROM genres";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return genres;
-
-            }
-
-            while (rs.next()) {
-
-                genres.add(new Genre(
-                        rs.getString("name"),
-                        rs.getInt("code")
-                ));
-
-            }
-
+            System.err.println("Connessione al database non valida.");
             return genres;
 
         }
+
+        while (rs.next()) {
+
+            genres.add(new Genre(
+                    rs.getString("name"),
+                    rs.getInt("code")
+            ));
+
+        }
+
+        return genres;
+
 
     }
 
@@ -188,18 +186,17 @@ public class GenreManager {
 
         stmt.setInt(1, elementId);
 
-        try (ResultSet rs = stmt.executeQuery()) {
+        ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
+        while (rs.next()) {
 
-                genres.add(new Genre(
-                        rs.getString("name"),
-                        rs.getInt("code")
-                ));
-
-            }
+            genres.add(new Genre(
+                    rs.getString("name"),
+                    rs.getInt("code")
+            ));
 
         }
+
 
         return genres;
 
