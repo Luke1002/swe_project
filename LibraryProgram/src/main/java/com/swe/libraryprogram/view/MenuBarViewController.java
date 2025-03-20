@@ -30,12 +30,14 @@ public class MenuBarViewController extends BaseViewController{
         homeMenuItem.setOnAction(event -> goToHome());
         addItemMenuItem.setOnAction(event -> goToAddItem());
         addGenresMenuItem.setOnAction(event -> {
-            if(MainController.getInstance().getUserController() instanceof LibraryAdminController){
+            if(MainController.getInstance().getUser().isAdmin()){
 
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.WINDOW_MODAL);
                 popupStage.initOwner(mainViewController.getStage());
                 popupStage.setResizable(false);
+                popupStage.setWidth(600);
+                popupStage.setHeight(200);
                 popupStage.setTitle("Aggiungi Generi");
 
                 Label instructionLabel = new Label("Inserisci nomi dei generi da inserire separati da \",\"");
@@ -79,10 +81,12 @@ public class MenuBarViewController extends BaseViewController{
             if(!MainController.getInstance().getUser().isAdmin()){
                 addItemMenuItem.setVisible(false);
                 borrowedItemsMenuItem.setVisible(true);
+                addGenresMenuItem.setVisible(false);
             }
             else{
                 addItemMenuItem.setVisible(true);
                 borrowedItemsMenuItem.setVisible(false);
+                addGenresMenuItem.setVisible(true);
             }
         }
 

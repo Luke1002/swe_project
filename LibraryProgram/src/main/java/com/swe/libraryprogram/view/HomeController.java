@@ -4,6 +4,7 @@ package com.swe.libraryprogram.view;
 import com.swe.libraryprogram.controller.MainController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import com.swe.libraryprogram.domainmodel.Element;
@@ -31,6 +32,7 @@ public class HomeController extends ElementCheckViewController {
     private CheckBox isAvailableFilter;
 
     FilteredList<Element> filteredElements;
+    SortedList<Element> sortedElements;
 
 
     @FXML
@@ -88,7 +90,9 @@ public class HomeController extends ElementCheckViewController {
                 return element.getTitle().toLowerCase().contains(lowerCaseFilter);
             });
         });
-        elementsTable.setItems(filteredElements);
+        sortedElements = new SortedList<>(filteredElements);
+        sortedElements.comparatorProperty().bind(elementsTable.comparatorProperty());
+        elementsTable.setItems(sortedElements);
 
         System.out.println("Elementi caricati: " + elements.size());
 

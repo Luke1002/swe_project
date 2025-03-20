@@ -55,10 +55,11 @@ public class DescriptionElementController extends BaseViewController {
         genresLabel.setText(element.getGenresAsString());
         descriptionLabel.setText(element.getDescription());
         quantityLabel.setText("Disponibilità: "+ element.getQuantityAvailable().toString() + "/" + element.getQuantity().toString());
-        String lengthStringvalue = element.getLength() == null ? "" : element.getLength().toString();
+        String lengthStringvalue = element.getLength() == null ? "" : element.getLength().toString()+" pagine";
+        String durationStringvalue = element.getLength() == null ? "" : element.getLength().toString()+" minuti";
         if(element instanceof Book){
             typeLabel.setText("Libro");
-            lengthLabel.setText("Lunghezza: " + lengthStringvalue + " pagine");
+            lengthLabel.setText("Lunghezza: " + lengthStringvalue);
             try {
                 HBox bookDetails = (new FXMLLoader(getClass().getResource("/com/swe/libraryprogram/book-details.fxml"))).load();
                 mainVBox.getChildren().add(2, bookDetails);
@@ -78,7 +79,7 @@ public class DescriptionElementController extends BaseViewController {
         }
         else if (element instanceof DigitalMedia){
             typeLabel.setText("Film");
-            lengthLabel.setText("Durata: " + lengthStringvalue + " minuti");
+            lengthLabel.setText("Durata: " + durationStringvalue);
             try {
                 HBox digitalMediaDetails = (new FXMLLoader(getClass().getResource("/com/swe/libraryprogram/digitalmedia-details.fxml"))).load();
                 mainVBox.getChildren().add(2, digitalMediaDetails);
@@ -96,7 +97,7 @@ public class DescriptionElementController extends BaseViewController {
         }
         else if(element instanceof PeriodicPublication){
             typeLabel.setText("Periodico");
-            lengthLabel.setText("Lunghezza: " + lengthStringvalue + " pagine");
+            lengthLabel.setText("Lunghezza: " + lengthStringvalue);
             try {
                 HBox periodicPublicationDetails = (new FXMLLoader(getClass().getResource("/com/swe/libraryprogram/periodicpublication-details.fxml"))).load();
                 mainVBox.getChildren().add(2, periodicPublicationDetails);
@@ -120,10 +121,10 @@ public class DescriptionElementController extends BaseViewController {
         editButton.setOnAction(event -> handleEditAction());
         removeButton.setOnAction(event -> handleRemoveAction());
         closeButton.setOnAction(event -> handleCloseAction());
-        updateView();
+        updateButtonView();
     }
 
-    private void updateView() {
+    private void updateButtonView() {
         if(MainController.getInstance().getUser().isAdmin()){
             borrowButton.setVisible(false);
             returnButton.setVisible(false);
@@ -155,7 +156,8 @@ public class DescriptionElementController extends BaseViewController {
     private void handleReturnAction() {
         if (((LibraryUserController) MainController.getInstance().getUserController()).returnElement(element.getId())) {
             showAlert("Prestito dell'elemento", "Elemento restituito!");
-            updateView();
+            mainVBox.getChildren().remove(2);
+            initialize();
         } else {
             showAlert("Prestito dell'elemento", "Errore durante il prestito dell'elemento");
         }
@@ -165,7 +167,8 @@ public class DescriptionElementController extends BaseViewController {
 
         if (((LibraryUserController) MainController.getInstance().getUserController()).borrowElement(element.getId())) {
             showAlert("Prestito dell'elemento", "Elemento preso!");
-            updateView();
+            mainVBox.getChildren().remove(2);
+            initialize();
         } else {
             showAlert("Prestito dell'elemento", "Errore durante il prestito dell'elemento");
         }
