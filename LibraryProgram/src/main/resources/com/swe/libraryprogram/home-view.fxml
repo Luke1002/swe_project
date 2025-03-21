@@ -63,7 +63,7 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </HBox>
-                  <Label layoutX="20.0" layoutY="62.0" text="Lunghezza:" />
+                  <Label layoutX="20.0" layoutY="62.0" text="Lunghezza minima: " />
                   <HBox alignment="CENTER_LEFT">
                      <children>
                         <TextField fx:id="lengthFilterField" HBox.hgrow="ALWAYS">

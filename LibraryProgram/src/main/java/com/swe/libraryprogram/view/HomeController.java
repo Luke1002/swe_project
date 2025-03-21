@@ -108,8 +108,8 @@ public class HomeController extends ElementCheckViewController {
 
             Boolean titleFilterCompliant = titleFilter.isEmpty() || element.getTitle().toLowerCase().contains(titleFilter);
             Boolean genreFilterCompliant = genresFilter.isEmpty() || genresFilter.stream().allMatch(genre -> element.getGenresAsString().toLowerCase().contains(genre));
-            Boolean yearFilterCompliant = (yearFilter == null || (element.getReleaseYear() ==  null || yearFilter < element.getReleaseYear()));
-            Boolean lengthFilterCompliant = (lengthFilter == null || (element.getLength() == null || lengthFilter < element.getLength()));
+            Boolean yearFilterCompliant = (yearFilter == null || (element.getReleaseYear() ==  null || yearFilter.equals(element.getReleaseYear())));
+            Boolean lengthFilterCompliant = (lengthFilter == null || (element.getLength() == null || lengthFilter <= element.getLength()));
             Boolean isAvailableCompliant = (!isAvailable || (element.getQuantityAvailable() != null && element.getQuantityAvailable() > 0));
             return (titleFilterCompliant && genreFilterCompliant && yearFilterCompliant && lengthFilterCompliant && isAvailableCompliant);
         });
