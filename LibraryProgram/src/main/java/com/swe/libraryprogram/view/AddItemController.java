@@ -145,7 +145,6 @@ public class AddItemController extends ElementCheckViewController {
         }
     }
 
-    @Override
     protected void showFields() {
         elementType = choiceBox.getValue();
         if (elementType.equals("Libro")) {
@@ -173,7 +172,6 @@ public class AddItemController extends ElementCheckViewController {
         }
     }
 
-    @Override
     protected void showDays() {
         Integer curr_month = monthBox.getValue();
         int curr_year;
@@ -391,6 +389,17 @@ public class AddItemController extends ElementCheckViewController {
         descriptionArea.setTextFormatter(new TextFormatter<>(totalLength256Filter));
 
     }
+
+    UnaryOperator<TextFormatter.Change> yearFilter = change -> {
+        String newText = change.getControlNewText();
+
+        if (newText.matches("\\d*") && newText.length() <= 4) {
+            showDays();
+            return change;
+        } else {
+            return null;
+        }
+    };
 
 
 }

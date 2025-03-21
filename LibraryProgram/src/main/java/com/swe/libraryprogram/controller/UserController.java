@@ -9,11 +9,16 @@ public class UserController {
 
     private final UserManager userManager = new UserManager();
 
-    public User login (String email, String password) throws SQLException {
+    public User login (String email, String password){
         if (email == null || password == null || email.isEmpty() || password.isEmpty()){
             return null;
         }
-        return userManager.authenticate(email, password);
+        try {
+            return userManager.authenticate(email, password);
+        }
+        catch (SQLException e){
+            return null;
+        }
     }
 
     public Boolean signup (String email, String password, String name, String surname, String phone) {

@@ -12,10 +12,6 @@ import java.util.List;
 public class LibraryAdminController extends UserController {
 
 
-    private final ElementManager elementManager = new ElementManager();
-    private final BookManager bookManager = new BookManager();
-    private final DigitalMediaManager digitalMediaManager = new DigitalMediaManager();
-    private final PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
 
 
     public Boolean addElement(Element element) {
@@ -26,11 +22,11 @@ public class LibraryAdminController extends UserController {
                     Book book = (Book) element;
 
 
-                    elementId = bookManager.addBook((Book) element);
+                    elementId = MainController.getInstance().getBookManager().addBook((Book) element);
                 } else if (element instanceof DigitalMedia) {
-                    elementId = digitalMediaManager.addDigitalMedia((DigitalMedia) element);
+                    elementId = MainController.getInstance().getDigitalMediaManager().addDigitalMedia((DigitalMedia) element);
                 } else if (element instanceof PeriodicPublication) {
-                    elementId = periodicPublicationManager.addPeriodicPublication((PeriodicPublication) element);
+                    elementId = MainController.getInstance().getPeriodicPublicationManager().addPeriodicPublication((PeriodicPublication) element);
                 }
                 if (elementId == null) {
                     return false;
@@ -51,7 +47,7 @@ public class LibraryAdminController extends UserController {
 
     public Boolean removeElement(Element element) {
         try {
-            elementManager.removeElement(element.getId());
+            MainController.getInstance().getElementManager().removeElement(element.getId());
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,11 +58,11 @@ public class LibraryAdminController extends UserController {
     public Boolean updateElement(Element element) {
         try {
             if (element instanceof Book) {
-                bookManager.updateBook((Book) element);
+                MainController.getInstance().getBookManager().updateBook((Book) element);
             } else if (element instanceof DigitalMedia) {
-                digitalMediaManager.updateDigitalMedia((DigitalMedia) element);
+                MainController.getInstance().getDigitalMediaManager().updateDigitalMedia((DigitalMedia) element);
             } else if (element instanceof PeriodicPublication) {
-                periodicPublicationManager.updatePeriodicPublication((PeriodicPublication) element);
+                MainController.getInstance().getPeriodicPublicationManager().updatePeriodicPublication((PeriodicPublication) element);
             } else {
                 return false;
             }
