@@ -1,11 +1,8 @@
 package com.swe.libraryprogram.controller;
 
-
-import com.swe.libraryprogram.dao.*;
 import com.swe.libraryprogram.domainmodel.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,9 +16,6 @@ public class LibraryAdminController extends UserController {
             if (element.getClass() != Element.class) {
                 Integer elementId = null;
                 if (element instanceof Book) {
-                    Book book = (Book) element;
-
-
                     elementId = MainController.getInstance().getBookManager().addBook((Book) element);
                 } else if (element instanceof DigitalMedia) {
                     elementId = MainController.getInstance().getDigitalMediaManager().addDigitalMedia((DigitalMedia) element);
@@ -50,7 +44,6 @@ public class LibraryAdminController extends UserController {
             MainController.getInstance().getElementManager().removeElement(element.getId());
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -85,7 +78,6 @@ public class LibraryAdminController extends UserController {
             return true;
         } catch (
                 SQLException e) {
-            e.printStackTrace();
             return false;
         }
     }

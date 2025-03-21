@@ -21,7 +21,6 @@ public class LibraryUserController extends UserController {
             }
             return false;
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -37,7 +36,6 @@ public class LibraryUserController extends UserController {
             }
             return false;
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
     }

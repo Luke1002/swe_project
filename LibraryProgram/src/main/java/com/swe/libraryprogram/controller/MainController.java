@@ -1,13 +1,9 @@
 package com.swe.libraryprogram.controller;
 
 import com.swe.libraryprogram.dao.*;
-import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.User;
-import javafx.scene.Scene;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainController {
 

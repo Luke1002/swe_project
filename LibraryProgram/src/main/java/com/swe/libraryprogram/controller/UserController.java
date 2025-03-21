@@ -1,20 +1,18 @@
 package com.swe.libraryprogram.controller;
 
 import com.swe.libraryprogram.domainmodel.User;
-import com.swe.libraryprogram.dao.UserManager;
 
 import java.sql.SQLException;
 
 public class UserController {
 
-    private final UserManager userManager = new UserManager();
 
     public User login (String email, String password){
         if (email == null || password == null || email.isEmpty() || password.isEmpty()){
             return null;
         }
         try {
-            return userManager.authenticate(email, password);
+            return MainController.getInstance().getUserManager().authenticate(email, password);
         }
         catch (SQLException e){
             return null;
@@ -26,12 +24,12 @@ public class UserController {
             return false;
         }
         try{
-                if (userManager.getUser(email) != null) {
+                if (MainController.getInstance().getUserManager().getUser(email) != null) {
                     return false;
                 }
             else{
 
-                return userManager.addUser(new User(email, password, name, surname, phone));
+                return MainController.getInstance().getUserManager().addUser(new User(email, password, name, surname, phone));
             }
         }
         catch(SQLException e){
