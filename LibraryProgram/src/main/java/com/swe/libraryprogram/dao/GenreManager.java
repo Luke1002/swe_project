@@ -36,13 +36,6 @@ public class GenreManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return false;
-
-        }
-
         stmt.setInt(1, code);
 
         int rowsDeleted = stmt.executeUpdate();
@@ -57,13 +50,6 @@ public class GenreManager {
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
-
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return null;
-
-        }
 
         stmt.setInt(1, code);
 
@@ -93,12 +79,6 @@ public class GenreManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return null;
-
-        }
 
         stmt.setString(1, name);
         ResultSet rs = stmt.executeQuery();
@@ -123,12 +103,6 @@ public class GenreManager {
         PreparedStatement stmt = connection.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return genres;
-
-        }
 
         while (rs.next()) {
 
@@ -172,12 +146,6 @@ public class GenreManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return genres;
-
-        }
 
         stmt.setInt(1, elementId);
 
@@ -203,13 +171,6 @@ public class GenreManager {
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
-
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return false;
-
-        }
 
         stmt.setInt(1, elementId);
         stmt.setInt(2, genreCode);

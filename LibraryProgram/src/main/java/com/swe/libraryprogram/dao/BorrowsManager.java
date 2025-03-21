@@ -43,11 +43,6 @@ public class BorrowsManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-            System.err.println("Connessione al database non valida.");
-
-        }
-
         stmt.setInt(1, element_id);
         stmt.setString(2, user_id);
 

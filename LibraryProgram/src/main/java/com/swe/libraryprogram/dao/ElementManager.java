@@ -26,12 +26,6 @@ public class ElementManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return false;
-
-        }
 
         stmt.setInt(1, id);
 
@@ -81,12 +75,6 @@ public class ElementManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
 
             stmt.setString(1, element.getTitle());
             stmt.setInt(2, element.getReleaseYear());
@@ -330,13 +318,6 @@ public class ElementManager {
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query.toString());
-
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return elements;
-
-        }
 
         // Imposta i parametri dinamici IN ORDINE
         for (int i = 0; i < parameters.size(); i++) {

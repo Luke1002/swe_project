@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,13 +23,6 @@ public class UserManager {
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
-
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return null;
-
-        }
 
         stmt.setString(1, email);
         ResultSet rs = stmt.executeQuery();
@@ -112,12 +106,6 @@ public class UserManager {
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return false;
-
-        }
 
         stmt.setString(1, user.getPassword());
         stmt.setString(2, user.getName());
@@ -146,30 +134,22 @@ public class UserManager {
 
         String query = "DELETE FROM users WHERE email = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        stmt.setString(1, email);
 
-                System.err.println("Connessione al database non valida.");
-                return false;
+        int rowsDeleted = stmt.executeUpdate();
 
-            }
+        if (rowsDeleted > 0) {
 
-            stmt.setString(1, email);
+            System.out.println("Utente rimosso correttamente.");
+            return true;
 
-            int rowsDeleted = stmt.executeUpdate();
+        } else {
 
-            if (rowsDeleted > 0) {
-
-                System.out.println("Utente rimosso correttamente.");
-                return true;
-
-            } else {
-
-                System.err.println("Nessun utente trovato con email: " + email);
-                return false;
-
-            }
+            System.err.println("Nessun utente trovato con email: " + email);
+            return false;
 
         }
 
@@ -177,19 +157,13 @@ public class UserManager {
 
     public List<User> getAllUsers() throws SQLException {
 
-        List<User> users = new LinkedList<>();
+        List<User> users = new ArrayList<>();
 
         String query = "SELECT * FROM users";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-            System.err.println("Connessione al database non valida.");
-            return users;
-
-        }
 
         ResultSet rs = stmt.executeQuery();
 
