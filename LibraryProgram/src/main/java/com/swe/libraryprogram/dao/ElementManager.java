@@ -257,19 +257,12 @@ public class ElementManager {
 
         String query = "SELECT quantityavailable FROM elements WHERE id = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
+        Connection connection = ConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setInt(1, id);
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
 
@@ -292,9 +285,6 @@ public class ElementManager {
 
                 }
 
-            }
-
-        }
 
     }
 

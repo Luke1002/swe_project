@@ -66,7 +66,7 @@ public class PeriodicPublicationManager extends ElementManager {
             stmt.close();
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Errore nell'accesso al database", e);
+            return null;
         }
     }
 

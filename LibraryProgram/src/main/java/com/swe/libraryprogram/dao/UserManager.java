@@ -82,10 +82,9 @@ public class UserManager {
         stmt.setString(2, user.getPassword());
         stmt.setString(3, user.getName());
         stmt.setString(4, user.getSurname());
-        if(user.getPhone() == null){
+        if (user.getPhone() == null) {
             stmt.setNull(5, java.sql.Types.VARCHAR);
-        }
-        else{
+        } else {
             stmt.setString(5, user.getPhone());
         }
         stmt.setBoolean(6, user.isAdmin());
@@ -182,30 +181,27 @@ public class UserManager {
 
         String query = "SELECT * FROM users";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return users;
-
-            }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                while (rs.next()) {
-
-                    User user = new User(rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getString("phone"), rs.getBoolean("isadmin"));
-
-                    users.add(user);
-
-                }
-
-                return users;
-
-            }
+            System.err.println("Connessione al database non valida.");
+            return users;
 
         }
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+
+            User user = new User(rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getString("phone"), rs.getBoolean("isadmin"));
+
+            users.add(user);
+
+        }
+
+        return users;
 
     }
 

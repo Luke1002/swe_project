@@ -33,22 +33,21 @@ public class GenreManager {
 
         String query = "DELETE FROM genres WHERE code = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
-
-            stmt.setInt(1, code);
-
-            int rowsDeleted = stmt.executeUpdate();
-            return rowsDeleted > 0;
+            System.err.println("Connessione al database non valida.");
+            return false;
 
         }
+
+        stmt.setInt(1, code);
+
+        int rowsDeleted = stmt.executeUpdate();
+        return rowsDeleted > 0;
+
 
     }
 
@@ -56,36 +55,34 @@ public class GenreManager {
 
         String query = "SELECT * FROM genres WHERE code = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return null;
-
-            }
-
-            stmt.setInt(1, code);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-
-                    return new Genre(
-                            rs.getString("name"),
-                            rs.getInt("code")
-                    );
-
-                } else {
-
-                    System.err.println("Genere non trovato con codice: " + code);
-                    return null;
-
-                }
-            }
+            System.err.println("Connessione al database non valida.");
+            return null;
 
         }
+
+        stmt.setInt(1, code);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+
+            return new Genre(
+                    rs.getString("name"),
+                    rs.getInt("code")
+            );
+
+        } else {
+
+            System.err.println("Genere non trovato con codice: " + code);
+            return null;
+
+        }
+
 
     }
 
@@ -93,29 +90,27 @@ public class GenreManager {
 
         String query = "SELECT * FROM genres WHERE name = ?";
 
-        try (Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Connection connection = ConnectionManager.getInstance().getConnection();
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
+        if (!ConnectionManager.getInstance().isConnectionValid()) {
 
-                System.err.println("Connessione al database non valida.");
-                return null;
+            System.err.println("Connessione al database non valida.");
+            return null;
 
-            }
-
-            stmt.setString(1, name);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new Genre(
-                        rs.getString("name"),
-                        rs.getInt("code")
-                );
-            } else {
-                System.err.println("Genere non trovato con codice: " + name);
-                return null;
-            }
         }
 
+        stmt.setString(1, name);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return new Genre(
+                    rs.getString("name"),
+                    rs.getInt("code")
+            );
+        } else {
+            System.err.println("Genere non trovato con codice: " + name);
+            return null;
+        }
     }
 
     public List<Genre> getAllGenres() throws SQLException {
