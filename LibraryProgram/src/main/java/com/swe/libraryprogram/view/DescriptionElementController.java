@@ -185,20 +185,14 @@ public class DescriptionElementController extends BaseViewController {
     }
 
     private void handleRemoveAction() {
-
-        try {
-            if (MainController.getInstance().getElementManager().removeElement(element.getId())) {
+            if (((LibraryAdminController)MainController.getInstance().getUserController()).removeElement(element)) {
                 showAlert("Rimozione dell'elemento", "Elemento rimosso con successo");
                 MainController.getInstance().setSelectedElementId(null);
                 mainViewController.loadBottomPane("home");
             }
-
-        } catch (SQLException e) {
-
-            showAlert("Rimozione dell'elemento", "Errore durante la rimozione dell'elemento");
-            e.printStackTrace();
-
-        }
+            else{
+                showAlert("Rimozione dell'elemento", "Errore durante la rimozione dell'elemento");
+            }
 
     }
 }
