@@ -1,7 +1,10 @@
 package com.swe.libraryprogram.dao;
 
 import com.swe.libraryprogram.controller.MainController;
+import com.swe.libraryprogram.domainmodel.Book;
+import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import com.swe.libraryprogram.domainmodel.Element;
+import com.swe.libraryprogram.domainmodel.PeriodicPublication;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -55,6 +58,7 @@ public class ElementManagerTest {
         mockStatic(ConnectionManager.class);
         mockStatic(MainController.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
+        ElementManager mockElementManager = mock(ElementManager.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
         GenreManager mockGenreManager = mock(GenreManager.class);
@@ -63,6 +67,7 @@ public class ElementManagerTest {
         when(mockMainController.getGenreManager()).thenReturn(mockGenreManager);
         when(mockGenreManager.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
         when(mockConnectionManager.isConnectionValid()).thenReturn(true);
+
 
     }
 
@@ -112,6 +117,70 @@ public class ElementManagerTest {
         Element element = elementManager.getElement(generatedId);
 
         assertEquals(generatedId, element.getId());
+
+    }
+
+    @Test
+    public void getCompleteElementByIdTest() throws SQLException {
+
+        int testElementId = 123; // Example ID
+
+        // Mock ElementManager
+        ElementManager mockElementManager = mock(ElementManager.class);
+
+        // Mock Book
+        int bookType = 1;
+        Book mockBook = mock(Book.class);
+        when(mockBook.getId()).thenReturn(testElementId);
+        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(bookType);
+
+        BookManager mockBookManager = mock(BookManager.class);
+        when(mockBookManager.getBook(testElementId)).thenReturn(mockBook);
+
+        // Mock DigitalMedia
+        int digitalMediaType = 2;
+        DigitalMedia mockDigitalMedia = mock(DigitalMedia.class);
+        when(mockDigitalMedia.getId()).thenReturn(testElementId);
+        DigitalMediaManager mockDigitalMediaManager = mock(DigitalMediaManager.class);
+        when(mockDigitalMediaManager.getDigitalMedia(testElementId)).thenReturn(mockDigitalMedia);
+
+        // Mock PeriodicPublication
+        int periodicPublicationType = 3;
+        PeriodicPublication mockPeriodicPublication = mock(PeriodicPublication.class);
+        when(mockPeriodicPublication.getId()).thenReturn(testElementId);
+        PeriodicPublicationManager mockPeriodicPublicationManager = mock(PeriodicPublicationManager.class);
+        when(mockPeriodicPublicationManager.getPeriodicPublication(testElementId)).thenReturn(mockPeriodicPublication);
+
+        // Mock MainController
+        MainController mockMainController = mock(MainController.class);
+        when(MainController.getInstance()).thenReturn(mockMainController);
+        when(mockMainController.getElementManager()).thenReturn(mockElementManager);
+        when(mockMainController.getBookManager()).thenReturn(mockBookManager);
+        when(mockMainController.getDigitalMediaManager()).thenReturn(mockDigitalMediaManager);
+        when(mockMainController.getPeriodicPublicationManager()).thenReturn(mockPeriodicPublicationManager);
+
+        //Book
+        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(bookType);
+        Element bookResult = elementManager.getCompleteElementById(testElementId);
+        assertNotNull(bookResult);
+        assertEquals(testElementId, bookResult.getId());
+
+        //DigitalMedia
+        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(digitalMediaType);
+        Element digitalMediaResult = elementManager.getCompleteElementById(testElementId);
+        assertNotNull(digitalMediaResult);
+        assertEquals(testElementId, digitalMediaResult.getId());
+
+        //PeriodicPublication
+        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(periodicPublicationType);
+        Element periodicPublicationResult = elementManager.getCompleteElementById(testElementId);
+        assertNotNull(periodicPublicationResult);
+        assertEquals(testElementId, periodicPublicationResult.getId());
+
+        //Invalid type
+        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(99); // Invalid type
+        Element nullResult = elementManager.getCompleteElementById(testElementId);
+        assertNull(nullResult);
 
     }
 
