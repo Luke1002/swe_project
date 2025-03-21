@@ -12,13 +12,13 @@ import java.util.List;
 public class MainController {
 
 
-    private final BookManager bookManager = new BookManager();
-    private final BorrowsManager borrowsManager = new BorrowsManager();
-    private final DigitalMediaManager digitalMediaManager = new DigitalMediaManager();
-    private final ElementManager elementManager = new ElementManager();
-    private final GenreManager genreManager = new GenreManager();
-    private final PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
-    private final UserManager userManager = new UserManager();
+    private BookManager bookManager = new BookManager();
+    private BorrowsManager borrowsManager = new BorrowsManager();
+    private DigitalMediaManager digitalMediaManager = new DigitalMediaManager();
+    private ElementManager elementManager = new ElementManager();
+    private GenreManager genreManager = new GenreManager();
+    private PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
+    private UserManager userManager = new UserManager();
 
 
     private Integer selectedElementId = null;
