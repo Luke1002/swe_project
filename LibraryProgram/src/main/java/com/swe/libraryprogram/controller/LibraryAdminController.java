@@ -19,7 +19,6 @@ public class LibraryAdminController extends UserController {
 
 
     public Boolean addElement(Element element) {
-        ConnectionManager cM = ConnectionManager.getInstance();
         try {
             if (element.getClass() != Element.class) {
                 Integer elementId = null;
