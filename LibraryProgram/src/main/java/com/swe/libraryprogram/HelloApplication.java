@@ -15,7 +15,8 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         try{
-            MainController mainController = MainController.getInstance();
+            ConnectionManager.getInstance();
+            MainController.getInstance();
             MainViewController mainViewController;
             stage.setMinWidth(800);
             stage.setMinHeight(600);
@@ -36,11 +37,6 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        ConnectionManager conman  = ConnectionManager.getInstance();
-        if (!conman.isConnectionValid()) {
-        }else{
-        }
-
         launch();
     }
 }

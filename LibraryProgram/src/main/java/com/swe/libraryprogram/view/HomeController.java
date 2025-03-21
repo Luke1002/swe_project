@@ -12,8 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class HomeController extends ElementCheckViewController {
         quantityAvailableColumn.setCellValueFactory(new PropertyValueFactory<>("quantityAvailable"));
         genresColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGenresAsString()));
         lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
-        elementsTable.setRowFactory(tv -> {
+        elementsTable.setRowFactory(_ -> {
             TableRow<Element> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
@@ -78,16 +76,14 @@ public class HomeController extends ElementCheckViewController {
         }
 
         elementsList.setAll(elements);
-        filteredElements = new FilteredList<>(elementsList, p -> true);
-        titleFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredElements.setPredicate(element -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true; // Mostra tutti gli elementi se il campo è vuoto
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return element.getTitle().toLowerCase().contains(lowerCaseFilter);
-            });
-        });
+        filteredElements = new FilteredList<>(elementsList, _ -> true);
+        titleFilterField.textProperty().addListener((observable, oldValue, newValue) -> filteredElements.setPredicate(element -> {
+            if (newValue == null || newValue.isEmpty()) {
+                return true; // Mostra tutti gli elementi se il campo è vuoto
+            }
+            String lowerCaseFilter = newValue.toLowerCase();
+            return element.getTitle().toLowerCase().contains(lowerCaseFilter);
+        }));
         sortedElements = new SortedList<>(filteredElements);
         sortedElements.comparatorProperty().bind(elementsTable.comparatorProperty());
         elementsTable.setItems(sortedElements);
