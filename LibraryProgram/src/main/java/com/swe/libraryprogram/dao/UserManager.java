@@ -176,41 +176,6 @@ public class UserManager {
 
     }
 
-    public Boolean isEmailTaken(String email) throws SQLException {
-
-        String query = "SELECT COUNT(*) FROM users WHERE email = ?";
-
-        try (Connection connection = ConnectionManager.getInstance().getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
-
-            if (!ConnectionManager.getInstance().isConnectionValid()) {
-
-                System.err.println("Connessione al database non valida.");
-                return false;
-
-            }
-
-            stmt.setString(1, email);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-
-                    int count = rs.getInt(1);
-                    return count > 0;
-
-                } else {
-
-                    System.err.println("Email già in uso.");
-                    return false;
-
-                }
-
-            }
-
-        }
-
-    }
-
     public List<User> getAllUsers() throws SQLException {
 
         List<User> users = new LinkedList<>();

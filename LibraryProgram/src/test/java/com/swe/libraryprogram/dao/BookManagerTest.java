@@ -55,14 +55,10 @@ public class BookManagerTest {
 
         // Mockare staticamente il metodo ConnectionManager.getInstance()
         mockStatic(ConnectionManager.class);
-        mockStatic(MainController.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
         GenreManager mockGenreManager = mock(GenreManager.class);
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getGenreManager()).thenReturn(mockGenreManager);
         when(mockGenreManager.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
 
     }

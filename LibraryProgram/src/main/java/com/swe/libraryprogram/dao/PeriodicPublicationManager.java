@@ -174,7 +174,7 @@ public class PeriodicPublicationManager extends ElementManager {
 
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreManager genreManager = new GenreManager();
         for (Element element : periodics) {
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);
@@ -263,7 +263,7 @@ public class PeriodicPublicationManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreManager genreManager = new GenreManager();
         for (Element element : elements) {
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);

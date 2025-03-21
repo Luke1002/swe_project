@@ -200,7 +200,7 @@ public class BookManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreManager genreManager = new GenreManager();
         for (Element element : books){
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);
@@ -286,7 +286,7 @@ public class BookManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreManager genreManager = new GenreManager();
         for (Element element : elements){
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);

@@ -1,8 +1,11 @@
 package com.swe.libraryprogram.controller;
 
+import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.User;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserController {
 
@@ -39,5 +42,15 @@ public class UserController {
 
     public void logout(){
         MainController.getInstance().resetUserState();
+    }
+
+    public List<Element> getAllElements(){
+        List<Element> elements = new ArrayList<>();
+        try {
+            elements = MainController.getInstance().getElementManager().getAllElements();
+            return elements;
+        } catch (SQLException _) {
+            return null;
+        }
     }
 }

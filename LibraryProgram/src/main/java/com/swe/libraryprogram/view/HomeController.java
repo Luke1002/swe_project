@@ -71,12 +71,10 @@ public class HomeController extends ElementCheckViewController {
     private void loadElementsData() {
         ObservableList<Element> elementsList = FXCollections.observableArrayList();
 
-        List<Element> elements;
-        try {
-            elements = MainController.getInstance().getElementManager().getAllElements();
-        } catch (SQLException e) {
+        List<Element> elements = MainController.getInstance().getUserController().getAllElements();
+        if(elements == null) {
             showAlert("Errore", "Connessione al database non riuscita");
-            elements = new ArrayList<>();
+            return;
         }
 
         elementsList.setAll(elements);

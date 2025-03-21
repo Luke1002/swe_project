@@ -161,7 +161,7 @@ public class ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreManager genreManager = new GenreManager();
         for (Element element : elements) {
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);
@@ -243,7 +243,7 @@ public class ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreManager genreManager = new GenreManager();
         for (Element element : elements) {
             List<Genre> genres = genreManager.getGenresForElement(element.getId());
             element.setGenres(genres);
@@ -390,7 +390,7 @@ public class ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreManager genreManager = new GenreManager();
         for (Element element : elements) {
             List<Genre> genresList = genreManager.getGenresForElement(element.getId());
             element.setGenres(genresList);
@@ -406,13 +406,13 @@ public class ElementManager {
 
     public Element getCompleteElementById(Integer id) {
         try {
-            Integer type = MainController.getInstance().getElementManager().getElementTypeById(id);
+            Integer type = getElementTypeById(id);
             if (type == 1) {
-                return MainController.getInstance().getBookManager().getBook(id);
+                return new BookManager().getBook(id);
             } else if (type == 2) {
-                return MainController.getInstance().getDigitalMediaManager().getDigitalMedia(id);
+                return new DigitalMediaManager().getDigitalMedia(id);
             } else if (type == 3) {
-                return MainController.getInstance().getPeriodicPublicationManager().getPeriodicPublication(id);
+                return new PeriodicPublicationManager().getPeriodicPublication(id);
             } else {
                 return null;
             }

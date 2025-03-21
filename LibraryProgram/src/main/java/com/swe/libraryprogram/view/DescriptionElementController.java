@@ -48,7 +48,7 @@ public class DescriptionElementController extends BaseViewController {
     protected void initialize() {
         super.initialize();
         Integer elementId = MainController.getInstance().getSelectedElementId();
-        element = MainController.getInstance().getElementManager().getCompleteElementById(elementId);
+        element = MainController.getInstance().getSelectedElement();
         titleLabel.setText("Titolo: " + element.getTitle());
         String yearStringvalue = element.getReleaseYear() == null ? "" : element.getReleaseYear().toString();
         yearLabel.setText("Anno: " + yearStringvalue);
@@ -136,15 +136,14 @@ public class DescriptionElementController extends BaseViewController {
             removeButton.setVisible(false);
             borrowButton.setDisable(false);
             returnButton.setDisable(true);
-            List<Element> elements = new ArrayList<>();
-            try{
-                elements = MainController.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainController.getInstance().getUser().getEmail());
-            }
-            catch(SQLException e){}
-            for (Element e : elements) {
-                if(e.getId().equals(element.getId())) {
-                    borrowButton.setDisable(true);
-                    returnButton.setDisable(false);
+
+            if(!MainController.getInstance().getUser().isAdmin()){
+                List<Element> elements = ((LibraryUserController)MainController.getInstance().getUserController()).getBorrowedElements(MainController.getInstance().getUser());
+                for (Element e : elements) {
+                    if(e.getId().equals(element.getId())) {
+                        borrowButton.setDisable(true);
+                        returnButton.setDisable(false);
+                    }
                 }
             }
             if(element.getQuantityAvailable() == 0){

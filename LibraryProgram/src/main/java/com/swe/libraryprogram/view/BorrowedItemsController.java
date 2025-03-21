@@ -57,10 +57,8 @@ public class BorrowedItemsController extends BaseViewController {
     }
 
     private void loadBorrowedElementsData() {
-        List<Element> borrowedElementsList;
-        try {
-            borrowedElementsList = MainController.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainController.getInstance().getUser().getEmail());
-        } catch (SQLException e) {
+        List<Element> borrowedElementsList = ((LibraryUserController)MainController.getInstance().getUserController()).getBorrowedElements(MainController.getInstance().getUser());
+        if(borrowedElementsList == null) {
             showAlert("Errore", "Connessione al database non riuscita");
             borrowedElementsList = new ArrayList<>();
         }

@@ -1,13 +1,24 @@
 package com.swe.libraryprogram.controller;
 
 import com.swe.libraryprogram.domainmodel.Element;
+import com.swe.libraryprogram.domainmodel.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 
 public class LibraryUserController extends UserController {
 
     public LibraryUserController() {
+    }
+
+    public List<Element> getBorrowedElements(User user){
+        try{
+            List<Element> borrowedElements = MainController.getInstance().getBorrowsManager().getBorrowedElementsForUser(user.getEmail());
+            return borrowedElements;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Boolean borrowElement(Integer element_id) {

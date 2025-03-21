@@ -16,6 +16,9 @@ public class LibraryAdminController extends UserController {
             if (element.getClass() != Element.class) {
                 Integer elementId = null;
                 if (element instanceof Book) {
+                    if ((MainController.getInstance().getBookManager().getBookByIsbn(((Book) element).getIsbn())) != null) {
+                        return false;
+                    }
                     elementId = MainController.getInstance().getBookManager().addBook((Book) element);
                 } else if (element instanceof DigitalMedia) {
                     elementId = MainController.getInstance().getDigitalMediaManager().addDigitalMedia((DigitalMedia) element);
@@ -51,6 +54,9 @@ public class LibraryAdminController extends UserController {
     public Boolean updateElement(Element element) {
         try {
             if (element instanceof Book) {
+                if ((MainController.getInstance().getBookManager().getBookByIsbn(((Book) element).getIsbn())) != null) {
+                    return false;
+                }
                 MainController.getInstance().getBookManager().updateBook((Book) element);
             } else if (element instanceof DigitalMedia) {
                 MainController.getInstance().getDigitalMediaManager().updateDigitalMedia((DigitalMedia) element);

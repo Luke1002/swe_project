@@ -56,15 +56,10 @@ public class ElementManagerTest {
         Mockito.clearAllCaches();
 
         mockStatic(ConnectionManager.class);
-        mockStatic(MainController.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
-        ElementManager mockElementManager = mock(ElementManager.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
         GenreManager mockGenreManager = mock(GenreManager.class);
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getGenreManager()).thenReturn(mockGenreManager);
         when(mockGenreManager.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
         when(mockConnectionManager.isConnectionValid()).thenReturn(true);
 
@@ -151,13 +146,6 @@ public class ElementManagerTest {
         PeriodicPublicationManager mockPeriodicPublicationManager = mock(PeriodicPublicationManager.class);
         when(mockPeriodicPublicationManager.getPeriodicPublication(testElementId)).thenReturn(mockPeriodicPublication);
 
-        // Mock MainController
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getElementManager()).thenReturn(mockElementManager);
-        when(mockMainController.getBookManager()).thenReturn(mockBookManager);
-        when(mockMainController.getDigitalMediaManager()).thenReturn(mockDigitalMediaManager);
-        when(mockMainController.getPeriodicPublicationManager()).thenReturn(mockPeriodicPublicationManager);
 
         //Book
         when(mockElementManager.getElementTypeById(testElementId)).thenReturn(bookType);

@@ -102,7 +102,7 @@ public class AddItemController extends ElementCheckViewController {
             choiceBox.setValue(choiceBox.getItems().getFirst());
             yearField.setText(String.valueOf(LocalDate.now().getYear()));
         } else {
-            currElement = MainController.getInstance().getElementManager().getCompleteElementById(currElementId);
+            currElement = MainController.getInstance().getSelectedElement();
             titleField.setText(currElement.getTitle());
             descriptionArea.setText(currElement.getDescription());
             yearField.setText(currElement.getReleaseYear() == null ? "" : currElement.getReleaseYear().toString());
@@ -241,7 +241,7 @@ public class AddItemController extends ElementCheckViewController {
                             dayBox.getValue());
                 }
             } else {
-                quantityAvailable = quantityField.getText().isEmpty() ? (quantity - (currElement.getQuantity() - MainController.getInstance().getElementManager().getCompleteElementById(currElementId).getQuantityAvailable())) : Integer.valueOf(quantityField.getText());
+                quantityAvailable = quantityField.getText().isEmpty() ? (quantity - (currElement.getQuantity() - MainController.getInstance().getSelectedElement().getQuantityAvailable())) : Integer.valueOf(quantityField.getText());
                 currElement.setTitle(titleField.getText());
                 currElement.setGenres(genreList);
                 currElement.setDescription(descriptionArea.getText());
@@ -302,21 +302,9 @@ public class AddItemController extends ElementCheckViewController {
             showAlert("Errore", "Titolo è un campo obbligatorio.");
             return false;
         }
-        if (elementType.equals("Libro")) {
-            if (isbnField.getText().length() < 13) {
+        if (elementType.equals("Libro") && isbnField.getText().length() < 13) {
                 showAlert("Errore", "Codice ISBN non valido.");
                 return false;
-            } else {
-                try {
-                    if ((MainController.getInstance().getBookManager().getBookByIsbn(isbnField.getText())) != null) {
-                        showAlert("Errore", "Elemento con stesso ISBN già presente.");
-                        return false;
-                    }
-                } catch (SQLException e) {
-                    showAlert("Errore", "Errore nella connessione al database.");
-                    return false;
-                }
-            }
         }
         Integer quantity = quantityField.getText().isEmpty() ? 1 : Integer.valueOf(quantityField.getText());
         Integer quantityAvailable = quantityField.getText().isEmpty() ? quantity : Integer.valueOf(quantityField.getText());
@@ -341,14 +329,12 @@ public class AddItemController extends ElementCheckViewController {
                 genreNames.add(formattedName);
             }
         }
-        List<Genre> allGenres;
-
-        try {
-            allGenres = MainController.getInstance().getGenreManager().getAllGenres();
-        } catch (SQLException e) {
+        List<Genre> allGenres = MainController.getInstance().getAllGenres();
+        if(allGenres == null){
             showAlert("Database Connection Error", "Non è possibile collegarsi al database");
             return null;
         }
+
 
         String message = "I seguenti generi non sono presenti nel database: ";
 

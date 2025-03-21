@@ -36,8 +36,6 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        ConnectionManager.setDbUser(args[0]);
-        ConnectionManager.setDbPass(args[1]);
         ConnectionManager conman  = ConnectionManager.getInstance();
         if (!conman.isConnectionValid()) {
         }else{

@@ -1,24 +1,28 @@
 package com.swe.libraryprogram.controller;
 
 import com.swe.libraryprogram.dao.*;
+import com.swe.libraryprogram.domainmodel.Element;
+import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.User;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainController {
 
 
-    BookManager bookManager = new BookManager();
-    BorrowsManager borrowsManager = new BorrowsManager();
-    DigitalMediaManager digitalMediaManager = new DigitalMediaManager();
-    ElementManager elementManager = new ElementManager();
-    GenreManager genreManager = new GenreManager();
-    PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
-    UserManager userManager = new UserManager();
+    private BookManager bookManager = new BookManager();
+    private BorrowsManager borrowsManager = new BorrowsManager();
+    private DigitalMediaManager digitalMediaManager = new DigitalMediaManager();
+    private ElementManager elementManager = new ElementManager();
+    private GenreManager genreManager = new GenreManager();
+    private PeriodicPublicationManager periodicPublicationManager = new PeriodicPublicationManager();
+    private UserManager userManager = new UserManager();
 
 
-    Integer selectedElementId = null;
-    User session_user = null;
+    private Integer selectedElementId = null;
+    private User session_user = null;
     UserController userController = new UserController();
 
 
@@ -58,31 +62,31 @@ public class MainController {
         return userController;
     }
 
-    public BookManager getBookManager() {
+    BookManager getBookManager() {
         return bookManager;
     }
 
-    public BorrowsManager getBorrowsManager() {
+    BorrowsManager getBorrowsManager() {
         return borrowsManager;
     }
 
-    public DigitalMediaManager getDigitalMediaManager() {
+    DigitalMediaManager getDigitalMediaManager() {
         return digitalMediaManager;
     }
 
-    public ElementManager getElementManager() {
+    ElementManager getElementManager() {
         return elementManager;
     }
 
-    public GenreManager getGenreManager() {
+    GenreManager getGenreManager() {
         return genreManager;
     }
 
-    public PeriodicPublicationManager getPeriodicPublicationManager() {
+    PeriodicPublicationManager getPeriodicPublicationManager() {
         return periodicPublicationManager;
     }
 
-    public UserManager getUserManager() {
+    UserManager getUserManager() {
         return userManager;
     }
 
@@ -97,5 +101,18 @@ public class MainController {
 
     public void setSelectedElementId(Integer elementId) {
         this.selectedElementId = elementId;
+    }
+    public Element getSelectedElement() {
+        return elementManager.getCompleteElementById(selectedElementId);
+    }
+
+    public List<Genre> getAllGenres(){
+        try {
+            List<Genre> allGenres = new ArrayList<>();
+            allGenres = genreManager.getAllGenres();
+            return allGenres;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 }
