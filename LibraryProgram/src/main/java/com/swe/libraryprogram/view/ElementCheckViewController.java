@@ -39,7 +39,6 @@ public class ElementCheckViewController extends BaseViewController {
         String newText = change.getControlNewText();
 
         if (newText.matches("\\d*") && newText.length() <= 4) {
-            showDays();
             return change;
         } else {
             return null;
@@ -65,10 +64,4 @@ public class ElementCheckViewController extends BaseViewController {
             return null;
         }
     };
-
-    protected void showFields() {
-    }
-
-    protected void showDays() {
-    }
 }
