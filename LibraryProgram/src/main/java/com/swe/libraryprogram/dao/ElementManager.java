@@ -52,7 +52,7 @@ public class ElementManager {
 
     }
 
-    private Integer getElementTypeById(Integer id) throws SQLException {
+    public Integer getElementTypeById(Integer id) throws SQLException {
         String query = "SELECT " +
                 "       CASE" +
                 "           WHEN EXISTS (SELECT 1 FROM books b WHERE b.id = e.id) THEN 1" +
