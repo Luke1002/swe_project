@@ -43,7 +43,6 @@ public class LibraryUserService extends UserService {
                 System.out.println("Elemento non disponibile per il prestito.");
                 return false;
             }
-            MainService.getInstance().getElementDAO().updateElement(element);
             MainService.getInstance().getBorrowsDAO().addBorrow(elementId, MainService.getInstance().getUser().getEmail());
             return true;
         } catch (SQLException e) {
@@ -65,10 +64,6 @@ public class LibraryUserService extends UserService {
             if (!elements.contains(element)) {
                 System.out.println("Elemento non preso in prestito.");
                 return false;
-            }
-            if (Objects.equals(element.getQuantityAvailable(), element.getQuantity())) {
-                element.setQuantityAvailable(element.getQuantityAvailable() - 1);
-                MainService.getInstance().getElementDAO().updateElement(element);
             }
 
             MainService.getInstance().getBorrowsDAO().removeBorrow(elementId, MainService.getInstance().getUser().getEmail());
