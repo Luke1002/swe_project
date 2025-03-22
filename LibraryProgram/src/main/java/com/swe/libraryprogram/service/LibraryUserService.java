@@ -6,7 +6,6 @@ import com.swe.libraryprogram.domainmodel.User;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 
 public class LibraryUserService extends UserService {
@@ -43,8 +42,8 @@ public class LibraryUserService extends UserService {
                 System.out.println("Elemento non disponibile per il prestito.");
                 return false;
             }
-            MainService.getInstance().getBorrowsDAO().addBorrow(elementId, MainService.getInstance().getUser().getEmail());
-            return true;
+
+            return MainService.getInstance().getBorrowsDAO().addBorrow(elementId, MainService.getInstance().getUser().getEmail());
         } catch (SQLException e) {
             System.out.println("Impossibile connettersi al database.");
         } catch (NoSuchElementException e) {
@@ -66,8 +65,7 @@ public class LibraryUserService extends UserService {
                 return false;
             }
 
-            MainService.getInstance().getBorrowsDAO().removeBorrow(elementId, MainService.getInstance().getUser().getEmail());
-            return true;
+            return MainService.getInstance().getBorrowsDAO().removeBorrow(elementId, MainService.getInstance().getUser().getEmail());
         } catch (SQLException e) {
             System.out.println("Impossibile connettersi al database.");
             return false;
