@@ -17,7 +17,7 @@ public class MainService {
     private DigitalMediaDAO digitalMediaDAO = new DigitalMediaDAO();
     private ElementDAO elementDAO = new ElementDAO();
     private GenreDAO genreDAO = new GenreDAO();
-    private PeriodicPublicationDAO periodicPublicationManager = new PeriodicPublicationDAO();
+    private PeriodicPublicationDAO periodicPublicationDAO = new PeriodicPublicationDAO();
     private UserDAO userDAO = new UserDAO();
 
 
@@ -62,31 +62,31 @@ public class MainService {
         return userService;
     }
 
-    BookDAO getBookManager() {
+    BookDAO getBookDAO() {
         return bookDAO;
     }
 
-    BorrowsDAO getBorrowsManager() {
+    BorrowsDAO getBorrowsDAO() {
         return borrowsDAO;
     }
 
-    DigitalMediaDAO getDigitalMediaManager() {
+    DigitalMediaDAO getDigitalMediaDAO() {
         return digitalMediaDAO;
     }
 
-    ElementDAO getElementManager() {
+    ElementDAO getElementDAO() {
         return elementDAO;
     }
 
-    GenreDAO getGenreManager() {
+    GenreDAO getGenreDAO() {
         return genreDAO;
     }
 
-    PeriodicPublicationDAO getPeriodicPublicationManager() {
-        return periodicPublicationManager;
+    PeriodicPublicationDAO getPeriodicPublicationDAO() {
+        return periodicPublicationDAO;
     }
 
-    UserDAO getUserManager() {
+    UserDAO getUserDAO() {
         return userDAO;
     }
 

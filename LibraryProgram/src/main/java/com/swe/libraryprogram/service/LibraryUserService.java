@@ -14,7 +14,7 @@ public class LibraryUserService extends UserService {
 
     public List<Element> getBorrowedElements(User user){
         try{
-            List<Element> borrowedElements = MainService.getInstance().getBorrowsManager().getBorrowedElementsForUser(user.getEmail());
+            List<Element> borrowedElements = MainService.getInstance().getBorrowsDAO().getBorrowedElementsForUser(user.getEmail());
             return borrowedElements;
         } catch (SQLException e) {
             return null;
@@ -23,11 +23,11 @@ public class LibraryUserService extends UserService {
 
     public Boolean borrowElement(Integer element_id) {
         try {
-            Element element = MainService.getInstance().getElementManager().getElement(element_id);
+            Element element = MainService.getInstance().getElementDAO().getElement(element_id);
             if (element != null && element.getQuantityAvailable() > 0) {
                 element.setQuantityAvailable(element.getQuantityAvailable() - 1);
-                MainService.getInstance().getElementManager().updateElement(element);
-                MainService.getInstance().getBorrowsManager().addBorrow(element_id, MainService.getInstance().getUser().getEmail());
+                MainService.getInstance().getElementDAO().updateElement(element);
+                MainService.getInstance().getBorrowsDAO().addBorrow(element_id, MainService.getInstance().getUser().getEmail());
                 return true;
             }
             return false;
@@ -38,11 +38,11 @@ public class LibraryUserService extends UserService {
 
     public Boolean returnElement(Integer element_id) {
         try {
-            Element element = MainService.getInstance().getElementManager().getElement(element_id);
+            Element element = MainService.getInstance().getElementDAO().getElement(element_id);
             if (element != null && element.getQuantityAvailable() < element.getQuantity()) {
                 element.setQuantityAvailable(element.getQuantityAvailable() + 1);
-                MainService.getInstance().getElementManager().updateElement(element);
-                MainService.getInstance().getBorrowsManager().removeBorrow(element_id, MainService.getInstance().getUser().getEmail());
+                MainService.getInstance().getElementDAO().updateElement(element);
+                MainService.getInstance().getBorrowsDAO().removeBorrow(element_id, MainService.getInstance().getUser().getEmail());
                 return true;
             }
             return false;

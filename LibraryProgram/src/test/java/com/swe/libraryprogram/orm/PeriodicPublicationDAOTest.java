@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-public class PeriodicPublicationManagerTest {
+public class PeriodicPublicationDAOTest {
 
     @InjectMocks
     private PeriodicPublicationDAO periodicManager;

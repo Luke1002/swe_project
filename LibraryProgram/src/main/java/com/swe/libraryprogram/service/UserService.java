@@ -15,7 +15,7 @@ public class UserService {
             return null;
         }
         try {
-            return MainService.getInstance().getUserManager().authenticate(email, password);
+            return MainService.getInstance().getUserDAO().authenticate(email, password);
         }
         catch (SQLException e){
             return null;
@@ -27,12 +27,12 @@ public class UserService {
             return false;
         }
         try{
-                if (MainService.getInstance().getUserManager().getUser(email) != null) {
+                if (MainService.getInstance().getUserDAO().getUser(email) != null) {
                     return false;
                 }
             else{
 
-                return MainService.getInstance().getUserManager().addUser(new User(email, password, name, surname, phone));
+                return MainService.getInstance().getUserDAO().addUser(new User(email, password, name, surname, phone));
             }
         }
         catch(SQLException e){
@@ -47,7 +47,7 @@ public class UserService {
     public List<Element> getAllElements(){
         List<Element> elements = new ArrayList<>();
         try {
-            elements = MainService.getInstance().getElementManager().getAllElements();
+            elements = MainService.getInstance().getElementDAO().getAllElements();
             return elements;
         } catch (SQLException _) {
             return null;
