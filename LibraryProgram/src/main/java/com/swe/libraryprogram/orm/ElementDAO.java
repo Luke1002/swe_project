@@ -2,6 +2,7 @@ package com.swe.libraryprogram.orm;
 
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
+import com.swe.libraryprogram.service.MainService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -72,6 +73,7 @@ public class ElementDAO {
         String query = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
         PreparedStatement stmt = connection.prepareStatement(query);
 
 
@@ -88,12 +90,34 @@ public class ElementDAO {
         stmt.setInt(7, element.getId());
 
         int rowsUpdated = stmt.executeUpdate();
-        stmt.close();
         if (rowsUpdated > 0) {
+            List<Genre> genresToAdd = element.getGenres();
+            genresToAdd.removeAll(new GenreDAO().getGenresForElement(element.getId()));
+            List<Genre> genresToRemove = new GenreDAO().getGenresForElement(element.getId());
+            genresToRemove.removeAll(element.getGenres());
+            for (Genre genre : genresToRemove) {
+                try {
+                    new GenreDAO().removeGenreFromElement(element.getId(), genre.getCode());
+                } catch (SQLException e) {
+                    System.err.println("Impossibile rimuovere " + genre.getName() + " dalla lista dei generi associati");
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
+            }
+            for (Genre genre : genresToAdd) {
+                if (! new GenreDAO().associateGenreWithElement(element.getId(), genre.getCode())) {
+                    System.err.println("Impossibile aggiungere " + genre.getName() + " alla lista dei generi associati");
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
+            }
             return true;
 
         } else {
-
+            connection.rollback();
+            connection.setAutoCommit(true);
             System.out.println("Errore: informazioni base dell'elemento non aggiornate.");
             return false;
 
