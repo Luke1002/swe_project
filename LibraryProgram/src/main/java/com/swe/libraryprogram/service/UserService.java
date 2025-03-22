@@ -74,7 +74,10 @@ public class UserService {
     }
 
     public List<Element> searchElements(List<Element> elements, String titleFilter, List<String> genresFilter, Integer yearFilter, Integer lengthFilter, Boolean isAvailable) {
+        titleFilter = titleFilter == null ? "" : titleFilter;
+        genresFilter = genresFilter == null ? new ArrayList<>() : genresFilter;
         List<Element> filteredElements = new ArrayList<>();
+        isAvailable = isAvailable != null && isAvailable;
         for (Element element : elements) {
             Boolean titleFilterCompliant = titleFilter.isEmpty() || element.getTitle().toLowerCase().contains(titleFilter);
             Boolean genreFilterCompliant = genresFilter.isEmpty() || genresFilter.stream().allMatch(genre -> element.getGenresAsString().toLowerCase().contains(genre));
