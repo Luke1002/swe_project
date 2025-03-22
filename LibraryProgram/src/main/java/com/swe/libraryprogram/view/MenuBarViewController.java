@@ -1,8 +1,7 @@
 package com.swe.libraryprogram.view;
 
-import com.swe.libraryprogram.controller.LibraryAdminController;
-import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.domainmodel.Genre;
+import com.swe.libraryprogram.services.LibraryAdminController;
+import com.swe.libraryprogram.services.MainController;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

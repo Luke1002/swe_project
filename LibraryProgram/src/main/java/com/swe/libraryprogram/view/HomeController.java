@@ -1,7 +1,7 @@
 package com.swe.libraryprogram.view;
 
 
-import com.swe.libraryprogram.controller.MainController;
+import com.swe.libraryprogram.services.MainController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;

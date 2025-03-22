@@ -1,6 +1,6 @@
 package com.swe.libraryprogram.view;
 
-import com.swe.libraryprogram.controller.MainController;
+import com.swe.libraryprogram.services.MainController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 

@@ -1,7 +1,7 @@
 package com.swe.libraryprogram;
 
-import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.dao.ConnectionManager;
+import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.orm.ConnectionManager;
 import com.swe.libraryprogram.view.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

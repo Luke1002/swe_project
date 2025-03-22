@@ -1,7 +1,7 @@
 package com.swe.libraryprogram.view;
 
-import com.swe.libraryprogram.controller.LibraryAdminController;
-import com.swe.libraryprogram.controller.MainController;
+import com.swe.libraryprogram.services.LibraryAdminController;
+import com.swe.libraryprogram.services.MainController;
 import com.swe.libraryprogram.domainmodel.*;
 
 import javafx.fxml.FXML;

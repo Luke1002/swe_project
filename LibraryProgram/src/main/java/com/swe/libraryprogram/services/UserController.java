@@ -1,7 +1,7 @@
-package com.swe.libraryprogram.controller;
+package com.swe.libraryprogram.services;
 
 import com.swe.libraryprogram.domainmodel.User;
-import com.swe.libraryprogram.dao.UserManager;
+import com.swe.libraryprogram.orm.UserManager;
 
 import java.sql.SQLException;
 

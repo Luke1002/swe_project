@@ -1,25 +1,17 @@
 package com.swe.libraryprogram.view;
 
-import com.swe.libraryprogram.controller.LibraryUserController;
-import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.dao.BorrowsManager;
+import com.swe.libraryprogram.services.MainController;
 import com.swe.libraryprogram.domainmodel.Element;
-import com.swe.libraryprogram.domainmodel.User;
-import com.swe.libraryprogram.domainmodel.Genre;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 
 public class BorrowedItemsController extends BaseViewController {

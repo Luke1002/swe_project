@@ -1,15 +1,8 @@
 package com.swe.libraryprogram.view;
 
-import com.swe.libraryprogram.controller.MainController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-
-import java.io.IOException;
 
 public class BaseViewController {
 

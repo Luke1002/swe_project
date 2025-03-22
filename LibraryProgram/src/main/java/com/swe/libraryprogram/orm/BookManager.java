@@ -1,11 +1,11 @@
-package com.swe.libraryprogram.dao;
+package com.swe.libraryprogram.orm;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.swe.libraryprogram.controller.MainController;
+import com.swe.libraryprogram.services.MainController;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.Book;

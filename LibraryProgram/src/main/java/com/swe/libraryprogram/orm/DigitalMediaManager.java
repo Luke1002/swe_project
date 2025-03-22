@@ -1,14 +1,12 @@
-package com.swe.libraryprogram.dao;
+package com.swe.libraryprogram.orm;
 
-import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.domainmodel.Book;
+import com.swe.libraryprogram.services.MainController;
 import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
