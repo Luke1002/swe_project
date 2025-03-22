@@ -71,7 +71,7 @@ public class HomeViewController extends ElementCheckViewController {
 
     private void applyFilters() {
             String titleFilter = titleFilterField.getText().trim().toLowerCase();
-            List<String> genresFilter = Arrays.stream(genresFilterField.getText().split(",")).map(String::trim).filter(s -> !s.isEmpty()).map(String::toLowerCase).toList();
+            List<String> genresFilter = Arrays.stream(genresFilterField.getText().split(",")).map(String::trim).filter(s -> !s.isEmpty()).toList();
             Integer yearFilter = yearFilterField.getText().isEmpty() ? null : Integer.parseInt(yearFilterField.getText());
             Integer lengthFilter = lengthFilterField.getText().isEmpty() ? null : Integer.parseInt(lengthFilterField.getText());
             Boolean isAvailable = isAvailableFilter.isSelected();

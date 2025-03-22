@@ -6,6 +6,7 @@ import com.swe.libraryprogram.domainmodel.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService {
 
@@ -74,8 +75,8 @@ public class UserService {
     }
 
     public List<Element> searchElements(List<Element> elements, String titleFilter, List<String> genresFilter, Integer yearFilter, Integer lengthFilter, Boolean isAvailable) {
-        titleFilter = titleFilter == null ? "" : titleFilter;
-        genresFilter = genresFilter == null ? new ArrayList<>() : genresFilter;
+        titleFilter = titleFilter == null ? "" : titleFilter.trim().toLowerCase();
+        genresFilter = genresFilter == null ? new ArrayList<>() : genresFilter.stream().map(String::toLowerCase).collect(Collectors.toList());
         List<Element> filteredElements = new ArrayList<>();
         isAvailable = isAvailable != null && isAvailable;
         for (Element element : elements) {
