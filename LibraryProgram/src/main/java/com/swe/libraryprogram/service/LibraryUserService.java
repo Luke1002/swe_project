@@ -6,6 +6,7 @@ import com.swe.libraryprogram.domainmodel.User;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 
 public class LibraryUserService extends UserService {
@@ -38,7 +39,7 @@ public class LibraryUserService extends UserService {
                 System.out.println("Elemento già preso in prestito.");
                 return false;
             }
-            if (element.getQuantityAvailable() <= 0) {
+            if (element.getQuantityAvailable() == 0) {
                 System.out.println("Elemento non disponibile per il prestito.");
                 return false;
             }
@@ -65,7 +66,7 @@ public class LibraryUserService extends UserService {
                 System.out.println("Elemento non preso in prestito.");
                 return false;
             }
-            if (element.getQuantityAvailable() >= element.getQuantity()) {
+            if (Objects.equals(element.getQuantityAvailable(), element.getQuantity())) {
                 element.setQuantityAvailable(element.getQuantityAvailable() - 1);
                 MainService.getInstance().getElementDAO().updateElement(element);
             }
