@@ -70,11 +70,16 @@ public class UserService {
             elements = MainService.getInstance().getElementDAO().getAllElements();
             return elements;
         } catch (SQLException _) {
+            System.out.println("Impossible connettersi con il database");
             return null;
         }
     }
 
-    public List<Element> searchElements(List<Element> elements, String titleFilter, List<String> genresFilter, Integer yearFilter, Integer lengthFilter, Boolean isAvailable) {
+    public List<Element> searchElements(List<Element> elements, String titleFilter, List<String> genresFilter, Integer yearFilter, Integer minimumLengthFilter, Boolean isAvailable) {
+        if (elements == null) {
+            System.out.println("Lista di elementi non valida.");
+            return null;
+        }
         titleFilter = titleFilter == null ? "" : titleFilter.trim().toLowerCase();
         genresFilter = genresFilter == null ? new ArrayList<>() : genresFilter.stream().map(String::toLowerCase).collect(Collectors.toList());
         List<Element> filteredElements = new ArrayList<>();
@@ -83,7 +88,7 @@ public class UserService {
             Boolean titleFilterCompliant = titleFilter.isEmpty() || element.getTitle().toLowerCase().contains(titleFilter);
             Boolean genreFilterCompliant = genresFilter.isEmpty() || genresFilter.stream().allMatch(genre -> element.getGenresAsString().toLowerCase().contains(genre));
             Boolean yearFilterCompliant = (yearFilter == null || (element.getReleaseYear() != null && yearFilter.equals(element.getReleaseYear())));
-            Boolean lengthFilterCompliant = (lengthFilter == null || (element.getLength() != null && lengthFilter <= element.getLength()));
+            Boolean lengthFilterCompliant = (minimumLengthFilter == null || (element.getLength() != null && minimumLengthFilter <= element.getLength()));
             Boolean isAvailableCompliant = (!isAvailable || (element.getQuantityAvailable() != null && element.getQuantityAvailable() > 0));
             if (titleFilterCompliant && genreFilterCompliant && yearFilterCompliant && lengthFilterCompliant && isAvailableCompliant) {
                 filteredElements.add(element);
