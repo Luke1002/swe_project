@@ -74,15 +74,15 @@ public class GenreDAOTest {
         if (connection != null) {
             try (Statement stmt = connection.createStatement()) {
                 // Delete from elementgenres first to avoid foreign key constraint violations
-                stmt.executeUpdate("DELETE FROM elementgenres WHERE elementid = " + generatedElementId);
-                stmt.executeUpdate("DELETE FROM genres WHERE code = " + generatedGenreCode);
-                stmt.executeUpdate("DELETE FROM elements WHERE id = " + generatedElementId);
+                stmt.executeUpdate("DELETE FROM elementgenres");
+                stmt.executeUpdate("DELETE FROM genres");
+                stmt.executeUpdate("DELETE FROM elements");
                 System.out.println("Cleanup successful: Deleted test data.");
+                connection.commit();
             } catch (SQLException e) {
                 System.err.println("Cleanup failed: " + e.getMessage());
-            } finally {
-                connection.close();
             }
+            connection.close();
         }
     }
 
