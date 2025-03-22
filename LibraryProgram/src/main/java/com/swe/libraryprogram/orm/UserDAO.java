@@ -16,7 +16,7 @@ public class UserDAO {
     }
 
 
-    public User getUser(String email) throws SQLException {
+    public User getUser(String email) throws SQLException, RuntimeException {
 
         String query = "SELECT * FROM users WHERE email = ?";
 
@@ -35,13 +35,14 @@ public class UserDAO {
                     rs.getBoolean("isadmin"));
 
         } else {
-            System.err.println("Utente non trovato con la seguente email: " + email);
+            throw new RuntimeException("Identificativo non presente");
         }
         stmt.close();
         return user;
     }
 
-    public User authenticate(String email, String password) throws SQLException {
+    public User authenticate(String email, String password) throws SQLException, RuntimeException {
+        getUser(email);
         String query = "SELECT * FROM users WHERE email = ? AND password = ?";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
@@ -58,7 +59,7 @@ public class UserDAO {
                     rs.getString("phone"),
                     rs.getBoolean("isadmin"));
         } else {
-            System.err.println("Utente non trovato con la seguente email: " + email);
+            throw new RuntimeException("Password errata");
         }
         stmt.close();
         return user;

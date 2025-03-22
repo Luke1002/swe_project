@@ -30,9 +30,8 @@ public class LoginViewController extends BaseViewController {
         String email = emailField.getText();
         String password = passwordField.getText();
 
-        MainService mC = MainService.getInstance();
         try {
-            if (mC.setUserState(email, password)) {
+            if (MainService.getInstance().setUserState(email, password)) {
                 mainViewController.loadTopPane("menubar");
                 mainViewController.loadBottomPane("home");
             } else {

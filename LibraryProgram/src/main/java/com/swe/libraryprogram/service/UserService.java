@@ -12,32 +12,34 @@ public class UserService {
 
 
     public User login(String email, String password) {
-        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-            return null;
+        if (!(email == null || password == null)) {
+            try {
+                return MainService.getInstance().getUserDAO().authenticate(email, password);
+            } catch (SQLException e) {
+                System.out.println("Impossible connettersi con il database");
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        try {
-            return MainService.getInstance().getUserDAO().authenticate(email, password);
-        }
-        catch (SQLException e){
-            return null;
-        }
+        return null;
     }
 
     public Boolean signup(String email, String password, String name, String surname, String phone) {
-        if (email == null || password == null || name == null || surname == null || email.isEmpty() || password.isEmpty() || name.isEmpty() || surname.isEmpty() || password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!#$%&=?@])[A-Za-z\\d!#$%&=?@]{8,20}$")) {
-            return false;
-        }
-        try{
-                if (MainService.getInstance().getUserDAO().getUser(email) != null) {
-                    return false;
+        if (!(email == null || password == null || name == null || surname == null || email.isEmpty() || password.isEmpty() || name.isEmpty() || surname.isEmpty() || password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!#$%&=?@])[A-Za-z\\d!#$%&=?@]{8,20}$"))) {
+            try {
+                try {
+                    MainService.getInstance().getUserDAO().getUser(email);
+                } catch (RuntimeException e) {
+                    throw new RuntimeException("E-mail già in uso");
                 }
-            else{
-
                 return MainService.getInstance().getUserDAO().addUser(new User(email, password, name, surname, phone));
+            } catch (SQLException e) {
+                System.out.println("Impossible connettersi con il database");
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (SQLException e) {
-            return false;
         }
+        return false;
     }
 
     public void logout() {
