@@ -42,7 +42,7 @@ public class UserService {
             return false;
         }
         if (phone != null && phone.matches("^[+]?[0-9]{0,1}[0-9]{1,4}[ ]?[0-9]{3}[ ]?[0-9]{6,7}$")) {
-            System.out.println("Numeero di telefono non valido.");
+            System.out.println("Numero di telefono non valido.");
             return false;
         }
         try {
@@ -50,8 +50,8 @@ public class UserService {
                 MainService.getInstance().getUserDAO().getUser(email);
                 throw new RuntimeException("E-mail già in uso");
             } catch (RuntimeException _) {
+                return MainService.getInstance().getUserDAO().addUser(new User(email, password, name, surname, phone));
             }
-            return MainService.getInstance().getUserDAO().addUser(new User(email, password, name, surname, phone));
         } catch (SQLException e) {
             System.out.println("Impossible connettersi con il database");
         } catch (RuntimeException e) {

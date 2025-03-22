@@ -10,7 +10,7 @@ public class BaseViewController {
     String lastView = null;
 
     @FXML
-    protected void initialize(){
+    protected void initialize() {
     }
 
     public void setMainViewController(MainViewController mainViewController) {
@@ -27,11 +27,11 @@ public class BaseViewController {
         alert.showAndWait();
     }
 
-    public void setLastView(String lastView){
+    public void setLastView(String lastView) {
         this.lastView = lastView;
     }
 
-    public void goBack(){
+    public void goBack() {
         mainViewController.loadBottomPane(lastView);
     }
 }

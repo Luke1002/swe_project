@@ -3,7 +3,6 @@ package com.swe.libraryprogram.domainmodel;
 import java.util.List;
 
 
-
 public class Book extends Element {
 
 
@@ -11,7 +10,6 @@ public class Book extends Element {
     private String author;
     private String publisher;
     private Integer edition;
-
 
 
     public Book(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String isbn, String author, String publisher, Integer edition) {

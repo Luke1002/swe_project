@@ -35,7 +35,7 @@ public class MainViewController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             AnchorPane view = loader.load();
-            ((BaseViewController)loader.getController()).setMainViewController(this);
+            ((BaseViewController) loader.getController()).setMainViewController(this);
             root.setTop(view);
             root.layout();
 
@@ -43,6 +43,7 @@ public class MainViewController {
             e.printStackTrace();
         }
     }
+
     public void loadTopPane() {
         AnchorPane view = new AnchorPane();
         root.setTop(view);
@@ -53,20 +54,19 @@ public class MainViewController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             AnchorPane view = loader.load();
-            ((BaseViewController)loader.getController()).setMainViewController(this);
-            if(!currView.equals(fxmlView)) {
-                if(!lastView.equals(fxmlView)) {
+            ((BaseViewController) loader.getController()).setMainViewController(this);
+            if (!currView.equals(fxmlView)) {
+                if (!lastView.equals(fxmlView)) {
                     lastLastView = lastView;
                     lastView = currView;
                     currView = fxmlView;
 
-                }
-                else{
+                } else {
                     lastView = lastLastView;
                     lastLastView = "login";
                     currView = fxmlView;
                 }
-                ((BaseViewController)loader.getController()).setLastView(lastView);
+                ((BaseViewController) loader.getController()).setLastView(lastView);
 
             }
             root.setCenter(view);
@@ -74,6 +74,7 @@ public class MainViewController {
             e.printStackTrace();
         }
     }
+
     public String getLastView() {
         return lastView;
     }

@@ -1,13 +1,13 @@
 package com.swe.libraryprogram.controller;
 
 
+import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.service.MainService;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import com.swe.libraryprogram.domainmodel.Element;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.Arrays;
@@ -48,11 +48,10 @@ public class HomeViewController extends ElementCheckViewController {
             });
             return row;
         });
-        totalElements = MainService.getInstance().getUserController().getAllElements();
-        if (totalElements == null){
+        totalElements = MainService.getInstance().getUserService().getAllElements();
+        if (totalElements == null) {
             showAlert("Errore", "Connessione al database non riuscita");
-        }
-        else{
+        } else {
             titleFilterField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
             genresFilterField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
             yearFilterField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
@@ -70,13 +69,13 @@ public class HomeViewController extends ElementCheckViewController {
     }
 
     private void applyFilters() {
-            String titleFilter = titleFilterField.getText().trim().toLowerCase();
-            List<String> genresFilter = Arrays.stream(genresFilterField.getText().split(",")).map(String::trim).filter(s -> !s.isEmpty()).toList();
-            Integer yearFilter = yearFilterField.getText().isEmpty() ? null : Integer.parseInt(yearFilterField.getText());
-            Integer lengthFilter = lengthFilterField.getText().isEmpty() ? null : Integer.parseInt(lengthFilterField.getText());
-            Boolean isAvailable = isAvailableFilter.isSelected();
+        String titleFilter = titleFilterField.getText().trim().toLowerCase();
+        List<String> genresFilter = Arrays.stream(genresFilterField.getText().split(",")).map(String::trim).filter(s -> !s.isEmpty()).toList();
+        Integer yearFilter = yearFilterField.getText().isEmpty() ? null : Integer.parseInt(yearFilterField.getText());
+        Integer lengthFilter = lengthFilterField.getText().isEmpty() ? null : Integer.parseInt(lengthFilterField.getText());
+        Boolean isAvailable = isAvailableFilter.isSelected();
 
-            observableList.setAll(MainService.getInstance().getUserController().searchElements(totalElements, titleFilter, genresFilter, yearFilter, lengthFilter, isAvailable));
-            elementsTable.refresh();
+        observableList.setAll(MainService.getInstance().getUserService().searchElements(totalElements, titleFilter, genresFilter, yearFilter, lengthFilter, isAvailable));
+        elementsTable.refresh();
     }
 }

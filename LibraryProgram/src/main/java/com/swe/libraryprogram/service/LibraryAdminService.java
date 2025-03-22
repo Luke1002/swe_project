@@ -9,8 +9,6 @@ import java.util.List;
 public class LibraryAdminService extends UserService {
 
 
-
-
     public Boolean addElement(Element element) {
         try {
             if (element.getClass() != Element.class) {
@@ -29,8 +27,8 @@ public class LibraryAdminService extends UserService {
                     return false;
                 }
                 for (Genre genre : element.getGenres()) {
-                    if(!MainService.getInstance().getGenreDAO().associateGenreWithElement(elementId, genre.getCode())){
-                        System.err.println("Impossibile aggiungere " + genre.getName() +" alla lista dei generi associati");
+                    if (!MainService.getInstance().getGenreDAO().associateGenreWithElement(elementId, genre.getCode())) {
+                        System.err.println("Impossibile aggiungere " + genre.getName() + " alla lista dei generi associati");
                     }
                 }
                 return true;
@@ -73,13 +71,13 @@ public class LibraryAdminService extends UserService {
                 try {
                     MainService.getInstance().getGenreDAO().removeGenreFromElement(element.getId(), genre.getCode());
                 } catch (SQLException e) {
-                    System.err.println("Impossibile rimuovere " + genre.getName() +" dalla lista dei generi associati");
+                    System.err.println("Impossibile rimuovere " + genre.getName() + " dalla lista dei generi associati");
                 }
             }
             for (Genre genre : genresToAdd) {
-                    if(!MainService.getInstance().getGenreDAO().associateGenreWithElement(element.getId(), genre.getCode())){
-                        System.err.println("Impossibile aggiungere " + genre.getName() +" alla lista dei generi associati");
-                    }
+                if (!MainService.getInstance().getGenreDAO().associateGenreWithElement(element.getId(), genre.getCode())) {
+                    System.err.println("Impossibile aggiungere " + genre.getName() + " alla lista dei generi associati");
+                }
             }
             return true;
         } catch (

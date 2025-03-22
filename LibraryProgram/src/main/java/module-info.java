@@ -10,6 +10,7 @@ module com.swe.libraryprogram {
     requires java.sql;
     requires org.postgresql.jdbc;
     requires jdk.compiler;
+    requires java.desktop;
 
     opens com.swe.libraryprogram to javafx.fxml;
     exports com.swe.libraryprogram;

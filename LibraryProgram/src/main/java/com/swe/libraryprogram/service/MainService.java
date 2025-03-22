@@ -1,9 +1,9 @@
 package com.swe.libraryprogram.service;
 
-import com.swe.libraryprogram.orm.*;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.User;
+import com.swe.libraryprogram.orm.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,17 +39,16 @@ public class MainService {
     }
 
 
-
     public Boolean setUserState(String email, String password) throws SQLException {
         session_user = userService.login(email, password);
         if (session_user != null) {
             if (session_user.isAdmin()) {
-                    userService = new LibraryAdminService();
+                userService = new LibraryAdminService();
             } else {
-                    userService = new LibraryUserService();
+                userService = new LibraryUserService();
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -58,7 +57,7 @@ public class MainService {
         return session_user;
     }
 
-    public UserService getUserController() {
+    public UserService getUserService() {
         return userService;
     }
 
@@ -102,11 +101,12 @@ public class MainService {
     public void setSelectedElementId(Integer elementId) {
         this.selectedElementId = elementId;
     }
+
     public Element getSelectedElement() {
         return elementDAO.getCompleteElementById(selectedElementId);
     }
 
-    public List<Genre> getAllGenres(){
+    public List<Genre> getAllGenres() {
         try {
             List<Genre> allGenres = new ArrayList<>();
             allGenres = genreDAO.getAllGenres();

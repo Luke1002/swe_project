@@ -1,6 +1,7 @@
 package com.swe.libraryprogram.controller;
 
 import javafx.scene.control.TextFormatter;
+
 import java.util.function.UnaryOperator;
 
 public class ElementCheckViewController extends BaseViewController {
@@ -8,15 +9,14 @@ public class ElementCheckViewController extends BaseViewController {
     UnaryOperator<TextFormatter.Change> onlyNumbersFilter = change -> {
         String newText = change.getControlNewText();
 
-        if (newText.matches("\\d*") && !newText.startsWith("0") ) {
-            if(newText.isEmpty()){
+        if (newText.matches("\\d*") && !newText.startsWith("0")) {
+            if (newText.isEmpty()) {
                 return change;
             }
-            try{
+            try {
                 Integer.parseInt(newText);
                 return change;
-            }
-            catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return null;
             }
         } else {

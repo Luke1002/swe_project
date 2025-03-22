@@ -1,7 +1,6 @@
 package com.swe.libraryprogram.domainmodel;
 
 
-
 public class Genre {
 
     private final String name;

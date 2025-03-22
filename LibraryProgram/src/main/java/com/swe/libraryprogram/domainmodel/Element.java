@@ -18,7 +18,6 @@ public class Element {
     private List<Genre> genres;
 
 
-
     public Element(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres) {
 
         this.id = id;
@@ -107,7 +106,7 @@ public class Element {
     }
 
     public String getGenresAsString() {
-        if (genres.isEmpty()){
+        if (genres.isEmpty()) {
             return "";
         }
         return genres.stream().map(Genre::getName).collect(Collectors.joining(", "));

@@ -4,12 +4,12 @@ import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -153,7 +153,7 @@ public class DigitalMediaDAO extends ElementDAO {
         stmt.close();
 
         GenreDAO genreDAO = new GenreDAO();
-        for (Element element : digitalMedias){
+        for (Element element : digitalMedias) {
             List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
@@ -228,7 +228,7 @@ public class DigitalMediaDAO extends ElementDAO {
         stmt.close();
 
         GenreDAO genreDAO = new GenreDAO();
-        for (Element element : elements){
+        for (Element element : elements) {
             List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }

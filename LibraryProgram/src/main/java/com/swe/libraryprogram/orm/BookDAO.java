@@ -1,13 +1,16 @@
 package com.swe.libraryprogram.orm;
 
-import java.sql.*;
+import com.swe.libraryprogram.domainmodel.Book;
+import com.swe.libraryprogram.domainmodel.Element;
+import com.swe.libraryprogram.domainmodel.Genre;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.swe.libraryprogram.domainmodel.Element;
-import com.swe.libraryprogram.domainmodel.Genre;
-import com.swe.libraryprogram.domainmodel.Book;
 
 
 public class BookDAO extends ElementDAO {
@@ -118,7 +121,7 @@ public class BookDAO extends ElementDAO {
             stmt1.setNull(6, java.sql.Types.INTEGER);
         }
         stmt1.setInt(7, book.getId());
-        int rowsUpdated= stmt1.executeUpdate();
+        int rowsUpdated = stmt1.executeUpdate();
         stmt1.close();
 
         if (rowsUpdated > 0) {
@@ -200,7 +203,7 @@ public class BookDAO extends ElementDAO {
         stmt.close();
 
         GenreDAO genreDAO = new GenreDAO();
-        for (Element element : books){
+        for (Element element : books) {
             List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
@@ -286,7 +289,7 @@ public class BookDAO extends ElementDAO {
         stmt.close();
 
         GenreDAO genreDAO = new GenreDAO();
-        for (Element element : elements){
+        for (Element element : elements) {
             List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }

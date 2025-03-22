@@ -5,10 +5,10 @@ import com.swe.libraryprogram.domainmodel.Genre;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -72,33 +72,32 @@ public class ElementDAO {
         String query = "UPDATE elements SET title = ?, releaseyear = ?, description = ?, quantity = ?, quantityavailable = ?, length = ? WHERE id = ?";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
 
-            stmt.setString(1, element.getTitle());
-            stmt.setInt(2, element.getReleaseYear());
-            stmt.setString(3, element.getDescription());
-            stmt.setInt(4, element.getQuantity());
-            stmt.setInt(5, element.getQuantityAvailable());
-            if(element.getLength() == null) {
-                stmt.setNull(6, java.sql.Types.INTEGER);
-            }
-            else{
-                stmt.setInt(6, element.getLength());
-            }
-            stmt.setInt(7, element.getId());
+        stmt.setString(1, element.getTitle());
+        stmt.setInt(2, element.getReleaseYear());
+        stmt.setString(3, element.getDescription());
+        stmt.setInt(4, element.getQuantity());
+        stmt.setInt(5, element.getQuantityAvailable());
+        if (element.getLength() == null) {
+            stmt.setNull(6, java.sql.Types.INTEGER);
+        } else {
+            stmt.setInt(6, element.getLength());
+        }
+        stmt.setInt(7, element.getId());
 
-            int rowsUpdated = stmt.executeUpdate();
-            stmt.close();
-            if (rowsUpdated > 0) {
-                return true;
+        int rowsUpdated = stmt.executeUpdate();
+        stmt.close();
+        if (rowsUpdated > 0) {
+            return true;
 
-            } else {
+        } else {
 
-                System.err.println("Errore: informazioni base non aggiornate.");
-                return false;
+            System.out.println("Errore: informazioni base dell'elemento non aggiornate.");
+            return false;
 
-            }
+        }
 
     }
 
@@ -245,32 +244,32 @@ public class ElementDAO {
         String query = "SELECT quantityavailable FROM elements WHERE id = ?";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, id);
+        stmt.setInt(1, id);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-                if (rs.next()) {
+        if (rs.next()) {
 
-                    int quantityAvailable = rs.getInt("quantityavailable");
+            int quantityAvailable = rs.getInt("quantityavailable");
 
-                    if (quantityAvailable > 0) {
-                        return true;
+            if (quantityAvailable > 0) {
+                return true;
 
-                    } else {
+            } else {
 
-                        System.err.println("Elemento non disponibile.");
-                        return false;
+                System.err.println("Elemento non disponibile.");
+                return false;
 
-                    }
+            }
 
-                } else {
+        } else {
 
-                    System.err.println("Elemento non trovato.");
-                    return false;
+            System.err.println("Elemento non trovato.");
+            return false;
 
-                }
+        }
 
 
     }

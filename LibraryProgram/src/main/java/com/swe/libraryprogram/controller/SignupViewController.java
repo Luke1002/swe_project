@@ -2,7 +2,10 @@ package com.swe.libraryprogram.controller;
 
 import com.swe.libraryprogram.service.MainService;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 
 import java.sql.SQLException;
 import java.util.function.UnaryOperator;
@@ -51,10 +54,9 @@ public class SignupViewController extends BaseViewController {
             }
             String initialRegex = "^[a-zA-Z0-9._-]*$";
             String totalRegex = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-            if((!newText.contains("@") && newText.matches(initialRegex)) || (newText.contains("@") && newText.matches(totalRegex))) {
+            if ((!newText.contains("@") && newText.matches(initialRegex)) || (newText.contains("@") && newText.matches(totalRegex))) {
                 return change;
-            }
-            else{
+            } else {
                 return null;
             }
         };
@@ -102,49 +104,47 @@ public class SignupViewController extends BaseViewController {
     }
 
     @FXML
-    private void onSignupButtonClick(){
-        if(checkFields()){
+    private void onSignupButtonClick() {
+        if (checkFields()) {
             String email = emailField.getText();
             String password = passwordField.getText();
             String name = nameField.getText();
             String surname = surnameField.getText();
             String phone = phoneField.getText();
 
-            if(MainService.getInstance().getUserController().signup(email, password, name, surname, phone)){
+            if (MainService.getInstance().getUserService().signup(email, password, name, surname, phone)) {
                 showAlert("Success", "Registrazione completata con successo");
                 try {
-                    if(MainService.getInstance().setUserState(email, password)){
+                    if (MainService.getInstance().setUserState(email, password)) {
                         mainViewController.loadTopPane("menubar");
                         mainViewController.loadBottomPane("home");
-                    }
-                    else {
+                    } else {
                         throw new SQLException();
                     }
-                }catch (SQLException e){
+                } catch (SQLException e) {
                     showAlert("Error", "Impossibile effettuare il login");
                     mainViewController.loadBottomPane("login");
                 }
-            }
-            else{
+            } else {
                 showAlert("Error", "Registrazione fallita");
             }
         }
     }
 
     private Boolean checkFields() {
-        if(emailField.getText().isEmpty() || passwordField.getText().isEmpty() || nameField.getText().isEmpty() || surnameField.getText().isEmpty()){
+        if (emailField.getText().isEmpty() || passwordField.getText().isEmpty() || nameField.getText().isEmpty() || surnameField.getText().isEmpty()) {
             showAlert("Error", "Tutti i campi obbligatori devono essere compilati");
             return false;
         }
-        if(!emailField.getText().contains("@")){
+        if (!emailField.getText().contains("@")) {
             showAlert("Error", "Email non valida");
             return false;
         }
-        if(!emailField.getText().equals(confirmEmailField.getText())){
+        if (!emailField.getText().equals(confirmEmailField.getText())) {
             showAlert("Error", "I due campi e-mail non corrispondono");
             return false;
         }
-        if(!passwordField.getText().equals(confirmPasswordField.getText())){
+        if (!passwordField.getText().equals(confirmPasswordField.getText())) {
             showAlert("Error", "I due campi password non corrispondono");
             return false;
         }

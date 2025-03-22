@@ -3,14 +3,12 @@ package com.swe.libraryprogram.domainmodel;
 import java.util.List;
 
 
-
-public class DigitalMedia extends Element{
+public class DigitalMedia extends Element {
 
 
     private String producer;
     private String ageRating;
     private String director;
-
 
 
     public DigitalMedia(Integer id, String title, Integer releaseYear, String description, Integer quantity, Integer quantityAvailable, Integer length, List<Genre> genres, String producer, String ageRating, String director) {

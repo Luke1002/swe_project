@@ -1,11 +1,16 @@
 package com.swe.libraryprogram.controller;
 
-import com.swe.libraryprogram.service.*;
-import com.swe.libraryprogram.domainmodel.*;
-
+import com.swe.libraryprogram.domainmodel.Book;
+import com.swe.libraryprogram.domainmodel.DigitalMedia;
+import com.swe.libraryprogram.domainmodel.Element;
+import com.swe.libraryprogram.domainmodel.PeriodicPublication;
+import com.swe.libraryprogram.service.LibraryAdminService;
+import com.swe.libraryprogram.service.LibraryUserService;
+import com.swe.libraryprogram.service.MainService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -52,10 +57,10 @@ public class ElementDetailsViewController extends BaseViewController {
         yearLabel.setText("Anno: " + yearStringvalue);
         genresLabel.setText(element.getGenresAsString());
         descriptionLabel.setText(element.getDescription());
-        quantityLabel.setText("Disponibilità: "+ element.getQuantityAvailable().toString() + "/" + element.getQuantity().toString());
-        String lengthStringvalue = element.getLength() == null ? "" : element.getLength().toString()+" pagine";
-        String durationStringvalue = element.getLength() == null ? "" : element.getLength().toString()+" minuti";
-        if(element instanceof Book){
+        quantityLabel.setText("Disponibilità: " + element.getQuantityAvailable().toString() + "/" + element.getQuantity().toString());
+        String lengthStringvalue = element.getLength() == null ? "" : element.getLength().toString() + " pagine";
+        String durationStringvalue = element.getLength() == null ? "" : element.getLength().toString() + " minuti";
+        if (element instanceof Book) {
             typeLabel.setText("Libro");
             lengthLabel.setText("Lunghezza: " + lengthStringvalue);
             try {
@@ -68,14 +73,12 @@ public class ElementDetailsViewController extends BaseViewController {
                 isbnLabel.setText("ISBN: " + ((Book) element).getIsbn());
                 authorLabel.setText("Autore: " + ((Book) element).getAuthor());
                 publisherLabel.setText("Casa Editrice: " + ((Book) element).getPublisher());
-                String editionStringValue = ((Book) element).getEdition() == null? "" : ((Book) element).getEdition().toString();
+                String editionStringValue = ((Book) element).getEdition() == null ? "" : ((Book) element).getEdition().toString();
                 editionLabel.setText("Edizione: " + editionStringValue);
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else if (element instanceof DigitalMedia){
+        } else if (element instanceof DigitalMedia) {
             typeLabel.setText("Film");
             lengthLabel.setText("Durata: " + durationStringvalue);
             try {
@@ -87,13 +90,11 @@ public class ElementDetailsViewController extends BaseViewController {
                 producerLabel.setText("Casa Produttrice: " + ((DigitalMedia) element).getProducer());
                 ageRatingLabel.setText("Età consigliata: " + ((DigitalMedia) element).getAgeRating());
                 directorLabel.setText("Direttore: " + ((DigitalMedia) element).getDirector());
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        }
-        else if(element instanceof PeriodicPublication){
+        } else if (element instanceof PeriodicPublication) {
             typeLabel.setText("Periodico");
             lengthLabel.setText("Lunghezza: " + lengthStringvalue);
             try {
@@ -105,12 +106,11 @@ public class ElementDetailsViewController extends BaseViewController {
                 releaseDayLabel = (Label) periodicPublicationDetails.lookup("#dayLabel");
                 publisherLabel.setText("Casa Produttrice: " + ((PeriodicPublication) element).getPublisher());
                 frequencyLabel.setText("Frequenza: " + ((PeriodicPublication) element).getFrequency());
-                String monthStringValue = ((PeriodicPublication) element).getReleaseMonth() == null? "" : ((PeriodicPublication) element).getReleaseMonth().toString();
+                String monthStringValue = ((PeriodicPublication) element).getReleaseMonth() == null ? "" : ((PeriodicPublication) element).getReleaseMonth().toString();
                 releaseMonthLabel.setText("Mese: " + monthStringValue);
-                String dayStringValue = ((PeriodicPublication) element).getReleaseDay() == null? "" : ((PeriodicPublication) element).getReleaseDay().toString();
+                String dayStringValue = ((PeriodicPublication) element).getReleaseDay() == null ? "" : ((PeriodicPublication) element).getReleaseDay().toString();
                 releaseDayLabel.setText("Giorno: " + dayStringValue);
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -123,35 +123,34 @@ public class ElementDetailsViewController extends BaseViewController {
     }
 
     private void updateButtonView() {
-        if(MainService.getInstance().getUser().isAdmin()){
+        if (MainService.getInstance().getUser().isAdmin()) {
             borrowButton.setVisible(false);
             returnButton.setVisible(false);
             editButton.setVisible(true);
             removeButton.setVisible(true);
-        }
-        else{
+        } else {
             editButton.setVisible(false);
             removeButton.setVisible(false);
             borrowButton.setDisable(false);
             returnButton.setDisable(true);
 
-            if(!MainService.getInstance().getUser().isAdmin()){
-                List<Element> elements = ((LibraryUserService) MainService.getInstance().getUserController()).getBorrowedElements(MainService.getInstance().getUser());
+            if (!MainService.getInstance().getUser().isAdmin()) {
+                List<Element> elements = ((LibraryUserService) MainService.getInstance().getUserService()).getBorrowedElements(MainService.getInstance().getUser());
                 for (Element e : elements) {
-                    if(e.getId().equals(element.getId())) {
+                    if (e.getId().equals(element.getId())) {
                         borrowButton.setDisable(true);
                         returnButton.setDisable(false);
                     }
                 }
             }
-            if(element.getQuantityAvailable() == 0){
+            if (element.getQuantityAvailable() == 0) {
                 borrowButton.setDisable(true);
             }
         }
     }
 
     private void handleReturnAction() {
-        if (((LibraryUserService) MainService.getInstance().getUserController()).returnElement(element.getId())) {
+        if (((LibraryUserService) MainService.getInstance().getUserService()).returnElement(element.getId())) {
             showAlert("Prestito dell'elemento", "Elemento restituito!");
             mainVBox.getChildren().remove(2);
             initialize();
@@ -162,7 +161,7 @@ public class ElementDetailsViewController extends BaseViewController {
 
     private void handleBorrowAction() {
 
-        if (((LibraryUserService) MainService.getInstance().getUserController()).borrowElement(element.getId())) {
+        if (((LibraryUserService) MainService.getInstance().getUserService()).borrowElement(element.getId())) {
             showAlert("Prestito dell'elemento", "Elemento preso!");
             mainVBox.getChildren().remove(2);
             initialize();
@@ -182,14 +181,13 @@ public class ElementDetailsViewController extends BaseViewController {
     }
 
     private void handleRemoveAction() {
-            if (((LibraryAdminService) MainService.getInstance().getUserController()).removeElement(element)) {
-                showAlert("Rimozione dell'elemento", "Elemento rimosso con successo");
-                MainService.getInstance().setSelectedElementId(null);
-                mainViewController.loadBottomPane("home");
-            }
-            else{
-                showAlert("Rimozione dell'elemento", "Errore durante la rimozione dell'elemento");
-            }
+        if (((LibraryAdminService) MainService.getInstance().getUserService()).removeElement(element)) {
+            showAlert("Rimozione dell'elemento", "Elemento rimosso con successo");
+            MainService.getInstance().setSelectedElementId(null);
+            mainViewController.loadBottomPane("home");
+        } else {
+            showAlert("Rimozione dell'elemento", "Errore durante la rimozione dell'elemento");
+        }
 
     }
 }

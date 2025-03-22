@@ -1,17 +1,19 @@
 package com.swe.libraryprogram.controller;
 
+import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.service.LibraryUserService;
 import com.swe.libraryprogram.service.MainService;
-import com.swe.libraryprogram.domainmodel.Element;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class BorrowedItemsViewController extends BaseViewController {
@@ -49,8 +51,8 @@ public class BorrowedItemsViewController extends BaseViewController {
     }
 
     private void loadBorrowedElementsData() {
-        List<Element> borrowedElementsList = ((LibraryUserService) MainService.getInstance().getUserController()).getBorrowedElements(MainService.getInstance().getUser());
-        if(borrowedElementsList == null) {
+        List<Element> borrowedElementsList = ((LibraryUserService) MainService.getInstance().getUserService()).getBorrowedElements(MainService.getInstance().getUser());
+        if (borrowedElementsList == null) {
             showAlert("Errore", "Connessione al database non riuscita");
             borrowedElementsList = new ArrayList<>();
         }

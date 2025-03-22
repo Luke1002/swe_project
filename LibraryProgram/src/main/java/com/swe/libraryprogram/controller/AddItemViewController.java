@@ -1,9 +1,8 @@
 package com.swe.libraryprogram.controller;
 
+import com.swe.libraryprogram.domainmodel.*;
 import com.swe.libraryprogram.service.LibraryAdminService;
 import com.swe.libraryprogram.service.MainService;
-import com.swe.libraryprogram.domainmodel.*;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -136,10 +135,9 @@ public class AddItemViewController extends ElementCheckViewController {
     }
 
     private void handleCancelButton() {
-        if (currElement != null){
+        if (currElement != null) {
             goBack();
-        }
-        else {
+        } else {
             mainViewController.loadBottomPane("home");
         }
     }
@@ -265,8 +263,8 @@ public class AddItemViewController extends ElementCheckViewController {
                 }
             }
 
-            if (MainService.getInstance().getUserController() instanceof LibraryAdminService && currElement == null) {
-                if (((LibraryAdminService) MainService.getInstance().getUserController()).addElement(element)) {
+            if (MainService.getInstance().getUserService() instanceof LibraryAdminService && currElement == null) {
+                if (((LibraryAdminService) MainService.getInstance().getUserService()).addElement(element)) {
 
                     showAlert("Aggiunta elemento", "Elemento aggiunto con successo");
                     goBack();
@@ -276,8 +274,8 @@ public class AddItemViewController extends ElementCheckViewController {
                     showAlert("Aggiunta elemento", "Errore: elemento non aggiunto");
 
                 }
-            } else if (MainService.getInstance().getUserController() instanceof LibraryAdminService && currElement != null) {
-                if (((LibraryAdminService) MainService.getInstance().getUserController()).updateElement(currElement)) {
+            } else if (MainService.getInstance().getUserService() instanceof LibraryAdminService && currElement != null) {
+                if (((LibraryAdminService) MainService.getInstance().getUserService()).updateElement(currElement)) {
 
                     showAlert("Modifica elemento", "Elemento modificato con successo");
                     goBack();
@@ -302,8 +300,8 @@ public class AddItemViewController extends ElementCheckViewController {
             return false;
         }
         if (elementType.equals("Libro") && isbnField.getText().length() < 13) {
-                showAlert("Errore", "Codice ISBN non valido.");
-                return false;
+            showAlert("Errore", "Codice ISBN non valido.");
+            return false;
         }
         Integer quantity = quantityField.getText().isEmpty() ? 1 : Integer.valueOf(quantityField.getText());
         Integer quantityAvailable = quantityField.getText().isEmpty() ? quantity : Integer.valueOf(quantityField.getText());
@@ -329,7 +327,7 @@ public class AddItemViewController extends ElementCheckViewController {
             }
         }
         List<Genre> allGenres = MainService.getInstance().getAllGenres();
-        if(allGenres == null){
+        if (allGenres == null) {
             showAlert("Database Connection Error", "Non è possibile collegarsi al database");
             return null;
         }

@@ -1,7 +1,8 @@
 package com.swe.libraryprogram.orm;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
 public class ConnectionManager {
@@ -15,12 +16,10 @@ public class ConnectionManager {
     private static String dbPass = "5^@34o8c4#X&9$fa";
 
 
-
     private ConnectionManager() {
-        try{
+        try {
             Class.forName("org.postgresql.Driver");
-        }
-        catch(ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException("Driver JDBC non trovato", e);
         }
     }
