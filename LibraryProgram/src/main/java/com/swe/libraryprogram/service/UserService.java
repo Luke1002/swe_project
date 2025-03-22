@@ -25,11 +25,11 @@ public class UserService {
     }
 
     public Boolean signup(String email, String password, String name, String surname, String phone) {
-        if (email == null || email.matches("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+        if (email == null || !email.matches("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
             System.out.println("E-mail non valida.");
             return false;
         }
-        if (password == null || password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!#$%&=?@])[A-Za-z\\d!#$%&=?@]{8,20}$")) {
+        if (password == null || !password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!#$%&=?@])[A-Za-z\\d!#$%&=?@]{8,20}$")) {
             System.out.println("Password non valida.");
             return false;
         }
@@ -41,7 +41,7 @@ public class UserService {
             System.out.println("Cognome non inserito.");
             return false;
         }
-        if (phone != null && phone.matches("^[+]?[0-9]{0,1}[0-9]{1,4}[ ]?[0-9]{3}[ ]?[0-9]{6,7}$")) {
+        if (phone != null && !phone.matches("^[+]?[0-9]{0,1}[0-9]{1,4}[ ]?[0-9]{3}[ ]?[0-9]{6,7}$")) {
             System.out.println("Numero di telefono non valido.");
             return false;
         }
