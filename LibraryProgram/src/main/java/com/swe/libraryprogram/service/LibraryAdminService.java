@@ -28,7 +28,7 @@ public class LibraryAdminService extends UserService {
             if (element.getClass() != Element.class) {
                 Integer elementId = null;
                 if (element instanceof Book) {
-                    if(((Book) element).getIsbn() == null  ||((Book) element).getIsbn().matches("\\d{13}")){
+                    if(((Book) element).getIsbn() == null  || ((Book) element).getIsbn().matches("\\d{13}")){
                         System.out.println("ISBN non valido");
                         return false;
                     }
@@ -110,34 +110,69 @@ public class LibraryAdminService extends UserService {
 
     public Boolean updateElement(Element element) {
         try {
+            if(element.getTitle()== null || element.getTitle().trim().isEmpty()){
+                System.out.println("Titolo non inserito");
+                return false;
+            }
+            if(element.getDescription()== null){
+                element.setDescription("");
+            }
+            if(element.getQuantity() == null || element.getQuantity() < 1){
+                System.out.println("Quantità non inserita, deve essere almeno 1");
+            }
+
+            element.setQuantityAvailable(element.getQuantity());
             if (element instanceof Book) {
-                if ((MainService.getInstance().getBookDAO().getBookByIsbn(((Book) element).getIsbn())) != null) {
+                if(((Book) element).getIsbn() == null  ||((Book) element).getIsbn().matches("\\d{13}")){
+                    System.out.println("ISBN non valido");
                     return false;
+                }
+                if ((MainService.getInstance().getBookDAO().getBookByIsbn(((Book) element).getIsbn())) != null) {
+                    System.out.println("ISBN già presente nel database");
+                    return false;
+                }
+                if(((Book) element).getAuthor() == null){
+                    ((Book) element).setAuthor("");
+                }
+                if(((Book) element).getPublisher() == null){
+                    ((Book) element).setPublisher("");
                 }
                 MainService.getInstance().getBookDAO().updateBook((Book) element);
             } else if (element instanceof DigitalMedia) {
+                if(((DigitalMedia) element).getProducer()== null){
+                    ((DigitalMedia) element).setProducer("");
+                }
+                if(((DigitalMedia) element).getAgeRating() == null){
+                    ((DigitalMedia) element).setAgeRating("");
+                }
+                if(((DigitalMedia) element).getDirector() == null){
+                    ((DigitalMedia) element).setDirector("");
+                }
                 MainService.getInstance().getDigitalMediaDAO().updateDigitalMedia((DigitalMedia) element);
             } else if (element instanceof PeriodicPublication) {
+                if(((PeriodicPublication) element).getPublisher() == null){
+                    ((PeriodicPublication) element).setPublisher("");
+                }
+                if(((PeriodicPublication) element).getFrequency() == null){
+                    ((PeriodicPublication) element).setFrequency("");
+                }
+                if(((PeriodicPublication) element).getReleaseMonth() == null || ((PeriodicPublication) element).getReleaseMonth() >12 || ((PeriodicPublication) element).getReleaseMonth() < 1){
+                    System.out.println("Mese non valido");
+                    return false;
+                }
+                if(((PeriodicPublication) element).getReleaseDay() == null || ((PeriodicPublication) element).getReleaseDay() >31 || ((PeriodicPublication) element).getReleaseMonth() < 1){
+                    System.out.println("Giorno non valido");
+                    return false;
+                }
+                if (((Arrays.asList(new Integer[]{4, 6, 9, 11}).contains(((PeriodicPublication) element).getReleaseMonth()) && (((PeriodicPublication) element).getReleaseMonth() == 2 && ((PeriodicPublication) element).getReleaseDay() > 28) || ((PeriodicPublication) element).getReleaseDay() > 31 ))){
+                    System.out.println("Giorno non valido rispetto al mese");
+                    return false;
+                }
                 MainService.getInstance().getPeriodicPublicationDAO().updatePeriodicPublication((PeriodicPublication) element);
             } else {
                 return false;
             }
-            List<Genre> genresToAdd = element.getGenres();
-            genresToAdd.removeAll(MainService.getInstance().getGenreDAO().getGenresForElement(element.getId()));
-            List<Genre> genresToRemove = MainService.getInstance().getGenreDAO().getGenresForElement(element.getId());
-            genresToRemove.removeAll(element.getGenres());
-            for (Genre genre : genresToRemove) {
-                try {
-                    MainService.getInstance().getGenreDAO().removeGenreFromElement(element.getId(), genre.getCode());
-                } catch (SQLException e) {
-                    System.err.println("Impossibile rimuovere " + genre.getName() + " dalla lista dei generi associati");
-                }
-            }
-            for (Genre genre : genresToAdd) {
-                if (!MainService.getInstance().getGenreDAO().associateGenreWithElement(element.getId(), genre.getCode())) {
-                    System.err.println("Impossibile aggiungere " + genre.getName() + " alla lista dei generi associati");
-                }
-            }
+
             return true;
         } catch (
                 SQLException e) {
@@ -146,13 +181,20 @@ public class LibraryAdminService extends UserService {
     }
 
     public Boolean addGenre(String genreName) {
-        if (genreName == null) {
+        if (genreName == null || genreName.trim().toLowerCase().isEmpty()) {
             return false;
         }
-        Genre newGenre = new Genre(genreName);
+        try {
+            MainService.getInstance().getGenreDAO().getGenreByName(genreName.trim().toLowerCase());
+            System.out.println("Genere già presente nel database");
+            return false;
+        }catch (SQLException _){
+        }
+        Genre newGenre = new Genre(genreName.trim().toLowerCase());
         try {
             return MainService.getInstance().getGenreDAO().addGenre(newGenre);
         } catch (SQLException e) {
+            System.out.println("Impossibile connettersi al database");
             return false;
         }
     }

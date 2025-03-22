@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class HelloApplication extends Application {
 
@@ -25,6 +26,7 @@ public class HelloApplication extends Application {
             ConnectionManager.getInstance();
             MainService.getInstance();
             MainViewController mainViewController;
+            stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon.png"))));
             stage.setMinWidth(800);
             stage.setMinHeight(600);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("main-view.fxml"));
