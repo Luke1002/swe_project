@@ -17,39 +17,43 @@ public class BorrowsDAO {
     }
 
 
-    public Boolean addBorrow(Integer element_id, String user_id) throws SQLException {
+    public Boolean addBorrow(Integer elementId, String userId) throws SQLException {
 
         String query = "INSERT INTO borrows (elementid, userid) VALUES (?, ?)";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        stmt.setInt(1, element_id);
-        stmt.setString(2, user_id);
+        stmt.setInt(1, elementId);
+        stmt.setString(2, userId);
 
         int rowsAffected = stmt.executeUpdate();
         stmt.close();
         if (rowsAffected > 0) {
-            return true;
+            Element element = new ElementDAO().getElement(elementId);
+            element.setQuantityAvailable(element.getQuantityAvailable()-1);
+            return new ElementDAO().updateElement(element);
         } else {
             return false;
         }
     }
 
-    public Boolean removeBorrow(Integer element_id, String user_id) throws SQLException {
+    public Boolean removeBorrow(Integer elementId, String userId) throws SQLException {
 
         String query = "DELETE FROM borrows WHERE elementid = ? AND userid = ?";
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        stmt.setInt(1, element_id);
-        stmt.setString(2, user_id);
+        stmt.setInt(1, elementId);
+        stmt.setString(2, userId);
 
         int rowsAffected = stmt.executeUpdate();
         stmt.close();
         if (rowsAffected > 0) {
-            return true;
+            Element element = new ElementDAO().getElement(elementId);
+            element.setQuantityAvailable(element.getQuantityAvailable()+1);
+            return new ElementDAO().updateElement(element);
         } else {
             return false;
         }

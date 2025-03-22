@@ -29,13 +29,18 @@ public class LibraryUserService extends UserService {
         }
         try {
             Element element = MainService.getInstance().getElementDAO().getElement(elementId);
-            if (element.getQuantityAvailable() > 0) {
-                element.setQuantityAvailable(element.getQuantityAvailable() - 1);
+            List<Element> elements = getBorrowedElements(MainService.getInstance().getUser());
+            if (elements.contains(element)) {
+                System.out.println("Elemento già preso in prestito.");
+                return false;
+            }
+            if (element.getQuantityAvailable() <= 0) {
+                System.out.println("Elemento non disponibile per il prestito.");
+                return false;
+            }
                 MainService.getInstance().getElementDAO().updateElement(element);
                 MainService.getInstance().getBorrowsDAO().addBorrow(elementId, MainService.getInstance().getUser().getEmail());
                 return true;
-            }
-            System.out.println("Elemento non disponibile per il prestito.");
         } catch (SQLException e) {
             System.out.println("Impossibile connettersi al database.");
         } catch (NoSuchElementException e) {

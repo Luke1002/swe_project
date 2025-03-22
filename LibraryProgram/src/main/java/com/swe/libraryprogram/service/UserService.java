@@ -41,14 +41,15 @@ public class UserService {
             System.out.println("Cognome non inserito.");
             return false;
         }
-        if (phone != null && !phone.matches("^[+]?[0-9]{0,1}[0-9]{1,4}[ ]?[0-9]{3}[ ]?[0-9]{6,7}$")) {
+        if (phone != null && !phone.isEmpty() && !phone.matches("^[+]?[0-9]{0,1}[0-9]{1,4}[ ]?[0-9]{3}[ ]?[0-9]{6,7}$")) {
             System.out.println("Numero di telefono non valido.");
             return false;
         }
         try {
             try {
                 MainService.getInstance().getUserDAO().getUser(email);
-                throw new RuntimeException("E-mail già in uso");
+                System.out.println("E-mail già in uso");
+                return false;
             } catch (RuntimeException _) {
                 return MainService.getInstance().getUserDAO().addUser(new User(email, password, name, surname, phone));
             }
