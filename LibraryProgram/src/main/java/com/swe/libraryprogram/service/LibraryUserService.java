@@ -33,7 +33,7 @@ public class LibraryUserService extends UserService {
         }
         try {
             Element element = MainService.getInstance().getElementDAO().getElement(elementId);
-            List<Element> elements = getBorrowedElements(MainService.getInstance().getUser());
+            List<Element> elements = this.getBorrowedElements(MainService.getInstance().getUser());
             if (elements.contains(element)) {
                 System.out.println("Elemento già preso in prestito.");
                 return false;

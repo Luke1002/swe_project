@@ -60,7 +60,7 @@ public class BorrowsDAO {
 
     }
 
-    public List<Element> getBorrowedElementsForUser(String user_id) throws SQLException {
+    public List<Element> getBorrowedElementsForUser(String userId) throws SQLException {
 
         List<Element> elements = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class BorrowsDAO {
 
         Connection connection = ConnectionManager.getInstance().getConnection();
         PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setString(1, user_id);
+        stmt.setString(1, userId);
 
         ResultSet rs = stmt.executeQuery();
 
