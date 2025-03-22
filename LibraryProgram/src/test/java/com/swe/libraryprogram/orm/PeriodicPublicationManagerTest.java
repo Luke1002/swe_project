@@ -1,7 +1,7 @@
 package com.swe.libraryprogram.orm;
 
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.PeriodicPublication;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class PeriodicPublicationManagerTest {
 
     @InjectMocks
-    private PeriodicPublicationManager periodicManager;
+    private PeriodicPublicationDAO periodicManager;
 
     private static Connection connection;
 
@@ -60,15 +60,15 @@ public class PeriodicPublicationManagerTest {
         Mockito.clearAllCaches();
 
         mockStatic(ConnectionManager.class);
-        mockStatic(MainController.class);
+        mockStatic(MainService.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
-        GenreManager mockGenreManager = mock(GenreManager.class);
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getGenreManager()).thenReturn(mockGenreManager);
-        when(mockGenreManager.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
+        GenreDAO mockGenreDAO = mock(GenreDAO.class);
+        MainService mockMainService = mock(MainService.class);
+        when(MainService.getInstance()).thenReturn(mockMainService);
+        when(mockMainService.getGenreManager()).thenReturn(mockGenreDAO);
+        when(mockGenreDAO.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
     }
 
     @AfterAll

@@ -1,4 +1,4 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

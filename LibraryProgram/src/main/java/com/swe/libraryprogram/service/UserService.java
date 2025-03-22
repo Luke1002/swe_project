@@ -1,20 +1,20 @@
-package com.swe.libraryprogram.services;
+package com.swe.libraryprogram.service;
 
 import com.swe.libraryprogram.domainmodel.User;
-import com.swe.libraryprogram.orm.UserManager;
+import com.swe.libraryprogram.orm.UserDAO;
 
 import java.sql.SQLException;
 
-public class UserController {
+public class UserService {
 
-    private final UserManager userManager = new UserManager();
+    private final UserDAO userDAO = new UserDAO();
 
     public User login (String email, String password){
         if (email == null || password == null || email.isEmpty() || password.isEmpty()){
             return null;
         }
         try {
-            return userManager.authenticate(email, password);
+            return userDAO.authenticate(email, password);
         }
         catch (SQLException e){
             return null;
@@ -26,12 +26,12 @@ public class UserController {
             return false;
         }
         try{
-                if (userManager.getUser(email) != null) {
+                if (userDAO.getUser(email) != null) {
                     return false;
                 }
             else{
 
-                return userManager.addUser(new User(email, password, name, surname, phone));
+                return userDAO.addUser(new User(email, password, name, surname, phone));
             }
         }
         catch(SQLException e){
@@ -40,6 +40,6 @@ public class UserController {
     }
 
     public void logout(){
-        MainController.getInstance().resetUserState();
+        MainService.getInstance().resetUserState();
     }
 }

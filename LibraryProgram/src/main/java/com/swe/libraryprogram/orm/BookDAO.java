@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.Book;
 
 
-public class BookManager extends ElementManager {
+public class BookDAO extends ElementDAO {
 
-    public BookManager() {
+    public BookDAO() {
     }
 
 
@@ -200,9 +200,9 @@ public class BookManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : books){
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
         return books;
@@ -286,9 +286,9 @@ public class BookManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : elements){
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
         return elements;

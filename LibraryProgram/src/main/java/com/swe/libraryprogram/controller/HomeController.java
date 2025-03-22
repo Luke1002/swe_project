@@ -1,7 +1,7 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -47,7 +47,7 @@ public class HomeController extends ElementCheckViewController {
             TableRow<Element> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    MainController.getInstance().setSelectedElementId(row.getItem().getId());
+                    MainService.getInstance().setSelectedElementId(row.getItem().getId());
                     mainViewController.loadBottomPane("descriptionElement");
                 }
             });
@@ -73,7 +73,7 @@ public class HomeController extends ElementCheckViewController {
 
         List<Element> elements;
         try {
-            elements = MainController.getInstance().getElementManager().getAllElements();
+            elements = MainService.getInstance().getElementManager().getAllElements();
         } catch (SQLException e) {
             showAlert("Errore", "Connessione al database non riuscita");
             elements = new ArrayList<>();

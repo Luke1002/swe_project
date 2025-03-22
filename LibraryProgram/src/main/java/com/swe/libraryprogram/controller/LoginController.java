@@ -1,7 +1,7 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -30,7 +30,7 @@ public class LoginController extends BaseViewController {
         String email = emailField.getText();
         String password = passwordField.getText();
 
-        MainController mC = MainController.getInstance();
+        MainService mC = MainService.getInstance();
         try {
             if (mC.setUserState(email, password)) {
                 mainViewController.loadTopPane("menubar");

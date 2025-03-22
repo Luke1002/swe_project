@@ -1,6 +1,6 @@
 package com.swe.libraryprogram.orm;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.Book;
 import com.swe.libraryprogram.domainmodel.Element;
 import org.junit.jupiter.api.*;
@@ -16,10 +16,10 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class BookManagerTest {
+public class BookDAOTest {
 
     @InjectMocks
-    private BookManager bookManager;
+    private BookDAO bookDAO;
 
 
     private static Connection connection;
@@ -55,15 +55,15 @@ public class BookManagerTest {
 
         // Mockare staticamente il metodo ConnectionManager.getInstance()
         mockStatic(ConnectionManager.class);
-        mockStatic(MainController.class);
+        mockStatic(MainService.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
-        GenreManager mockGenreManager = mock(GenreManager.class);
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getGenreManager()).thenReturn(mockGenreManager);
-        when(mockGenreManager.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
+        GenreDAO mockGenreDAO = mock(GenreDAO.class);
+        MainService mockMainService = mock(MainService.class);
+        when(MainService.getInstance()).thenReturn(mockMainService);
+        when(mockMainService.getGenreManager()).thenReturn(mockGenreDAO);
+        when(mockGenreDAO.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
 
     }
 
@@ -80,7 +80,7 @@ public class BookManagerTest {
         Book book = new Book("titleTest",2000,"descriptionTest",1,1,1,new ArrayList<>(),"isbnTest","authorTest",
                 "publisherTest",1);
 
-        Integer id = bookManager.addBook(book);
+        Integer id = bookDAO.addBook(book);
 
         assertNotNull(id);
 
@@ -89,7 +89,7 @@ public class BookManagerTest {
     @Test
     void updateBookTest() throws SQLException {
 
-        assertTrue(bookManager.updateBook(new Book(generatedId,"newTitleTest",
+        assertTrue(bookDAO.updateBook(new Book(generatedId,"newTitleTest",
                 3000,"descriptionTest",1,1,
                 1,new ArrayList<>(),"isbnTest","authorTest",
                 "newPublisherTest",1)));
@@ -99,7 +99,7 @@ public class BookManagerTest {
     @Test
     void getBookByIsbnTest() throws SQLException {
 
-        Element book1 = bookManager.getBookByIsbn("isbnTest");
+        Element book1 = bookDAO.getBookByIsbn("isbnTest");
 
         assertEquals("isbnTest", ((Book) book1).getIsbn());
 

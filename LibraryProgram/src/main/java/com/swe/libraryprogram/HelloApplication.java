@@ -1,8 +1,8 @@
 package com.swe.libraryprogram;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.orm.ConnectionManager;
-import com.swe.libraryprogram.view.MainViewController;
+import com.swe.libraryprogram.controller.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,7 +15,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         try{
-            MainController mainController = MainController.getInstance();
+            MainService mainService = MainService.getInstance();
             MainViewController mainViewController;
             stage.setMinWidth(800);
             stage.setMinHeight(600);

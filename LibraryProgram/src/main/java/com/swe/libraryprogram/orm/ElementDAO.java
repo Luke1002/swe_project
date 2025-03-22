@@ -1,6 +1,6 @@
 package com.swe.libraryprogram.orm;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 
@@ -14,9 +14,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class ElementManager {
+public class ElementDAO {
 
-    public ElementManager() {
+    public ElementDAO() {
     }
 
     public Boolean removeElement(Integer id) throws SQLException {
@@ -161,9 +161,9 @@ public class ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : elements) {
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
 
@@ -243,9 +243,9 @@ public class ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : elements) {
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
 
@@ -390,9 +390,9 @@ public class ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : elements) {
-            List<Genre> genresList = genreManager.getGenresForElement(element.getId());
+            List<Genre> genresList = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genresList);
         }
 
@@ -406,13 +406,13 @@ public class ElementManager {
 
     public Element getCompleteElementById(Integer id) {
         try {
-            Integer type = MainController.getInstance().getElementManager().getElementTypeById(id);
+            Integer type = MainService.getInstance().getElementManager().getElementTypeById(id);
             if (type == 1) {
-                return MainController.getInstance().getBookManager().getBook(id);
+                return MainService.getInstance().getBookManager().getBook(id);
             } else if (type == 2) {
-                return MainController.getInstance().getDigitalMediaManager().getDigitalMedia(id);
+                return MainService.getInstance().getDigitalMediaManager().getDigitalMedia(id);
             } else if (type == 3) {
-                return MainController.getInstance().getPeriodicPublicationManager().getPeriodicPublication(id);
+                return MainService.getInstance().getPeriodicPublicationManager().getPeriodicPublication(id);
             } else {
                 return null;
             }

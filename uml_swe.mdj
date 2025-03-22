@@ -2480,7 +2480,7 @@
 											"top": 155,
 											"width": 351,
 											"height": 13,
-											"text": "-elementManager: ElementManager",
+											"text": "-elementDAO: ElementManager",
 											"horizontalAlignment": 0
 										}
 									],
@@ -15221,7 +15221,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGS9/wx4BPv0tY="
 							},
-							"name": "elementManager",
+							"name": "elementDAO",
 							"visibility": "private",
 							"type": {
 								"$ref": "AAAAAAGTDIOHVjkpCVc="

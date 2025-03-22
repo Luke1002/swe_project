@@ -1,7 +1,7 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
-import com.swe.libraryprogram.services.LibraryAdminController;
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.LibraryAdminService;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.*;
 
 import javafx.fxml.FXML;
@@ -97,12 +97,12 @@ public class AddItemController extends ElementCheckViewController {
         choiceBox.setOnAction(event -> showFields());
         monthBox.getItems().setAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         monthBox.setOnAction(event -> showDays());
-        currElementId = MainController.getInstance().getSelectedElementId();
+        currElementId = MainService.getInstance().getSelectedElementId();
         if (currElementId == null) {
             choiceBox.setValue(choiceBox.getItems().getFirst());
             yearField.setText(String.valueOf(LocalDate.now().getYear()));
         } else {
-            currElement = MainController.getInstance().getElementManager().getCompleteElementById(currElementId);
+            currElement = MainService.getInstance().getElementManager().getCompleteElementById(currElementId);
             titleField.setText(currElement.getTitle());
             descriptionArea.setText(currElement.getDescription());
             yearField.setText(currElement.getReleaseYear() == null ? "" : currElement.getReleaseYear().toString());
@@ -241,7 +241,7 @@ public class AddItemController extends ElementCheckViewController {
                             dayBox.getValue());
                 }
             } else {
-                quantityAvailable = quantityField.getText().isEmpty() ? (quantity - (currElement.getQuantity() - MainController.getInstance().getElementManager().getCompleteElementById(currElementId).getQuantityAvailable())) : Integer.valueOf(quantityField.getText());
+                quantityAvailable = quantityField.getText().isEmpty() ? (quantity - (currElement.getQuantity() - MainService.getInstance().getElementManager().getCompleteElementById(currElementId).getQuantityAvailable())) : Integer.valueOf(quantityField.getText());
                 currElement.setTitle(titleField.getText());
                 currElement.setGenres(genreList);
                 currElement.setDescription(descriptionArea.getText());
@@ -266,8 +266,8 @@ public class AddItemController extends ElementCheckViewController {
                 }
             }
 
-            if (MainController.getInstance().getUserController() instanceof LibraryAdminController && currElement == null) {
-                if (((LibraryAdminController) MainController.getInstance().getUserController()).addElement(element)) {
+            if (MainService.getInstance().getUserController() instanceof LibraryAdminService && currElement == null) {
+                if (((LibraryAdminService) MainService.getInstance().getUserController()).addElement(element)) {
 
                     showAlert("Aggiunta elemento", "Elemento aggiunto con successo");
                     goBack();
@@ -277,8 +277,8 @@ public class AddItemController extends ElementCheckViewController {
                     showAlert("Aggiunta elemento", "Errore: elemento non aggiunto");
 
                 }
-            } else if (MainController.getInstance().getUserController() instanceof LibraryAdminController && currElement != null) {
-                if (((LibraryAdminController) MainController.getInstance().getUserController()).updateElement(currElement)) {
+            } else if (MainService.getInstance().getUserController() instanceof LibraryAdminService && currElement != null) {
+                if (((LibraryAdminService) MainService.getInstance().getUserController()).updateElement(currElement)) {
 
                     showAlert("Modifica elemento", "Elemento modificato con successo");
                     goBack();
@@ -308,7 +308,7 @@ public class AddItemController extends ElementCheckViewController {
                 return false;
             } else {
                 try {
-                    if ((MainController.getInstance().getBookManager().getBookByIsbn(isbnField.getText())) != null) {
+                    if ((MainService.getInstance().getBookManager().getBookByIsbn(isbnField.getText())) != null) {
                         showAlert("Errore", "Elemento con stesso ISBN già presente.");
                         return false;
                     }
@@ -344,7 +344,7 @@ public class AddItemController extends ElementCheckViewController {
         List<Genre> allGenres;
 
         try {
-            allGenres = MainController.getInstance().getGenreManager().getAllGenres();
+            allGenres = MainService.getInstance().getGenreManager().getAllGenres();
         } catch (SQLException e) {
             showAlert("Database Connection Error", "Non è possibile collegarsi al database");
             return null;

@@ -1,6 +1,6 @@
 package com.swe.libraryprogram.orm;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.Book;
 import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import com.swe.libraryprogram.domainmodel.Element;
@@ -25,10 +25,10 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ElementManagerTest {
+public class ElementDAOTest {
 
     @InjectMocks
-    private ElementManager elementManager;
+    private ElementDAO elementDAO;
 
     private static Connection connection;
 
@@ -56,16 +56,16 @@ public class ElementManagerTest {
         Mockito.clearAllCaches();
 
         mockStatic(ConnectionManager.class);
-        mockStatic(MainController.class);
+        mockStatic(MainService.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
-        ElementManager mockElementManager = mock(ElementManager.class);
+        ElementDAO mockElementDAO = mock(ElementDAO.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
-        GenreManager mockGenreManager = mock(GenreManager.class);
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getGenreManager()).thenReturn(mockGenreManager);
-        when(mockGenreManager.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
+        GenreDAO mockGenreDAO = mock(GenreDAO.class);
+        MainService mockMainService = mock(MainService.class);
+        when(MainService.getInstance()).thenReturn(mockMainService);
+        when(mockMainService.getGenreManager()).thenReturn(mockGenreDAO);
+        when(mockGenreDAO.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
         when(mockConnectionManager.isConnectionValid()).thenReturn(true);
 
 
@@ -93,7 +93,7 @@ public class ElementManagerTest {
             }
         }
 
-        assertTrue(elementManager.removeElement(generatedId));
+        assertTrue(elementDAO.removeElement(generatedId));
 
     }
 
@@ -114,7 +114,7 @@ public class ElementManagerTest {
             }
         }
 
-        Element element = elementManager.getElement(generatedId);
+        Element element = elementDAO.getElement(generatedId);
 
         assertEquals(generatedId, element.getId());
 
@@ -126,60 +126,60 @@ public class ElementManagerTest {
         int testElementId = 123; // Example ID
 
         // Mock ElementManager
-        ElementManager mockElementManager = mock(ElementManager.class);
+        ElementDAO mockElementDAO = mock(ElementDAO.class);
 
         // Mock Book
         int bookType = 1;
         Book mockBook = mock(Book.class);
         when(mockBook.getId()).thenReturn(testElementId);
-        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(bookType);
+        when(mockElementDAO.getElementTypeById(testElementId)).thenReturn(bookType);
 
-        BookManager mockBookManager = mock(BookManager.class);
-        when(mockBookManager.getBook(testElementId)).thenReturn(mockBook);
+        BookDAO mockBookDAO = mock(BookDAO.class);
+        when(mockBookDAO.getBook(testElementId)).thenReturn(mockBook);
 
         // Mock DigitalMedia
         int digitalMediaType = 2;
         DigitalMedia mockDigitalMedia = mock(DigitalMedia.class);
         when(mockDigitalMedia.getId()).thenReturn(testElementId);
-        DigitalMediaManager mockDigitalMediaManager = mock(DigitalMediaManager.class);
-        when(mockDigitalMediaManager.getDigitalMedia(testElementId)).thenReturn(mockDigitalMedia);
+        DigitalMediaDAO mockDigitalMediaDAO = mock(DigitalMediaDAO.class);
+        when(mockDigitalMediaDAO.getDigitalMedia(testElementId)).thenReturn(mockDigitalMedia);
 
         // Mock PeriodicPublication
         int periodicPublicationType = 3;
         PeriodicPublication mockPeriodicPublication = mock(PeriodicPublication.class);
         when(mockPeriodicPublication.getId()).thenReturn(testElementId);
-        PeriodicPublicationManager mockPeriodicPublicationManager = mock(PeriodicPublicationManager.class);
+        PeriodicPublicationDAO mockPeriodicPublicationManager = mock(PeriodicPublicationDAO.class);
         when(mockPeriodicPublicationManager.getPeriodicPublication(testElementId)).thenReturn(mockPeriodicPublication);
 
         // Mock MainController
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getElementManager()).thenReturn(mockElementManager);
-        when(mockMainController.getBookManager()).thenReturn(mockBookManager);
-        when(mockMainController.getDigitalMediaManager()).thenReturn(mockDigitalMediaManager);
-        when(mockMainController.getPeriodicPublicationManager()).thenReturn(mockPeriodicPublicationManager);
+        MainService mockMainService = mock(MainService.class);
+        when(MainService.getInstance()).thenReturn(mockMainService);
+        when(mockMainService.getElementManager()).thenReturn(mockElementDAO);
+        when(mockMainService.getBookManager()).thenReturn(mockBookDAO);
+        when(mockMainService.getDigitalMediaManager()).thenReturn(mockDigitalMediaDAO);
+        when(mockMainService.getPeriodicPublicationManager()).thenReturn(mockPeriodicPublicationManager);
 
         //Book
-        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(bookType);
-        Element bookResult = elementManager.getCompleteElementById(testElementId);
+        when(mockElementDAO.getElementTypeById(testElementId)).thenReturn(bookType);
+        Element bookResult = elementDAO.getCompleteElementById(testElementId);
         assertNotNull(bookResult);
         assertEquals(testElementId, bookResult.getId());
 
         //DigitalMedia
-        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(digitalMediaType);
-        Element digitalMediaResult = elementManager.getCompleteElementById(testElementId);
+        when(mockElementDAO.getElementTypeById(testElementId)).thenReturn(digitalMediaType);
+        Element digitalMediaResult = elementDAO.getCompleteElementById(testElementId);
         assertNotNull(digitalMediaResult);
         assertEquals(testElementId, digitalMediaResult.getId());
 
         //PeriodicPublication
-        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(periodicPublicationType);
-        Element periodicPublicationResult = elementManager.getCompleteElementById(testElementId);
+        when(mockElementDAO.getElementTypeById(testElementId)).thenReturn(periodicPublicationType);
+        Element periodicPublicationResult = elementDAO.getCompleteElementById(testElementId);
         assertNotNull(periodicPublicationResult);
         assertEquals(testElementId, periodicPublicationResult.getId());
 
         //Invalid type
-        when(mockElementManager.getElementTypeById(testElementId)).thenReturn(99); // Invalid type
-        Element nullResult = elementManager.getCompleteElementById(testElementId);
+        when(mockElementDAO.getElementTypeById(testElementId)).thenReturn(99); // Invalid type
+        Element nullResult = elementDAO.getCompleteElementById(testElementId);
         assertNull(nullResult);
 
     }

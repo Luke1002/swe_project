@@ -19,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GenreManagerTest {
+public class GenreDAOTest {
 
     @InjectMocks
-    private GenreManager genreManager;
+    private GenreDAO genreDAO;
 
     private static Connection connection;
 
@@ -89,7 +89,7 @@ public class GenreManagerTest {
     @Test
     public void associateGenreWithElementTest() throws SQLException {
 
-        Boolean result = genreManager.associateGenreWithElement(generatedElementId, generatedGenreCode);
+        Boolean result = genreDAO.associateGenreWithElement(generatedElementId, generatedGenreCode);
 
         assertTrue(result);
 
@@ -98,7 +98,7 @@ public class GenreManagerTest {
     @Test
     public void addGenreTest() throws SQLException {
 
-        Boolean result = genreManager.addGenre(new Genre("Insert Test"));
+        Boolean result = genreDAO.addGenre(new Genre("Insert Test"));
 
         assertTrue(result);
 
@@ -107,7 +107,7 @@ public class GenreManagerTest {
     @Test
     public void getAllGenresTest() throws SQLException {
 
-        List<Genre> result = genreManager.getAllGenres();
+        List<Genre> result = genreDAO.getAllGenres();
 
         assertNotNull(result);
 
@@ -122,7 +122,7 @@ public class GenreManagerTest {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate(insertAssociationQuery);
 
-        List<Genre> result = genreManager.getGenresForElement(generatedElementId);
+        List<Genre> result = genreDAO.getGenresForElement(generatedElementId);
 
         assertNotNull(result);
 
@@ -137,7 +137,7 @@ public class GenreManagerTest {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate(insertAssociationQuery);
 
-        assertTrue(genreManager.removeGenreFromElement(generatedElementId,generatedGenreCode));
+        assertTrue(genreDAO.removeGenreFromElement(generatedElementId,generatedGenreCode));
 
     }
 

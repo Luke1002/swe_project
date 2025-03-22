@@ -10,10 +10,10 @@ import java.util.List;
 import java.sql.ResultSet;
 
 
-public class BorrowsManager {
+public class BorrowsDAO {
 
 
-    public BorrowsManager() {
+    public BorrowsDAO() {
     }
 
 
@@ -73,13 +73,13 @@ public class BorrowsManager {
 
         ResultSet rs = stmt.executeQuery();
 
-        ElementManager elementManager = new ElementManager();
+        ElementDAO elementDAO = new ElementDAO();
 
         while (rs.next()) {
 
             int elementId = rs.getInt("elementid");
 
-            Element element = elementManager.getElement(elementId);
+            Element element = elementDAO.getElement(elementId);
 
             if (element != null) {
                 elements.add(element);

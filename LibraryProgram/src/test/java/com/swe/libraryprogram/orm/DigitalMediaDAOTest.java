@@ -1,6 +1,6 @@
 package com.swe.libraryprogram.orm;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 
 import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import org.junit.jupiter.api.*;
@@ -16,10 +16,10 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class DigitalMediaManagerTest {
+public class DigitalMediaDAOTest {
 
     @InjectMocks
-    private DigitalMediaManager digitalMediaManager;
+    private DigitalMediaDAO digitalMediaDAO;
 
     private static Connection connection;
 
@@ -54,15 +54,15 @@ public class DigitalMediaManagerTest {
         Mockito.clearAllCaches();
 
         mockStatic(ConnectionManager.class);
-        mockStatic(MainController.class);
+        mockStatic(MainService.class);
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
-        GenreManager mockGenreManager = mock(GenreManager.class);
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
-        when(mockMainController.getGenreManager()).thenReturn(mockGenreManager);
-        when(mockGenreManager.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
+        GenreDAO mockGenreDAO = mock(GenreDAO.class);
+        MainService mockMainService = mock(MainService.class);
+        when(MainService.getInstance()).thenReturn(mockMainService);
+        when(mockMainService.getGenreManager()).thenReturn(mockGenreDAO);
+        when(mockGenreDAO.getGenresForElement(anyInt())).thenReturn(new ArrayList<>());
 
     }
 
@@ -79,7 +79,7 @@ public class DigitalMediaManagerTest {
                 5,5,300,new ArrayList<>(), "insertedProducerTest",
                 "insertedAgeRatingTest", "insertedDirectorTest");
 
-        Integer id = digitalMediaManager.addDigitalMedia(media);
+        Integer id = digitalMediaDAO.addDigitalMedia(media);
 
         assertNotNull(id);
 
@@ -88,7 +88,7 @@ public class DigitalMediaManagerTest {
     @Test
     void updateDigitalMediaTest() throws SQLException {
 
-        assertTrue(digitalMediaManager.updateDigitalMedia(new DigitalMedia(generatedId,
+        assertTrue(digitalMediaDAO.updateDigitalMedia(new DigitalMedia(generatedId,
                 "updatedMediaTest",2000,"updatedDescriptionTest",1,1,1,new ArrayList<>(),
                 "updatedProducerTest","updatedAgeRatingTest","updatedDirectorTest")));
 
@@ -97,7 +97,7 @@ public class DigitalMediaManagerTest {
     @Test
     void getDigitalMediaTest() throws SQLException {
 
-        assertNotNull(digitalMediaManager.getDigitalMedia(generatedId));
+        assertNotNull(digitalMediaDAO.getDigitalMedia(generatedId));
 
     }
 

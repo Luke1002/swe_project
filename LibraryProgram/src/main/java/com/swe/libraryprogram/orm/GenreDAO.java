@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GenreManager {
+public class GenreDAO {
 
-    public GenreManager() {
+    public GenreDAO() {
     }
 
 

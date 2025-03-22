@@ -1,7 +1,7 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
-import com.swe.libraryprogram.services.LibraryAdminController;
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.LibraryAdminService;
+import com.swe.libraryprogram.service.MainService;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -29,7 +29,7 @@ public class MenuBarViewController extends BaseViewController{
         homeMenuItem.setOnAction(event -> goToHome());
         addItemMenuItem.setOnAction(event -> goToAddItem());
         addGenresMenuItem.setOnAction(event -> {
-            if(MainController.getInstance().getUser().isAdmin()){
+            if(MainService.getInstance().getUser().isAdmin()){
 
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.WINDOW_MODAL);
@@ -53,7 +53,7 @@ public class MenuBarViewController extends BaseViewController{
                                 .collect(Collectors.toCollection(ArrayList::new));
                     }
                     for(String newGenreName : genresToAddList) {
-                        if(!((LibraryAdminController)MainController.getInstance().getUserController()).addGenre(newGenreName)){
+                        if(!((LibraryAdminService) MainService.getInstance().getUserController()).addGenre(newGenreName)){
                             showAlert("Errore", "Impossibile inserire il genere "+ newGenreName+ ". Forse è già presente?");
                         }
                     }
@@ -76,8 +76,8 @@ public class MenuBarViewController extends BaseViewController{
         borrowedItemsMenuItem.setOnAction(event -> goToBorrowedItems());
         logoutMenuItem.setOnAction(event -> handleLogoutMenuItem());
         aboutMenuItem.setOnAction(event -> showAlert("Informazioni","Library Manager version 1.0"));
-        if (MainController.getInstance().getUser() != null){
-            if(!MainController.getInstance().getUser().isAdmin()){
+        if (MainService.getInstance().getUser() != null){
+            if(!MainService.getInstance().getUser().isAdmin()){
                 addItemMenuItem.setVisible(false);
                 borrowedItemsMenuItem.setVisible(true);
                 addGenresMenuItem.setVisible(false);
@@ -92,13 +92,13 @@ public class MenuBarViewController extends BaseViewController{
     }
 
     private void handleLogoutMenuItem() {
-        MainController.getInstance().getUserController().logout();
+        MainService.getInstance().getUserController().logout();
         mainViewController.loadTopPane();
         mainViewController.loadBottomPane("login");
     }
 
     private void goToAddItem() {
-        MainController.getInstance().setSelectedElementId(null);
+        MainService.getInstance().setSelectedElementId(null);
         mainViewController.loadBottomPane("addItem");
     }
 

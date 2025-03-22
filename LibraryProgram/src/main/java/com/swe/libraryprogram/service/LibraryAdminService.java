@@ -1,4 +1,4 @@
-package com.swe.libraryprogram.services;
+package com.swe.libraryprogram.service;
 
 
 import com.swe.libraryprogram.domainmodel.*;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class LibraryAdminController extends UserController {
+public class LibraryAdminService extends UserService {
 
 
 
@@ -20,17 +20,17 @@ public class LibraryAdminController extends UserController {
                     Book book = (Book) element;
 
 
-                    elementId = MainController.getInstance().getBookManager().addBook((Book) element);
+                    elementId = MainService.getInstance().getBookManager().addBook((Book) element);
                 } else if (element instanceof DigitalMedia) {
-                    elementId = MainController.getInstance().getDigitalMediaManager().addDigitalMedia((DigitalMedia) element);
+                    elementId = MainService.getInstance().getDigitalMediaManager().addDigitalMedia((DigitalMedia) element);
                 } else if (element instanceof PeriodicPublication) {
-                    elementId = MainController.getInstance().getPeriodicPublicationManager().addPeriodicPublication((PeriodicPublication) element);
+                    elementId = MainService.getInstance().getPeriodicPublicationManager().addPeriodicPublication((PeriodicPublication) element);
                 }
                 if (elementId == null) {
                     return false;
                 }
                 for (Genre genre : element.getGenres()) {
-                    if(!MainController.getInstance().getGenreManager().associateGenreWithElement(elementId, genre.getCode())){
+                    if(!MainService.getInstance().getGenreManager().associateGenreWithElement(elementId, genre.getCode())){
                         System.err.println("Impossibile aggiungere " + genre.getName() +" alla lista dei generi associati");
                     }
                 }
@@ -45,7 +45,7 @@ public class LibraryAdminController extends UserController {
 
     public Boolean removeElement(Element element) {
         try {
-            MainController.getInstance().getElementManager().removeElement(element.getId());
+            MainService.getInstance().getElementManager().removeElement(element.getId());
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,27 +56,27 @@ public class LibraryAdminController extends UserController {
     public Boolean updateElement(Element element) {
         try {
             if (element instanceof Book) {
-                MainController.getInstance().getBookManager().updateBook((Book) element);
+                MainService.getInstance().getBookManager().updateBook((Book) element);
             } else if (element instanceof DigitalMedia) {
-                MainController.getInstance().getDigitalMediaManager().updateDigitalMedia((DigitalMedia) element);
+                MainService.getInstance().getDigitalMediaManager().updateDigitalMedia((DigitalMedia) element);
             } else if (element instanceof PeriodicPublication) {
-                MainController.getInstance().getPeriodicPublicationManager().updatePeriodicPublication((PeriodicPublication) element);
+                MainService.getInstance().getPeriodicPublicationManager().updatePeriodicPublication((PeriodicPublication) element);
             } else {
                 return false;
             }
             List<Genre> genresToAdd = element.getGenres();
-            genresToAdd.removeAll(MainController.getInstance().getGenreManager().getGenresForElement(element.getId()));
-            List<Genre> genresToRemove = MainController.getInstance().getGenreManager().getGenresForElement(element.getId());
+            genresToAdd.removeAll(MainService.getInstance().getGenreManager().getGenresForElement(element.getId()));
+            List<Genre> genresToRemove = MainService.getInstance().getGenreManager().getGenresForElement(element.getId());
             genresToRemove.removeAll(element.getGenres());
             for (Genre genre : genresToRemove) {
                 try {
-                    MainController.getInstance().getGenreManager().removeGenreFromElement(element.getId(), genre.getCode());
+                    MainService.getInstance().getGenreManager().removeGenreFromElement(element.getId(), genre.getCode());
                 } catch (SQLException e) {
                     System.err.println("Impossibile rimuovere " + genre.getName() +" dalla lista dei generi associati");
                 }
             }
             for (Genre genre : genresToAdd) {
-                    if(!MainController.getInstance().getGenreManager().associateGenreWithElement(element.getId(), genre.getCode())){
+                    if(!MainService.getInstance().getGenreManager().associateGenreWithElement(element.getId(), genre.getCode())){
                         System.err.println("Impossibile aggiungere " + genre.getName() +" alla lista dei generi associati");
                     }
             }
@@ -94,7 +94,7 @@ public class LibraryAdminController extends UserController {
         }
         Genre newGenre = new Genre(genreName);
         try {
-            return MainController.getInstance().getGenreManager().addGenre(newGenre);
+            return MainService.getInstance().getGenreManager().addGenre(newGenre);
         } catch (SQLException e) {
             return false;
         }

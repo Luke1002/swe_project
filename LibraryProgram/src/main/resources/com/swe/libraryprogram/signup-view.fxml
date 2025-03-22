@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.SignupController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.controller.SignupController">
    <children>
       <VBox layoutX="27.0" layoutY="27.0" prefHeight="346.0" prefWidth="546.0" style="-fx-border-color: #000000;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>

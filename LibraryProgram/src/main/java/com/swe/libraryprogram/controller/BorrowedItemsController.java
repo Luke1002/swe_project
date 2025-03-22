@@ -1,6 +1,6 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.Element;
 
 import javafx.collections.FXCollections;
@@ -38,7 +38,7 @@ public class BorrowedItemsController extends BaseViewController {
             TableRow<Element> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    MainController.getInstance().setSelectedElementId(row.getItem().getId());
+                    MainService.getInstance().setSelectedElementId(row.getItem().getId());
                     mainViewController.loadBottomPane("descriptionElement");
                 }
             });
@@ -51,7 +51,7 @@ public class BorrowedItemsController extends BaseViewController {
     private void loadBorrowedElementsData() {
         List<Element> borrowedElementsList;
         try {
-            borrowedElementsList = MainController.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainController.getInstance().getUser().getEmail());
+            borrowedElementsList = MainService.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainService.getInstance().getUser().getEmail());
         } catch (SQLException e) {
             showAlert("Errore", "Connessione al database non riuscita");
             borrowedElementsList = new ArrayList<>();

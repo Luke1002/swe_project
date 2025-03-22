@@ -1,22 +1,22 @@
-package com.swe.libraryprogram.services;
+package com.swe.libraryprogram.service;
 
 import com.swe.libraryprogram.domainmodel.Element;
 
 import java.sql.SQLException;
 
 
-public class LibraryUserController extends UserController {
+public class LibraryUserService extends UserService {
 
-    public LibraryUserController() {
+    public LibraryUserService() {
     }
 
     public Boolean borrowElement(Integer element_id) {
         try {
-            Element element = MainController.getInstance().getElementManager().getElement(element_id);
+            Element element = MainService.getInstance().getElementManager().getElement(element_id);
             if (element != null && element.getQuantityAvailable() > 0) {
                 element.setQuantityAvailable(element.getQuantityAvailable() - 1);
-                MainController.getInstance().getElementManager().updateElement(element);
-                MainController.getInstance().getBorrowsManager().addBorrow(element_id, MainController.getInstance().getUser().getEmail());
+                MainService.getInstance().getElementManager().updateElement(element);
+                MainService.getInstance().getBorrowsManager().addBorrow(element_id, MainService.getInstance().getUser().getEmail());
                 return true;
             }
             return false;
@@ -28,11 +28,11 @@ public class LibraryUserController extends UserController {
 
     public Boolean returnElement(Integer element_id) {
         try {
-            Element element = MainController.getInstance().getElementManager().getElement(element_id);
+            Element element = MainService.getInstance().getElementManager().getElement(element_id);
             if (element != null && element.getQuantityAvailable() < element.getQuantity()) {
                 element.setQuantityAvailable(element.getQuantityAvailable() + 1);
-                MainController.getInstance().getElementManager().updateElement(element);
-                MainController.getInstance().getBorrowsManager().removeBorrow(element_id, MainController.getInstance().getUser().getEmail());
+                MainService.getInstance().getElementManager().updateElement(element);
+                MainService.getInstance().getBorrowsManager().removeBorrow(element_id, MainService.getInstance().getUser().getEmail());
                 return true;
             }
             return false;

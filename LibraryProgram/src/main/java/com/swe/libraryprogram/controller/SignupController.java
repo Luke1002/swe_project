@@ -1,6 +1,6 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -110,10 +110,10 @@ public class SignupController extends BaseViewController {
             String surname = surnameField.getText();
             String phone = phoneField.getText();
 
-            if(MainController.getInstance().getUserController().signup(email, password, name, surname, phone)){
+            if(MainService.getInstance().getUserController().signup(email, password, name, surname, phone)){
                 showAlert("Success", "Registrazione completata con successo");
                 try {
-                    if(MainController.getInstance().setUserState(email, password)){
+                    if(MainService.getInstance().setUserState(email, password)){
                         mainViewController.loadTopPane("menubar");
                         mainViewController.loadBottomPane("home");
                     }

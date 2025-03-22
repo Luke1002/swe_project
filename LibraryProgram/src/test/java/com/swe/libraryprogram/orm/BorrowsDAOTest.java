@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BorrowsManagerTest {
+public class BorrowsDAOTest {
 
     @InjectMocks
-    private BorrowsManager borrowsManager;
+    private BorrowsDAO borrowsDAO;
 
     private static Connection connection;
 
@@ -69,7 +69,7 @@ public class BorrowsManagerTest {
 
     @Test
     void addBorrowTest() throws SQLException {
-        assertTrue(borrowsManager.addBorrow(generatedId,"testUser"));
+        assertTrue(borrowsDAO.addBorrow(generatedId,"testUser"));
         connection.rollback();
     }
 
@@ -85,12 +85,12 @@ public class BorrowsManagerTest {
 
         }
 
-        assertTrue(borrowsManager.removeBorrow(generatedId,"testUser"));
+        assertTrue(borrowsDAO.removeBorrow(generatedId,"testUser"));
     }
 
     @Test
     void getBorrowsedElementsForUserTest() throws SQLException {
-        assertNotNull(borrowsManager.getBorrowedElementsForUser("testUser"));
+        assertNotNull(borrowsDAO.getBorrowedElementsForUser("testUser"));
     }
 
 

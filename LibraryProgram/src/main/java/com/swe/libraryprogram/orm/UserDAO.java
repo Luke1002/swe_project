@@ -10,9 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class UserManager {
+public class UserDAO {
 
-    public UserManager() {
+    public UserDAO() {
     }
 
 

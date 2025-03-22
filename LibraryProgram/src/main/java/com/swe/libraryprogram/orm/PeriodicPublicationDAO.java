@@ -1,6 +1,6 @@
 package com.swe.libraryprogram.orm;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.PeriodicPublication;
 import com.swe.libraryprogram.domainmodel.Element;
@@ -11,9 +11,9 @@ import java.sql.*;
 import java.util.Map;
 
 
-public class PeriodicPublicationManager extends ElementManager {
+public class PeriodicPublicationDAO extends ElementDAO {
 
-    public PeriodicPublicationManager() {
+    public PeriodicPublicationDAO() {
     }
 
 
@@ -174,9 +174,9 @@ public class PeriodicPublicationManager extends ElementManager {
 
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : periodics) {
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
         return periodics;
@@ -263,9 +263,9 @@ public class PeriodicPublicationManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : elements) {
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
         return elements;

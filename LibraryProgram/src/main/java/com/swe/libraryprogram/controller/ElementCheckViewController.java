@@ -1,4 +1,4 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
 import javafx.scene.control.TextFormatter;
 import java.util.function.UnaryOperator;

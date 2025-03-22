@@ -1,7 +1,7 @@
 package com.swe.libraryprogram.orm;
 
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,10 +19,10 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserManagerTest {
+public class UserDAOTest {
 
     @InjectMocks
-    private UserManager userManager;
+    private UserDAO userDAO;
 
     private static Connection connection;
 
@@ -49,14 +49,14 @@ public class UserManagerTest {
         Mockito.clearAllCaches();
 
         mockStatic(ConnectionManager.class);
-        mockStatic(MainController.class);
+        mockStatic(MainService.class);
 
         ConnectionManager mockConnectionManager = mock(ConnectionManager.class);
         when(ConnectionManager.getInstance()).thenReturn(mockConnectionManager);
         when(mockConnectionManager.getConnection()).thenReturn(connection);
 
-        MainController mockMainController = mock(MainController.class);
-        when(MainController.getInstance()).thenReturn(mockMainController);
+        MainService mockMainService = mock(MainService.class);
+        when(MainService.getInstance()).thenReturn(mockMainService);
 
     }
 
@@ -69,7 +69,7 @@ public class UserManagerTest {
 
     @Test
     void addUserTest() throws SQLException {
-        assertTrue(userManager.addUser(new User("testInsertedUser", "testInsertedPassword",
+        assertTrue(userDAO.addUser(new User("testInsertedUser", "testInsertedPassword",
                 "testInsertedName", "testInsertedSurname", "testInsertedPhone", false)));
     }
 

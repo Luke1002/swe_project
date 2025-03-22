@@ -1,6 +1,6 @@
-package com.swe.libraryprogram.view;
+package com.swe.libraryprogram.controller;
 
-import com.swe.libraryprogram.services.*;
+import com.swe.libraryprogram.service.*;
 import com.swe.libraryprogram.domainmodel.*;
 
 import javafx.fxml.FXML;
@@ -47,8 +47,8 @@ public class DescriptionElementController extends BaseViewController {
     @FXML
     protected void initialize() {
         super.initialize();
-        Integer elementId = MainController.getInstance().getSelectedElementId();
-        element = MainController.getInstance().getElementManager().getCompleteElementById(elementId);
+        Integer elementId = MainService.getInstance().getSelectedElementId();
+        element = MainService.getInstance().getElementManager().getCompleteElementById(elementId);
         titleLabel.setText("Titolo: " + element.getTitle());
         String yearStringvalue = element.getReleaseYear() == null ? "" : element.getReleaseYear().toString();
         yearLabel.setText("Anno: " + yearStringvalue);
@@ -125,7 +125,7 @@ public class DescriptionElementController extends BaseViewController {
     }
 
     private void updateButtonView() {
-        if(MainController.getInstance().getUser().isAdmin()){
+        if(MainService.getInstance().getUser().isAdmin()){
             borrowButton.setVisible(false);
             returnButton.setVisible(false);
             editButton.setVisible(true);
@@ -138,7 +138,7 @@ public class DescriptionElementController extends BaseViewController {
             returnButton.setDisable(true);
             List<Element> elements = new ArrayList<>();
             try{
-                elements = MainController.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainController.getInstance().getUser().getEmail());
+                elements = MainService.getInstance().getBorrowsManager().getBorrowedElementsForUser(MainService.getInstance().getUser().getEmail());
             }
             catch(SQLException e){}
             for (Element e : elements) {
@@ -154,7 +154,7 @@ public class DescriptionElementController extends BaseViewController {
     }
 
     private void handleReturnAction() {
-        if (((LibraryUserController) MainController.getInstance().getUserController()).returnElement(element.getId())) {
+        if (((LibraryUserService) MainService.getInstance().getUserController()).returnElement(element.getId())) {
             showAlert("Prestito dell'elemento", "Elemento restituito!");
             mainVBox.getChildren().remove(2);
             initialize();
@@ -165,7 +165,7 @@ public class DescriptionElementController extends BaseViewController {
 
     private void handleBorrowAction() {
 
-        if (((LibraryUserController) MainController.getInstance().getUserController()).borrowElement(element.getId())) {
+        if (((LibraryUserService) MainService.getInstance().getUserController()).borrowElement(element.getId())) {
             showAlert("Prestito dell'elemento", "Elemento preso!");
             mainVBox.getChildren().remove(2);
             initialize();
@@ -180,16 +180,16 @@ public class DescriptionElementController extends BaseViewController {
     }
 
     private void handleCloseAction() {
-        MainController.getInstance().setSelectedElementId(null);
+        MainService.getInstance().setSelectedElementId(null);
         goBack();
     }
 
     private void handleRemoveAction() {
 
         try {
-            if (MainController.getInstance().getElementManager().removeElement(element.getId())) {
+            if (MainService.getInstance().getElementManager().removeElement(element.getId())) {
                 showAlert("Rimozione dell'elemento", "Elemento rimosso con successo");
-                MainController.getInstance().setSelectedElementId(null);
+                MainService.getInstance().setSelectedElementId(null);
                 mainViewController.loadBottomPane("home");
             }
 

@@ -1,6 +1,6 @@
 package com.swe.libraryprogram.orm;
 
-import com.swe.libraryprogram.services.MainController;
+import com.swe.libraryprogram.service.MainService;
 import com.swe.libraryprogram.domainmodel.DigitalMedia;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
@@ -14,9 +14,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 
-public class DigitalMediaManager extends ElementManager {
+public class DigitalMediaDAO extends ElementDAO {
 
-    public DigitalMediaManager() {
+    public DigitalMediaDAO() {
     }
 
 
@@ -153,9 +153,9 @@ public class DigitalMediaManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : digitalMedias){
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
         return digitalMedias;
@@ -228,9 +228,9 @@ public class DigitalMediaManager extends ElementManager {
         }
         stmt.close();
 
-        GenreManager genreManager = MainController.getInstance().getGenreManager();
+        GenreDAO genreDAO = MainService.getInstance().getGenreManager();
         for (Element element : elements){
-            List<Genre> genres = genreManager.getGenresForElement(element.getId());
+            List<Genre> genres = genreDAO.getGenresForElement(element.getId());
             element.setGenres(genres);
         }
         return elements;
