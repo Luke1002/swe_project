@@ -2,7 +2,7 @@
 
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="root" prefHeight="480" prefWidth="640" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.view.MainViewController">
+<BorderPane fx:id="root" prefHeight="480" prefWidth="640" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.swe.libraryprogram.controller.MainViewController">
     <top>
     </top>
     <left>

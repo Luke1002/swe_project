@@ -1,14 +1,25 @@
 package com.swe.libraryprogram;
 
-import com.swe.libraryprogram.controller.MainController;
-import com.swe.libraryprogram.dao.ConnectionManager;
-import com.swe.libraryprogram.view.MainViewController;
+import com.swe.libraryprogram.service.LibraryAdminService;
+import com.swe.libraryprogram.service.MainService;
+import com.swe.libraryprogram.orm.ConnectionManager;
+import com.swe.libraryprogram.controller.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class HelloApplication extends Application {
 
@@ -16,7 +27,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         try{
             ConnectionManager.getInstance();
-            MainController.getInstance();
+            MainService.getInstance();
             MainViewController mainViewController;
             stage.setMinWidth(800);
             stage.setMinHeight(600);
@@ -31,7 +42,26 @@ public class HelloApplication extends Application {
             stage.setTitle("Library Management System");
             stage.show();
         }catch (Exception e){
-            e.printStackTrace();
+            Stage errorStage = new Stage();
+            errorStage.setResizable(false);
+            errorStage.setWidth(250);
+            errorStage.setHeight(140);
+            errorStage.setTitle("Errore");
+            Label instructionLabel = new Label("Impossibile aprire l'applicazione");
+            Button submitButton = new Button("Ok");
+            errorStage.initModality(Modality.APPLICATION_MODAL);
+            submitButton.setOnAction(_ -> {
+                errorStage.close();
+            });
+            HBox buttonBox = new HBox(submitButton);
+            buttonBox.setAlignment(Pos.BOTTOM_RIGHT);
+            buttonBox.setStyle("-fx-padding: 10; -fx-spacing: 10;");
+
+            VBox layout = new VBox(10, instructionLabel, buttonBox);
+            layout.setStyle("-fx-padding: 20; -fx-alignment: top-center;");
+            Scene scene = new Scene(layout, 300, 150);
+            errorStage.setScene(scene);
+            errorStage.showAndWait();
         }
 
     }

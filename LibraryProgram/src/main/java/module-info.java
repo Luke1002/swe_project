@@ -13,7 +13,7 @@ module com.swe.libraryprogram {
 
     opens com.swe.libraryprogram to javafx.fxml;
     exports com.swe.libraryprogram;
-    exports com.swe.libraryprogram.view;
+    exports com.swe.libraryprogram.controller;
     opens com.swe.libraryprogram.domainmodel to javafx.base;
-    opens com.swe.libraryprogram.view to javafx.fxml;
+    opens com.swe.libraryprogram.controller to javafx.fxml;
 }
