@@ -2,10 +2,7 @@ package com.swe.libraryprogram.service;
 
 
 import com.swe.libraryprogram.domainmodel.*;
-import com.swe.libraryprogram.orm.BookDAO;
-import com.swe.libraryprogram.orm.DigitalMediaDAO;
-import com.swe.libraryprogram.orm.GenreDAO;
-import com.swe.libraryprogram.orm.PeriodicPublicationDAO;
+import com.swe.libraryprogram.orm.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +38,9 @@ public class LibraryAdminServiceTest {
     private PeriodicPublicationDAO periodicPublicationDAO;
 
     @Mock
+    private ElementDAO elementDAO;
+
+    @Mock
     private GenreDAO genreDAO;
 
     private Book book;
@@ -57,6 +57,7 @@ public class LibraryAdminServiceTest {
         lenient().when(mainService.getDigitalMediaDAO()).thenReturn(digitalMediaDAO);
         lenient().when(mainService.getPeriodicPublicationDAO()).thenReturn(periodicPublicationDAO);
         lenient().when(mainService.getGenreDAO()).thenReturn(genreDAO);
+        lenient().when(mainService.getElementDAO()).thenReturn(elementDAO);
 
         List<Genre> genres = new ArrayList<>();
         genres.add(new Genre("genretest",1));
@@ -237,6 +238,42 @@ public class LibraryAdminServiceTest {
         lenient().when(genreDAO.addGenre(any(Genre.class))).thenThrow(SQLException.class);
 
         assertFalse(libraryAdminService.addGenre("test genre"));
+
+    }
+
+    @Test
+    @Order(11)
+    public void removeElementTestUC11() throws SQLException {
+
+        System.out.println("-------- TST UC 11 --------");
+
+        lenient().when(elementDAO.removeElement(book.getId())).thenReturn(true);
+
+        assertTrue(libraryAdminService.removeElement(book));
+
+    }
+
+    @Test
+    @Order(12)
+    public void removeElementTestUC11F3A() throws SQLException {
+
+        System.out.println("TST UC 11 FLOW 3A:");
+
+        book.setQuantity(5);
+
+        assertFalse(libraryAdminService.removeElement(book));
+
+    }
+
+    @Test
+    @Order(13)
+    public void removeElementTestUC11F3B() throws SQLException {
+
+        System.out.println("TST UC 11 FLOW 3B:");
+
+        lenient().when(elementDAO.removeElement(book.getId())).thenThrow(SQLException.class);
+
+        assertFalse(libraryAdminService.removeElement(book));
 
     }
 

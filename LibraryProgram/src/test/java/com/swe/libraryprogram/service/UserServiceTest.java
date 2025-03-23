@@ -3,6 +3,7 @@ package com.swe.libraryprogram.service;
 import com.swe.libraryprogram.domainmodel.Element;
 import com.swe.libraryprogram.domainmodel.Genre;
 import com.swe.libraryprogram.domainmodel.User;
+import com.swe.libraryprogram.orm.ElementDAO;
 import com.swe.libraryprogram.orm.UserDAO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,9 @@ public class UserServiceTest {
     @Mock
     private UserDAO userDAO;
 
+    @Mock
+    private ElementDAO elementDAO;
+
     static User user;
 
     @BeforeEach
@@ -42,6 +46,7 @@ public class UserServiceTest {
 
         lenient().when(MainService.getInstance()).thenReturn(mainService);
         lenient().when(mainService.getUserDAO()).thenReturn(userDAO);
+        lenient().when(mainService.getElementDAO()).thenReturn(elementDAO);
 
         lenient().when(userDAO.addUser(any(user.getClass()))).thenReturn(true);
 
@@ -290,6 +295,48 @@ public class UserServiceTest {
 
         assertTrue(userService.searchElements(elementList, "test title 1999",
                 null, null,null,true).isEmpty());
+
+    }
+
+    @Test
+    @Order(13)
+    public void getAllElementsTestUC6() throws SQLException {
+
+        System.out.println("-------- TST UC 6 --------");
+
+        Element element = new Element("test title",1,"",1,
+                1,1,new ArrayList<>());
+
+        List<Element> elementList = new ArrayList<>();
+        elementList.add(element);
+
+        lenient().when(elementDAO.getAllElements()).thenReturn(elementList);
+
+        assertFalse(userService.getAllElements().isEmpty());
+
+    }
+
+    @Test
+    @Order(13)
+    public void getAllElementsTestUC6F3A() throws SQLException {
+
+        System.out.println("TST UC 6 FLOW 3A:");
+
+        lenient().when(elementDAO.getAllElements()).thenReturn(new ArrayList<>());
+
+        assertTrue(userService.getAllElements().isEmpty());
+
+    }
+
+    @Test
+    @Order(14)
+    public void getAllElementsTestUC6F3B() throws SQLException {
+
+        System.out.println("TST UC 6 FLOW 3B:");
+
+        lenient().when(elementDAO.getAllElements()).thenThrow(SQLException.class);
+
+        assertNull(userService.getAllElements());
 
     }
 
