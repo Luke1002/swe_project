@@ -69,7 +69,12 @@ public class UserService {
         List<Element> elements;
         try {
             elements = MainService.getInstance().getElementDAO().getAllElements();
-            return elements;
+            if (!elements.isEmpty()){
+                return elements;
+            } else {
+                System.out.println("Nessun elemento è stato recuperato.");
+                return elements;
+            }
         } catch (SQLException _) {
             System.out.println("Impossible connettersi con il database");
             return null;

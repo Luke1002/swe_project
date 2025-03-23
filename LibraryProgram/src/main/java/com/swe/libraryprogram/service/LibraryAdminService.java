@@ -133,7 +133,7 @@ public class LibraryAdminService extends UserService {
                 error = true;
             }
             if (error) {
-                System.out.println("Informazioni insufficienti o non valide al fine di aggiornare l'elemento.");
+                System.out.println("Informazioni insufficienti o non valide.");
                 return false;
             }
 
@@ -147,7 +147,7 @@ public class LibraryAdminService extends UserService {
                     error = true;
                 }
                 if (error) {
-                    System.out.println("Informazioni insufficienti o non valide al fine di aggiornare l'elemento.");
+                    System.out.println("Informazioni insufficienti o non valide.");
                     return false;
                 }
                 if(((Book) element).getAuthor() == null){
@@ -186,7 +186,7 @@ public class LibraryAdminService extends UserService {
                     error = true;
                 }
                 if (error) {
-                    System.out.println("Informazioni insufficienti o non valide al fine di aggiornare l'elemento.");
+                    System.out.println("Informazioni insufficienti o non valide.");
                     return false;
                 }
                 MainService.getInstance().getPeriodicPublicationDAO().updatePeriodicPublication((PeriodicPublication) element);
