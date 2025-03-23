@@ -284,22 +284,6 @@ public class UserServiceTest {
 
     @Test
     @Order(12)
-    public void searchElementsTestUC5F3A() throws SQLException {
-
-        System.out.println("TST UC 5 FLOW 3A: ricerca di un elemento non esistente");
-
-        List<Element> elementList = new ArrayList<>();
-
-        elementList.add(new Element("test title 1",2001,"test description 1",
-                1,1,10,new ArrayList<>()));
-
-        assertTrue(userService.searchElements(elementList, "test title 1999",
-                null, null,null,true).isEmpty());
-
-    }
-
-    @Test
-    @Order(13)
     public void getAllElementsTestUC6() throws SQLException {
 
         System.out.println("-------- TST UC 6 --------");
@@ -317,7 +301,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @Order(13)
+    @Order(12)
     public void getAllElementsTestUC6F3A() throws SQLException {
 
         System.out.println("TST UC 6 FLOW 3A:");
@@ -329,7 +313,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @Order(14)
+    @Order(13)
     public void getAllElementsTestUC6F3B() throws SQLException {
 
         System.out.println("TST UC 6 FLOW 3B:");

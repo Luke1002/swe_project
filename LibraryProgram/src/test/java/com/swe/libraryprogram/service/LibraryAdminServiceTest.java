@@ -165,9 +165,9 @@ public class LibraryAdminServiceTest {
 
     @Test
     @Order(6)
-    public void updateElementTestUC12F4A() throws SQLException {
+    public void updateElementTestUC12F6A() throws SQLException {
 
-        System.out.println("TST UC 12 FLOW 4A:");
+        System.out.println("TST UC 12 FLOW 6A:");
         System.out.println("Testing per ciascun tipo di elemento...");
 
         lenient().when(bookDAO.getBookByIsbn(book.getIsbn())).thenReturn(null);
@@ -184,9 +184,9 @@ public class LibraryAdminServiceTest {
 
     @Test
     @Order(7)
-    public void updateElementTestUC12F4B() throws SQLException {
+    public void updateElementTestUC12F6B() throws SQLException {
 
-        System.out.println("TST UC 12 FLOW 4B:");
+        System.out.println("TST UC 12 FLOW 6B:");
 
         lenient().when(bookDAO.getBookByIsbn(book.getIsbn())).thenReturn(book);
 
@@ -196,9 +196,9 @@ public class LibraryAdminServiceTest {
 
     @Test
     @Order(8)
-    public void updateElementTestUC12F4C() throws SQLException {
+    public void updateElementTestUC12F6C() throws SQLException {
 
-        System.out.println("TST UC 12 FLOW 4C:");
+        System.out.println("TST UC 12 FLOW 6C:");
 
         lenient().when(bookDAO.getBookByIsbn(book.getIsbn())).thenThrow(SQLException.class);
 
