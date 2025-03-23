@@ -35,7 +35,7 @@ public class UserDAO {
                     rs.getBoolean("isadmin"));
 
         } else {
-            throw new RuntimeException("Identificativo non presente");
+            throw new RuntimeException("E-mail non presente.");
         }
         stmt.close();
         return user;
