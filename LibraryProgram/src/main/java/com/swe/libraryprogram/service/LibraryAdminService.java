@@ -68,13 +68,14 @@ public class LibraryAdminService extends UserService {
                     if(((PeriodicPublication) element).getFrequency() == null){
                         ((PeriodicPublication) element).setFrequency("");
                     }
-                    if(((PeriodicPublication) element).getReleaseMonth() == null || ((PeriodicPublication) element).getReleaseMonth() >12 || ((PeriodicPublication) element).getReleaseMonth() < 1){
+                    if( ((PeriodicPublication) element).getReleaseMonth() == null || ((PeriodicPublication) element).getReleaseMonth() >12 || ((PeriodicPublication) element).getReleaseMonth() < 1){
                         error=true;
                     }
-                    if(((PeriodicPublication) element).getReleaseDay() == null || ((PeriodicPublication) element).getReleaseDay() >31 || ((PeriodicPublication) element).getReleaseMonth() < 1){
+                    if( ((PeriodicPublication) element).getReleaseDay() == null || ((PeriodicPublication) element).getReleaseDay() >31 || ((PeriodicPublication) element).getReleaseDay() < 1){
                         error=true;
                     }
-                    if (((Arrays.asList(new Integer[]{4, 6, 9, 11}).contains(((PeriodicPublication) element).getReleaseMonth()) && (((PeriodicPublication) element).getReleaseMonth() == 2 && ((PeriodicPublication) element).getReleaseDay() > 28) || ((PeriodicPublication) element).getReleaseDay() > 31 ))){
+                    if( ( Arrays.asList(new Integer[]{4, 6, 9, 11}).contains(((PeriodicPublication) element).getReleaseMonth()) && ((PeriodicPublication) element).getReleaseDay() > 30 ) ||
+                        ( ((PeriodicPublication) element).getReleaseMonth() == 2 && ((PeriodicPublication) element).getReleaseDay() > 28 ) ){
                         error=true;
                     }
                     if (error) {
@@ -174,10 +175,11 @@ public class LibraryAdminService extends UserService {
                 if(((PeriodicPublication) element).getReleaseMonth() == null || ((PeriodicPublication) element).getReleaseMonth() >12 || ((PeriodicPublication) element).getReleaseMonth() < 1){
                     error = true;
                 }
-                if(((PeriodicPublication) element).getReleaseDay() == null || ((PeriodicPublication) element).getReleaseDay() >31 || ((PeriodicPublication) element).getReleaseMonth() < 1){
+                if(((PeriodicPublication) element).getReleaseDay() == null || ((PeriodicPublication) element).getReleaseDay() >31 || ((PeriodicPublication) element).getReleaseDay() < 1){
                     error = true;
                 }
-                if (((Arrays.asList(new Integer[]{4, 6, 9, 11}).contains(((PeriodicPublication) element).getReleaseMonth()) && (((PeriodicPublication) element).getReleaseMonth() == 2 && ((PeriodicPublication) element).getReleaseDay() > 28) || ((PeriodicPublication) element).getReleaseDay() > 31 ))){
+                if ((Arrays.asList(new Integer[]{4, 6, 9, 11}).contains(((PeriodicPublication) element).getReleaseMonth()) && ((PeriodicPublication) element).getReleaseDay() > 30) ||
+                        (((PeriodicPublication) element).getReleaseMonth() == 2 && ((PeriodicPublication) element).getReleaseDay() > 28)){
                     error = true;
                 }
                 if (error) {
