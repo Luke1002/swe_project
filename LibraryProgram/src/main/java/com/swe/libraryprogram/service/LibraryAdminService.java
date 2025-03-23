@@ -4,7 +4,6 @@ import com.swe.libraryprogram.domainmodel.*;
 
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -106,7 +105,6 @@ public class LibraryAdminService extends UserService {
 
     public Boolean removeElement(Element element) {
         try {
-            Element elewment = MainService.getInstance().getElementDAO().getElement(element.getId());
             if(!Objects.equals(element.getQuantityAvailable(), element.getQuantity())){
                 System.out.println("Impossibile rimuovere un elemento ancora in prestito");
                 return false;
