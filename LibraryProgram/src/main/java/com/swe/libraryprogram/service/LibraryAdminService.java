@@ -12,28 +12,35 @@ public class LibraryAdminService extends UserService {
 
 
     public Boolean addElement(Element element) {
+        Boolean error = false;
         try {
             if(element.getTitle()== null || element.getTitle().trim().isEmpty()){
-                System.out.println("Titolo non inserito");
-                return false;
+                error = true;
             }
             if(element.getDescription()== null){
                 element.setDescription("");
             }
             if(element.getQuantity() == null || element.getQuantity() < 1){
-                System.out.println("Quantità non inserita, deve essere almeno 1");
+                error = true;
+            }
+            if (error) {
+                System.out.println("Informazioni insufficienti o non valide.");
+                return false;
             }
 
             element.setQuantityAvailable(element.getQuantity());
             if (element.getClass() != Element.class) {
                 Integer elementId = null;
                 if (element instanceof Book) {
-                    if(((Book) element).getIsbn() == null  || ((Book) element).getIsbn().matches("\\d{13}")){
-                        System.out.println("ISBN non valido");
-                        return false;
+                    if(((Book) element).getIsbn() == null  || !((Book) element).getIsbn().matches("\\d{13}")){
+                        error = true;
                     }
                     if ((MainService.getInstance().getBookDAO().getBookByIsbn(((Book) element).getIsbn())) != null) {
                         System.out.println("ISBN già presente nel database");
+                        error = true;
+                    }
+                    if (error) {
+                        System.out.println("Informazioni insufficienti o non valide.");
                         return false;
                     }
                     if(((Book) element).getAuthor() == null){
@@ -62,15 +69,16 @@ public class LibraryAdminService extends UserService {
                         ((PeriodicPublication) element).setFrequency("");
                     }
                     if(((PeriodicPublication) element).getReleaseMonth() == null || ((PeriodicPublication) element).getReleaseMonth() >12 || ((PeriodicPublication) element).getReleaseMonth() < 1){
-                        System.out.println("Mese non valido");
-                        return false;
+                        error=true;
                     }
                     if(((PeriodicPublication) element).getReleaseDay() == null || ((PeriodicPublication) element).getReleaseDay() >31 || ((PeriodicPublication) element).getReleaseMonth() < 1){
-                        System.out.println("Giorno non valido");
-                        return false;
+                        error=true;
                     }
                     if (((Arrays.asList(new Integer[]{4, 6, 9, 11}).contains(((PeriodicPublication) element).getReleaseMonth()) && (((PeriodicPublication) element).getReleaseMonth() == 2 && ((PeriodicPublication) element).getReleaseDay() > 28) || ((PeriodicPublication) element).getReleaseDay() > 31 ))){
-                        System.out.println("Giorno non valido rispetto al mese");
+                        error=true;
+                    }
+                    if (error) {
+                        System.out.println("Informazioni insufficienti o non valide.");
                         return false;
                     }
                     elementId = MainService.getInstance().getPeriodicPublicationDAO().addPeriodicPublication((PeriodicPublication) element);
@@ -109,26 +117,33 @@ public class LibraryAdminService extends UserService {
     }
 
     public Boolean updateElement(Element element) {
+        Boolean error = false;
         try {
             if(element.getTitle()== null || element.getTitle().trim().isEmpty()){
-                System.out.println("Titolo non inserito");
-                return false;
+                error = true;
             }
             if(element.getDescription()== null){
                 element.setDescription("");
             }
             if(element.getQuantity() == null || element.getQuantity() < 1){
-                System.out.println("Quantità non inserita, deve essere almeno 1");
+                error = true;
+            }
+            if (error) {
+                System.out.println("Informazioni insufficienti o non valide al fine di aggiornare l'elemento.");
+                return false;
             }
 
             element.setQuantityAvailable(element.getQuantity());
             if (element instanceof Book) {
-                if(((Book) element).getIsbn() == null  ||((Book) element).getIsbn().matches("\\d{13}")){
-                    System.out.println("ISBN non valido");
-                    return false;
+                if(((Book) element).getIsbn() == null  ||!((Book) element).getIsbn().matches("\\d{13}")){
+                    error = true;
                 }
                 if ((MainService.getInstance().getBookDAO().getBookByIsbn(((Book) element).getIsbn())) != null) {
                     System.out.println("ISBN già presente nel database");
+                    error = true;
+                }
+                if (error) {
+                    System.out.println("Informazioni insufficienti o non valide al fine di aggiornare l'elemento.");
                     return false;
                 }
                 if(((Book) element).getAuthor() == null){
@@ -157,15 +172,16 @@ public class LibraryAdminService extends UserService {
                     ((PeriodicPublication) element).setFrequency("");
                 }
                 if(((PeriodicPublication) element).getReleaseMonth() == null || ((PeriodicPublication) element).getReleaseMonth() >12 || ((PeriodicPublication) element).getReleaseMonth() < 1){
-                    System.out.println("Mese non valido");
-                    return false;
+                    error = true;
                 }
                 if(((PeriodicPublication) element).getReleaseDay() == null || ((PeriodicPublication) element).getReleaseDay() >31 || ((PeriodicPublication) element).getReleaseMonth() < 1){
-                    System.out.println("Giorno non valido");
-                    return false;
+                    error = true;
                 }
                 if (((Arrays.asList(new Integer[]{4, 6, 9, 11}).contains(((PeriodicPublication) element).getReleaseMonth()) && (((PeriodicPublication) element).getReleaseMonth() == 2 && ((PeriodicPublication) element).getReleaseDay() > 28) || ((PeriodicPublication) element).getReleaseDay() > 31 ))){
-                    System.out.println("Giorno non valido rispetto al mese");
+                    error = true;
+                }
+                if (error) {
+                    System.out.println("Informazioni insufficienti o non valide al fine di aggiornare l'elemento.");
                     return false;
                 }
                 MainService.getInstance().getPeriodicPublicationDAO().updatePeriodicPublication((PeriodicPublication) element);
@@ -174,8 +190,8 @@ public class LibraryAdminService extends UserService {
             }
 
             return true;
-        } catch (
-                SQLException e) {
+        } catch (SQLException e) {
+            System.out.println("Impossibile connettersi al database");
             return false;
         }
     }
